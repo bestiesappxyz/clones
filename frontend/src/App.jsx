@@ -24,6 +24,7 @@ import SocialFeedPage from './pages/SocialFeedPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
 import ErrorDashboard from './pages/ErrorDashboard';
+import AlertViewPage from './pages/AlertViewPage';
 
 // Context
 import { AuthProvider } from './contexts/AuthContext';
@@ -93,6 +94,10 @@ function App() {
             <Route
               path="/terms"
               element={<TermsOfServicePage />}
+            />
+            <Route
+              path="/alert/:alertId"
+              element={<AlertViewPage />}
             />
 
             {/* Protected routes */}

@@ -107,42 +107,47 @@ exports.completeCheckIn = functions.https.onCall(async (data, context) => {
 async function sendAlertToBesties(checkInId, checkIn) {
   const userDoc = await db.collection('users').doc(checkIn.userId).get();
   const userData = userDoc.data();
-  
-  const alertMessage = `🚨 SAFETY ALERT: ${userData.displayName} hasn't checked in from ${checkIn.location}. They were expected back ${Math.round((Date.now() - checkIn.alertTime.toMillis()) / 60000)} minutes ago. Please check on them!`;
-  
+
+  // Full message for WhatsApp/Email (free/cheap)
+  const fullMessage = `🚨 SAFETY ALERT: ${userData.displayName} hasn't checked in from ${checkIn.location}. They were expected back ${Math.round((Date.now() - checkIn.alertTime.toMillis()) / 60000)} minutes ago. Please check on them!`;
+
+  // Short message for SMS (expensive - keep under 160 chars)
+  const shortMessage = `🚨 ${userData.displayName} missed check-in. View: https://bestiesapp.web.app/alert/${checkInId}`;
+
   const bestiePromises = checkIn.bestieIds.map(async (bestieId) => {
     const bestieDoc = await db.collection('users').doc(bestieId).get();
-    
+
     if (!bestieDoc.exists) return;
-    
+
     const bestieData = bestieDoc.data();
-    
+
     try {
-      // Try WhatsApp first
+      // Try WhatsApp first (free - use full message)
       if (bestieData.notifications?.whatsapp && bestieData.phoneNumber) {
         try {
-          await sendWhatsAppAlert(bestieData.phoneNumber, alertMessage);
+          await sendWhatsAppAlert(bestieData.phoneNumber, fullMessage);
         } catch (whatsappError) {
           console.log('WhatsApp failed, trying SMS...');
-          // Fallback to SMS
+          // Fallback to SMS (expensive - use short message)
           if (bestieData.smsSubscription?.active) {
-            await sendSMSAlert(bestieData.phoneNumber, alertMessage);
+            await sendSMSAlert(bestieData.phoneNumber, shortMessage);
           }
         }
       } else if (bestieData.smsSubscription?.active && bestieData.phoneNumber) {
-        await sendSMSAlert(bestieData.phoneNumber, alertMessage);
+        // SMS only (expensive - use short message)
+        await sendSMSAlert(bestieData.phoneNumber, shortMessage);
       }
-      
-      // Always send email as backup
-      if (bestieData.email) {
-        await sendEmailAlert(bestieData.email, alertMessage, checkIn);
+
+      // Send email if enabled (cheap - use full message)
+      if (bestieData.email && bestieData.notificationPreferences?.email) {
+        await sendEmailAlert(bestieData.email, fullMessage, checkIn);
       }
-      
+
       await db.collection('notifications').add({
         userId: bestieId,
         type: 'safety_alert',
         checkInId,
-        message: alertMessage,
+        message: fullMessage,
         sentAt: admin.firestore.Timestamp.now(),
         read: false,
       });
@@ -435,23 +440,31 @@ exports.triggerEmergencySOS = functions.https.onCall(async (data, context) => {
     createdAt: admin.firestore.Timestamp.now(),
   });
   
-  const alertMessage = isReversePIN
+  // Full message for WhatsApp/Email
+  const fullAlertMessage = isReversePIN
     ? `🚨 SILENT EMERGENCY: ${userData.displayName} triggered reverse PIN. Location: ${location || 'Unknown'}. Covert distress signal.`
     : `🆘 EMERGENCY: ${userData.displayName} triggered SOS! Location: ${location || 'Unknown'}. Help immediately!`;
-  
+
+  // Short message for SMS (expensive)
+  const shortAlertMessage = isReversePIN
+    ? `🚨 ${userData.displayName} reverse PIN. View: https://bestiesapp.web.app/alert/${sosRef.id}`
+    : `🆘 ${userData.displayName} SOS! View: https://bestiesapp.web.app/alert/${sosRef.id}`;
+
   const notifications = bestieIds.map(async (bestieId) => {
     const bestieDoc = await db.collection('users').doc(bestieId).get();
     if (!bestieDoc.exists) return;
-    
+
     const bestieData = bestieDoc.data();
-    
+
     try {
       if (bestieData.phoneNumber) {
-        await sendSMSAlert(bestieData.phoneNumber, alertMessage);
-        await sendWhatsAppAlert(bestieData.phoneNumber, alertMessage);
+        // SMS is expensive - use short message
+        await sendSMSAlert(bestieData.phoneNumber, shortAlertMessage);
+        // WhatsApp is free - use full message
+        await sendWhatsAppAlert(bestieData.phoneNumber, fullAlertMessage);
       }
-      if (bestieData.email) {
-        await sendEmailAlert(bestieData.email, alertMessage, {
+      if (bestieData.email && bestieData.notificationPreferences?.email) {
+        await sendEmailAlert(bestieData.email, fullAlertMessage, {
           location: location || 'Unknown',
           alertTime: admin.firestore.Timestamp.now(),
         });
@@ -948,5 +961,9 @@ ${JSON.stringify(error.details, null, 2)}
 
     return null;
   });
+
+// Dynamic share card generator
+const { generateShareCard } = require('./shareCard');
+exports.generateShareCard = generateShareCard;
 
 module.exports = exports;
