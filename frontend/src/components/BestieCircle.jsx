@@ -133,7 +133,7 @@ const BestieCircle = ({ userId, onAddClick }) => {
         <div className="absolute inset-0">
           {/* Center Circle (YOU) */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center text-white text-sm font-display shadow-lg border-2 border-white">
+            <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center text-white text-base font-display shadow-lg border-2 border-white">
               YOU
             </div>
           </div>
