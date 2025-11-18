@@ -101,7 +101,7 @@ export const authService = {
     try {
       if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
-          'size': 'normal', // Show visible checkbox so users can see progress
+          'size': 'invisible', // Invisible - auto-executes in background
           'callback': () => {
             // reCAPTCHA solved - allow signInWithPhoneNumber
           }
