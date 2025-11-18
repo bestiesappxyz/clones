@@ -22,6 +22,7 @@ import ExportDataPage from './pages/ExportDataPage';
 import MonitoringDashboard from './pages/MonitoringDashboard';
 import SocialFeedPage from './pages/SocialFeedPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
 
 // Context
 import { AuthProvider } from './contexts/AuthContext';
@@ -86,6 +87,10 @@ function App() {
             <Route
               path="/privacy"
               element={<PrivacyPolicyPage />}
+            />
+            <Route
+              path="/terms"
+              element={<TermsOfServicePage />}
             />
 
             {/* Protected routes */}

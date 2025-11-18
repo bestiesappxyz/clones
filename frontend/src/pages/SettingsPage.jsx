@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useDarkMode } from '../contexts/DarkModeContext';
@@ -7,12 +7,25 @@ import { doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import apiService from '../services/api';
+import notificationService from '../services/notifications';
 
 const SettingsPage = () => {
   const { currentUser, userData } = useAuth();
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(false);
+  const [pushNotificationsSupported, setPushNotificationsSupported] = useState(true);
+
+  // Check if push notifications are supported and enabled
+  useEffect(() => {
+    const isSupported = notificationService.isSupported();
+    setPushNotificationsSupported(isSupported);
+
+    if (isSupported) {
+      setPushNotificationsEnabled(userData?.notificationsEnabled || false);
+    }
+  }, [userData]);
 
   const handleSignOut = async () => {
     const result = await authService.signOut();
@@ -85,6 +98,35 @@ const SettingsPage = () => {
     } catch (error) {
       console.error('Donation error:', error);
       toast.error('Failed to start donation');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const togglePushNotifications = async () => {
+    if (!pushNotificationsSupported) {
+      toast.error('Push notifications are not supported in your browser');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (pushNotificationsEnabled) {
+        // Disable notifications
+        const success = await notificationService.disableNotifications();
+        if (success) {
+          setPushNotificationsEnabled(false);
+        }
+      } else {
+        // Enable notifications
+        const success = await notificationService.enableNotifications();
+        if (success) {
+          setPushNotificationsEnabled(true);
+        }
+      }
+    } catch (error) {
+      console.error('Push notification error:', error);
+      toast.error('Failed to update push notifications');
     } finally {
       setLoading(false);
     }
@@ -168,6 +210,36 @@ const SettingsPage = () => {
                 <div
                   className={`w-5 h-5 bg-white rounded-full transition-transform ${
                     userData?.notificationPreferences?.email
+                      ? 'translate-x-6'
+                      : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-semibold text-text-primary">Push Notifications</div>
+                <div className="text-sm text-text-secondary">
+                  {pushNotificationsSupported
+                    ? 'Get browser push notifications for check-in reminders'
+                    : 'Not supported in this browser'}
+                </div>
+              </div>
+              <button
+                onClick={togglePushNotifications}
+                disabled={!pushNotificationsSupported || loading}
+                className={`w-12 h-6 rounded-full transition-colors ${
+                  !pushNotificationsSupported
+                    ? 'bg-gray-200 cursor-not-allowed'
+                    : pushNotificationsEnabled
+                    ? 'bg-primary'
+                    : 'bg-gray-300'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 bg-white rounded-full transition-transform ${
+                    pushNotificationsEnabled
                       ? 'translate-x-6'
                       : 'translate-x-1'
                   }`}
