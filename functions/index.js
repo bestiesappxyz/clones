@@ -966,4 +966,188 @@ ${JSON.stringify(error.details, null, 2)}
 const { generateShareCard } = require('./shareCard');
 exports.generateShareCard = generateShareCard;
 
+// ========================================
+// DATA RETENTION CLEANUP
+// ========================================
+
+// Clean up old data based on user preferences
+exports.cleanupOldData = functions.pubsub
+  .schedule('0 3 * * *') // Run daily at 3:00 AM
+  .timeZone('America/New_York')
+  .onRun(async (context) => {
+    console.log('Starting data cleanup...');
+
+    const now = admin.firestore.Timestamp.now();
+    const twentyFourHoursAgo = admin.firestore.Timestamp.fromDate(
+      new Date(now.toDate().getTime() - 24 * 60 * 60 * 1000)
+    );
+
+    let deletedCheckIns = 0;
+    let deletedSOS = 0;
+    let deletedPhotos = 0;
+
+    try {
+      // Get all users who DON'T have holdData enabled
+      const usersSnapshot = await db.collection('users')
+        .where('settings.holdData', '!=', true)
+        .get();
+
+      const userIds = usersSnapshot.docs.map(doc => doc.id);
+
+      // Add users without settings field at all
+      const usersWithoutSettings = await db.collection('users')
+        .where('settings', '==', null)
+        .get();
+
+      userIds.push(...usersWithoutSettings.docs.map(doc => doc.id));
+
+      console.log(`Found ${userIds.length} users without data retention enabled`);
+
+      // Delete old check-ins
+      for (const userId of userIds) {
+        const oldCheckIns = await db.collection('checkins')
+          .where('userId', '==', userId)
+          .where('createdAt', '<', twentyFourHoursAgo)
+          .get();
+
+        for (const doc of oldCheckIns.docs) {
+          const checkInData = doc.data();
+
+          // Delete associated photo if exists
+          if (checkInData.photoURL) {
+            try {
+              // Extract storage path from URL
+              const photoPath = checkInData.photoURL.split('/o/')[1]?.split('?')[0];
+              if (photoPath) {
+                const decodedPath = decodeURIComponent(photoPath);
+                await admin.storage().bucket().file(decodedPath).delete();
+                deletedPhotos++;
+              }
+            } catch (photoError) {
+              console.error('Error deleting photo:', photoError);
+            }
+          }
+
+          await doc.ref.delete();
+          deletedCheckIns++;
+        }
+
+        // Delete old emergency SOS
+        const oldSOS = await db.collection('emergency_sos')
+          .where('userId', '==', userId)
+          .where('createdAt', '<', twentyFourHoursAgo)
+          .get();
+
+        for (const doc of oldSOS.docs) {
+          await doc.ref.delete();
+          deletedSOS++;
+        }
+      }
+
+      console.log(`Cleanup complete: ${deletedCheckIns} check-ins, ${deletedSOS} SOS, ${deletedPhotos} photos deleted`);
+
+      return {
+        success: true,
+        deletedCheckIns,
+        deletedSOS,
+        deletedPhotos,
+      };
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+// ========================================
+// TEST ALERT FUNCTION
+// ========================================
+
+// Send test alert to verify notification setup
+exports.sendTestAlert = functions.https.onCall(async (data, context) => {
+  // Verify user is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
+
+  const userId = context.auth.uid;
+
+  try {
+    // Get user data
+    const userDoc = await db.collection('users').doc(userId).get();
+    if (!userDoc.exists) {
+      throw new functions.https.HttpsError('not-found', 'User not found');
+    }
+
+    const userData = userDoc.data();
+    const testMessage = `✅ Test Alert from Besties!\n\nThis is a test notification to confirm your alert settings are working correctly.\n\nYour notification channels:\n${userData.notificationPreferences?.email ? '✓ Email' : '✗ Email'}\n${userData.notificationPreferences?.whatsapp ? '✓ WhatsApp' : '✗ WhatsApp'}\n${userData.notificationsEnabled ? '✓ Push Notifications' : '✗ Push Notifications'}`;
+
+    const notifications = [];
+
+    // Send Email
+    if (userData.email && userData.notificationPreferences?.email) {
+      const emailMsg = {
+        to: userData.email,
+        from: 'alerts@bestiesapp.web.app',
+        subject: '✅ Test Alert - Besties',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #7c3aed;">✅ Test Alert Success!</h2>
+            <p>Hi ${userData.displayName},</p>
+            <p>This is a test notification to confirm your email alerts are working correctly.</p>
+            <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin-top: 0;">Your Notification Channels:</h3>
+              <ul style="margin: 10px 0;">
+                <li>${userData.notificationPreferences?.email ? '✅' : '❌'} Email</li>
+                <li>${userData.notificationPreferences?.whatsapp ? '✅' : '❌'} WhatsApp</li>
+                <li>${userData.notificationsEnabled ? '✅' : '❌'} Push Notifications</li>
+              </ul>
+            </div>
+            <p>If you received this, your email notifications are set up correctly! 💜</p>
+          </div>
+        `,
+      };
+      notifications.push(sgMail.send(emailMsg));
+    }
+
+    // Send WhatsApp
+    if (userData.phoneNumber && userData.notificationPreferences?.whatsapp) {
+      notifications.push(
+        twilioClient.messages.create({
+          body: testMessage,
+          from: `whatsapp:${twilioPhone}`,
+          to: `whatsapp:${userData.phoneNumber}`,
+        })
+      );
+    }
+
+    // Send Push Notification
+    if (userData.fcmToken && userData.notificationsEnabled) {
+      const pushMessage = {
+        notification: {
+          title: '✅ Test Alert - Besties',
+          body: 'Your push notifications are working! This is a test alert.',
+        },
+        token: userData.fcmToken,
+      };
+      notifications.push(admin.messaging().send(pushMessage));
+    }
+
+    // Wait for all notifications to send
+    await Promise.all(notifications);
+
+    return {
+      success: true,
+      message: 'Test alerts sent successfully',
+      channels: {
+        email: userData.notificationPreferences?.email && userData.email,
+        whatsapp: userData.notificationPreferences?.whatsapp && userData.phoneNumber,
+        push: userData.notificationsEnabled && userData.fcmToken,
+      },
+    };
+  } catch (error) {
+    console.error('Error sending test alert:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to send test alert');
+  }
+});
+
 module.exports = exports;
