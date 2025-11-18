@@ -3,6 +3,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPasswor
 import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, getDocs, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getFunctions } from 'firebase/functions';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import firebaseConfig from '../config/firebase';
 
 // Initialize Firebase
@@ -13,6 +14,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const functions = getFunctions(app);
+export const messaging = getMessaging(app);
 // Auth providers
 export const googleProvider = new GoogleAuthProvider();
 
@@ -215,5 +217,8 @@ export const timestampUtils = {
   toDate: (timestamp) => timestamp?.toDate(),
   serverTimestamp: () => serverTimestamp()
 };
+
+// Export messaging functions for notifications service
+export { getToken, onMessage };
 
 export default app;

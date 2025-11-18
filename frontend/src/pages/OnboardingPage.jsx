@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../services/firebase';
-import { doc, updateDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
@@ -51,6 +51,7 @@ const OnboardingPage = () => {
     if (step === 'bestie-circle' && currentUser) {
       checkForBesties();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, currentUser]);
 
   const checkForBesties = async () => {
