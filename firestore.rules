@@ -81,10 +81,15 @@ service cloud.firestore {
       );
       
       allow update: if isSignedIn() && (
-        // Recipient can accept/decline or update acceptedAt/recipientId when accepting invite
+        // Recipient can accept/decline
         (request.auth.uid == resource.data.recipientId &&
          request.resource.data.status in ['accepted', 'declined']) ||
+        // User accepting invite link (setting themselves as recipientId)
         (request.auth.uid == request.resource.data.recipientId &&
+         request.resource.data.status == 'accepted') ||
+        // User converting pending invite to accepted (via invite link)
+        (request.auth.uid == request.resource.data.recipientId &&
+         !('recipientId' in resource.data) &&
          request.resource.data.status == 'accepted') ||
         // Requester can cancel
         (request.auth.uid == resource.data.requesterId &&
