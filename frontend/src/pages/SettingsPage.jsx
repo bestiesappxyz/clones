@@ -406,6 +406,12 @@ const SettingsPage = () => {
             >
               <div className="text-sm">🔍 Monitoring</div>
             </button>
+            <button
+              onClick={() => navigate('/error-dashboard')}
+              className="btn bg-red-500 text-white text-left px-4 py-3 hover:bg-red-600"
+            >
+              <div className="text-sm">🚨 Errors</div>
+            </button>
           </div>
         </div>
 

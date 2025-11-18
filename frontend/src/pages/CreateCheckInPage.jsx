@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../services/firebase';
-import { collection, query, where, getDocs, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, getDoc, doc, Timestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import { isEnabled } from '../config/features';
 import errorTracker from '../services/errorTracking';
 
 const CreateCheckInPage = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,6 +23,13 @@ const CreateCheckInPage = () => {
 
   const locationInputRef = useRef(null);
   const autocompleteRef = useRef(null);
+
+  // Auto-redirect to onboarding if user hasn't completed it
+  useEffect(() => {
+    if (userData && !userData.onboardingCompleted) {
+      navigate('/onboarding');
+    }
+  }, [userData, navigate]);
 
   // Common locations for suggestions
   const commonLocations = [
@@ -235,12 +242,20 @@ const CreateCheckInPage = () => {
       return;
     }
 
+    if (duration < 15 || duration > 180) {
+      toast.error('Duration must be between 15 and 180 minutes');
+      return;
+    }
+
     setLoading(true);
     errorTracker.trackFunnelStep('checkin', 'submit_checkin', {
       besties: selectedBesties.length,
       duration,
       hasNotes: !!notes,
     });
+
+    // Show loading toast
+    const loadingToast = toast.loading('Creating your check-in...');
 
     try {
       const now = new Date();
@@ -258,15 +273,50 @@ const CreateCheckInPage = () => {
         lastUpdate: Timestamp.now(),
       };
 
-      await addDoc(collection(db, 'checkins'), checkInData);
+      // Add document and get reference
+      const docRef = await addDoc(collection(db, 'checkins'), checkInData);
+
+      // Verify the document was created by reading it back
+      const docSnap = await getDoc(doc(db, 'checkins', docRef.id));
+
+      if (!docSnap.exists()) {
+        throw new Error('Check-in was not saved properly. Please try again.');
+      }
+
+      // Verify critical data
+      const savedData = docSnap.data();
+      if (savedData.userId !== currentUser.uid || savedData.status !== 'active') {
+        throw new Error('Check-in data verification failed. Please try again.');
+      }
+
+      // Verify besties were saved correctly
+      if (!savedData.bestieIds || savedData.bestieIds.length !== selectedBesties.length) {
+        throw new Error('Bestie list was not saved correctly. Please try again.');
+      }
+
+      // Verify all bestie IDs match exactly
+      const bestiesMatch = selectedBesties.every(id => savedData.bestieIds.includes(id));
+      if (!bestiesMatch) {
+        throw new Error('Bestie list verification failed. Please try again.');
+      }
 
       errorTracker.trackFunnelStep('checkin', 'complete_checkin');
-      toast.success('Check-in created! Stay safe! 💜');
+      toast.success('Check-in created! Stay safe! 💜', { id: loadingToast });
       navigate('/');
     } catch (error) {
       console.error('Error creating check-in:', error);
       errorTracker.logCustomError('Failed to create check-in', { error: error.message });
-      toast.error('Failed to create check-in');
+
+      // Provide specific error messages
+      if (error.code === 'permission-denied') {
+        toast.error('Permission denied. Please check your account settings.', { id: loadingToast });
+      } else if (error.code === 'unavailable') {
+        toast.error('Unable to connect to server. Please check your internet connection.', { id: loadingToast });
+      } else if (error.message.includes('verification failed')) {
+        toast.error(error.message, { id: loadingToast });
+      } else {
+        toast.error('Failed to create check-in. Please try again.', { id: loadingToast });
+      }
     } finally {
       setLoading(false);
     }
