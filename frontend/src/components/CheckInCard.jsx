@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { db, storage } from '../services/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import apiService from '../services/api';
 import toast from 'react-hot-toast';
@@ -49,26 +49,67 @@ const CheckInCard = ({ checkIn }) => {
 
   const handleComplete = async () => {
     setLoading(true);
-    const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
-    setLoading(false);
+    const loadingToast = toast.loading('Marking you safe...');
 
-    if (result.data?.success) {
-      setShowCelebration(true);
-      setTimeout(() => setShowCelebration(false), 3000);
-    } else {
-      toast.error('Failed to complete check-in');
+    try {
+      const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
+
+      if (result.data?.success) {
+        // Verify the status changed by checking Firestore
+        const checkInRef = doc(db, 'checkins', checkIn.id);
+        const checkInSnap = await getDoc(checkInRef);
+
+        if (checkInSnap.exists() && checkInSnap.data().status === 'completed') {
+          toast.success('You\'re safe! 💜', { id: loadingToast });
+          setShowCelebration(true);
+          setTimeout(() => setShowCelebration(false), 3000);
+        } else {
+          throw new Error('Check-in status verification failed');
+        }
+      } else {
+        throw new Error(result.error?.message || 'Failed to complete check-in');
+      }
+    } catch (error) {
+      console.error('Error completing check-in:', error);
+      if (error.code === 'unavailable') {
+        toast.error('Cannot reach server. Please check your internet connection.', { id: loadingToast });
+      } else {
+        toast.error(error.message || 'Failed to complete check-in. Please try again.', { id: loadingToast });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleExtend = async (minutes) => {
     setLoading(true);
-    const result = await apiService.extendCheckIn({ checkInId: checkIn.id, additionalMinutes: minutes });
-    setLoading(false);
+    const loadingToast = toast.loading(`Extending check-in by ${minutes} minutes...`);
 
-    if (result.data?.success) {
-      toast.success(`Extended by ${minutes} minutes!`);
-    } else {
-      toast.error('Failed to extend check-in');
+    try {
+      const result = await apiService.extendCheckIn({ checkInId: checkIn.id, additionalMinutes: minutes });
+
+      if (result.data?.success) {
+        // Verify the new alert time
+        const checkInRef = doc(db, 'checkins', checkIn.id);
+        const checkInSnap = await getDoc(checkInRef);
+
+        if (checkInSnap.exists()) {
+          toast.success(`Extended by ${minutes} minutes!`, { id: loadingToast });
+        } else {
+          throw new Error('Unable to verify extension');
+        }
+      } else {
+        throw new Error(result.error?.message || 'Failed to extend check-in');
+      }
+    } catch (error) {
+      console.error('Error extending check-in:', error);
+      if (error.code === 'unavailable') {
+        toast.error('Cannot reach server. Please check your internet connection.', { id: loadingToast });
+      } else {
+        toast.error(error.message || 'Failed to extend check-in. Please try again.', { id: loadingToast });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

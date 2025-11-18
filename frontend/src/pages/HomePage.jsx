@@ -17,6 +17,13 @@ const HomePage = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Auto-redirect to onboarding if user hasn't completed it
+  useEffect(() => {
+    if (userData && !userData.onboardingCompleted) {
+      navigate('/onboarding');
+    }
+  }, [userData, navigate]);
+
   useEffect(() => {
     if (!currentUser) return;
 
