@@ -260,6 +260,22 @@ const CreateCheckInPage = () => {
       return;
     }
 
+    // Check if selected besties have phone numbers
+    const bestiesWithoutPhone = selectedBesties.filter(bestieId => {
+      const bestie = besties.find(b => b.id === bestieId);
+      return !bestie?.phone;
+    }).map(bestieId => {
+      const bestie = besties.find(b => b.id === bestieId);
+      return bestie?.name || 'Unknown';
+    });
+
+    if (bestiesWithoutPhone.length > 0) {
+      toast.error(`These besties need to add their phone number: ${bestiesWithoutPhone.join(', ')}`, {
+        duration: 6000
+      });
+      return;
+    }
+
     if (!locationInput.trim()) {
       errorTracker.trackFunnelStep('checkin', 'error_no_location');
       toast.error('Please enter a location');
@@ -486,8 +502,11 @@ const CreateCheckInPage = () => {
                     key={bestie.id}
                     type="button"
                     onClick={() => toggleBestie(bestie.id)}
+                    disabled={!bestie.phone}
                     className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                      selectedBesties.includes(bestie.id)
+                      !bestie.phone
+                        ? 'border-orange-300 bg-orange-50 opacity-60 cursor-not-allowed'
+                        : selectedBesties.includes(bestie.id)
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
@@ -499,7 +518,9 @@ const CreateCheckInPage = () => {
                         </div>
                         <div>
                           <div className="font-semibold text-text-primary">{bestie.name}</div>
-                          <div className="text-sm text-text-secondary">{bestie.phone}</div>
+                          <div className="text-sm text-text-secondary">
+                            {bestie.phone || '⚠️ No phone number - ask them to add one'}
+                          </div>
                         </div>
                       </div>
                       {selectedBesties.includes(bestie.id) && (
