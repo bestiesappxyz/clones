@@ -24,10 +24,13 @@ const CreateCheckInPage = () => {
   const [besties, setBesties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [autocompleteLoaded, setAutocompleteLoaded] = useState(false);
+  const [gpsCoords, setGpsCoords] = useState(null); // Store GPS coordinates for map display
 
   const locationInputRef = useRef(null);
   const autocompleteRef = useRef(null);
   const fileInputRef = useRef(null);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
 
   // Auto-redirect to onboarding if user hasn't completed it
   useEffect(() => {
@@ -141,6 +144,34 @@ const CreateCheckInPage = () => {
     };
   }, [autocompleteLoaded]);
 
+  // Initialize map when GPS coordinates are available
+  useEffect(() => {
+    if (!gpsCoords || !autocompleteLoaded || !mapRef.current) return;
+
+    try {
+      // Initialize Google Map
+      mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+        center: { lat: gpsCoords.lat, lng: gpsCoords.lng },
+        zoom: 15,
+        disableDefaultUI: false,
+        zoomControl: true,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      });
+
+      // Add marker at GPS location
+      new window.google.maps.Marker({
+        position: { lat: gpsCoords.lat, lng: gpsCoords.lng },
+        map: mapInstanceRef.current,
+        title: 'Your Location',
+        animation: window.google.maps.Animation.DROP,
+      });
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
+  }, [gpsCoords, autocompleteLoaded]);
+
   const loadBesties = async () => {
     if (!currentUser) return;
 
@@ -200,7 +231,10 @@ const CreateCheckInPage = () => {
       setLoading(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocationInput(`GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`);
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setLocationInput(`GPS: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+          setGpsCoords({ lat, lng }); // Store coordinates for map
           setLoading(false);
           toast.success('Location captured!');
         },
@@ -438,6 +472,20 @@ const CreateCheckInPage = () => {
             <p className="text-xs text-text-secondary mt-2">
               Type your destination manually or use GPS to auto-fill your current location
             </p>
+
+            {/* Map Display when GPS is used */}
+            {gpsCoords && (
+              <div className="mt-4">
+                <div
+                  ref={mapRef}
+                  className="w-full h-64 rounded-xl border-2 border-gray-300 shadow-lg"
+                  style={{ minHeight: '256px' }}
+                ></div>
+                <p className="text-xs text-text-secondary mt-2 text-center">
+                  📍 Your GPS location
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Who You're Meeting */}
