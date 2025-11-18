@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/share",
+        "function": "generateShareCard"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

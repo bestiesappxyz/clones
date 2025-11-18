@@ -7,7 +7,10 @@ const SocialShareCardsModal = ({ onClose }) => {
   const [selectedCard, setSelectedCard] = useState(0);
   const cardRef = useRef(null);
 
-  const shareUrl = `https://bestiesapp.web.app/?invite=${userData?.uid}`;
+  // Dynamic share URL that shows custom card on social media
+  const shareUrl = `https://bestiesapp.web.app/share?invite=${userData?.uid}`;
+  // Direct app URL for copying
+  const appUrl = `https://bestiesapp.web.app/?invite=${userData?.uid}`;
 
   const cardDesigns = [
     {
@@ -63,7 +66,7 @@ const SocialShareCardsModal = ({ onClose }) => {
   const currentCard = cardDesigns[selectedCard];
 
   const handleCopyCard = async () => {
-    const cardText = `${currentCard.emoji} ${currentCard.title}\n\n${currentCard.subtitle}\n\n${shareUrl}`;
+    const cardText = `${currentCard.emoji} ${currentCard.title}\n\n${currentCard.subtitle}\n\n${appUrl}`;
 
     try {
       await navigator.clipboard.writeText(cardText);
