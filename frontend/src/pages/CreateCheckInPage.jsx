@@ -289,6 +289,17 @@ const CreateCheckInPage = () => {
         throw new Error('Check-in data verification failed. Please try again.');
       }
 
+      // Verify besties were saved correctly
+      if (!savedData.bestieIds || savedData.bestieIds.length !== selectedBesties.length) {
+        throw new Error('Bestie list was not saved correctly. Please try again.');
+      }
+
+      // Verify all bestie IDs match exactly
+      const bestiesMatch = selectedBesties.every(id => savedData.bestieIds.includes(id));
+      if (!bestiesMatch) {
+        throw new Error('Bestie list verification failed. Please try again.');
+      }
+
       errorTracker.trackFunnelStep('checkin', 'complete_checkin');
       toast.success('Check-in created! Stay safe! 💜', { id: loadingToast });
       navigate('/');

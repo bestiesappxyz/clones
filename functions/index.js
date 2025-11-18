@@ -816,4 +816,91 @@ exports.sendCheckInReminders = functions.pubsub
     }
   });
 
+// ========================================
+// ERROR MONITORING AND ALERTS
+// ========================================
+
+// Monitor critical errors and send email alerts to admin
+exports.monitorCriticalErrors = functions.firestore
+  .document('errors/{errorId}')
+  .onCreate(async (snapshot, context) => {
+    const error = snapshot.data();
+
+    // Determine if this is a critical error
+    const isCritical =
+      error.type === 'uncaught_error' ||
+      error.type === 'unhandled_promise' ||
+      error.message?.includes('verification failed') ||
+      error.message?.includes('Check-in was not saved');
+
+    if (!isCritical) {
+      return null; // Not critical, no alert needed
+    }
+
+    console.log('Critical error detected:', error.message);
+
+    // Send email alert to admin
+    const adminEmail = functions.config().admin?.email || 'admin@bestiesapp.com';
+
+    const msg = {
+      to: adminEmail,
+      from: 'alerts@bestiesapp.com',
+      subject: `🚨 Critical Error Alert - ${error.type}`,
+      html: `
+        <h2 style="color: #dc2626;">Critical Error Detected</h2>
+
+        <div style="background: #fee2e2; padding: 15px; border-left: 4px solid #dc2626; margin: 20px 0;">
+          <strong>Error Message:</strong><br/>
+          ${error.message}
+        </div>
+
+        <h3>Details:</h3>
+        <ul>
+          <li><strong>Type:</strong> ${error.type}</li>
+          <li><strong>User ID:</strong> ${error.userId || 'Anonymous'}</li>
+          <li><strong>Session ID:</strong> ${error.sessionId}</li>
+          <li><strong>URL:</strong> ${error.url}</li>
+          <li><strong>Timestamp:</strong> ${new Date(error.timestamp).toISOString()}</li>
+          ${error.filename ? `<li><strong>File:</strong> ${error.filename}:${error.lineno}:${error.colno}</li>` : ''}
+        </ul>
+
+        ${error.stack ? `
+          <h3>Stack Trace:</h3>
+          <pre style="background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto;">
+${error.stack}
+          </pre>
+        ` : ''}
+
+        ${error.details ? `
+          <h3>Additional Details:</h3>
+          <pre style="background: #f3f4f6; padding: 15px; border-radius: 8px; overflow-x: auto;">
+${JSON.stringify(error.details, null, 2)}
+          </pre>
+        ` : ''}
+
+        <hr style="margin: 30px 0;"/>
+
+        <p>
+          <a href="https://bestiesapp.web.app/error-dashboard"
+             style="background: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
+            View Error Dashboard
+          </a>
+        </p>
+
+        <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+          This is an automated alert from Besties Error Monitoring System.
+        </p>
+      `,
+    };
+
+    try {
+      await sgMail.send(msg);
+      console.log('Critical error alert sent to admin');
+    } catch (emailError) {
+      console.error('Failed to send email alert:', emailError);
+    }
+
+    return null;
+  });
+
 module.exports = exports;

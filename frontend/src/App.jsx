@@ -23,6 +23,7 @@ import MonitoringDashboard from './pages/MonitoringDashboard';
 import SocialFeedPage from './pages/SocialFeedPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsOfServicePage from './pages/TermsOfServicePage';
+import ErrorDashboard from './pages/ErrorDashboard';
 
 // Context
 import { AuthProvider } from './contexts/AuthContext';
@@ -154,9 +155,13 @@ function App() {
               path="/monitoring" 
               element={user ? <MonitoringDashboard /> : <Navigate to="/login" />} 
             />
-            <Route 
-              path="/social-feed" 
-              element={user ? <SocialFeedPage /> : <Navigate to="/login" />} 
+            <Route
+              path="/social-feed"
+              element={user ? <SocialFeedPage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/error-dashboard"
+              element={user ? <ErrorDashboard /> : <Navigate to="/login" />}
             />
 
             {/* Catch all */}
