@@ -5,7 +5,6 @@ import { db, storage } from '../services/firebase';
 import { doc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import toast from 'react-hot-toast';
-import BestieCircle from '../components/BestieCircle';
 
 const OnboardingPage = () => {
   const { currentUser, userData } = useAuth();
@@ -346,11 +345,6 @@ const OnboardingPage = () => {
                 </p>
               </div>
             )}
-          </div>
-
-          {/* Show actual bestie circle */}
-          <div className="mb-8">
-            <BestieCircle />
           </div>
 
           <div className="card p-6 mb-6">
