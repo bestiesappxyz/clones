@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { db, storage } from '../services/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import apiService from '../services/api';
 import toast from 'react-hot-toast';
 import CelebrationScreen from './CelebrationScreen';
@@ -8,6 +11,10 @@ const CheckInCard = ({ checkIn }) => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [notes, setNotes] = useState(checkIn.notes || '');
+  const [photoURL, setPhotoURL] = useState(checkIn.photoURL || null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -42,10 +49,10 @@ const CheckInCard = ({ checkIn }) => {
 
   const handleComplete = async () => {
     setLoading(true);
-    const result = await apiService.completeCheckIn(checkIn.id);
+    const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
     setLoading(false);
 
-    if (result.success) {
+    if (result.data?.success) {
       setShowCelebration(true);
       setTimeout(() => setShowCelebration(false), 3000);
     } else {
@@ -55,13 +62,59 @@ const CheckInCard = ({ checkIn }) => {
 
   const handleExtend = async (minutes) => {
     setLoading(true);
-    const result = await apiService.extendCheckIn(checkIn.id, minutes);
+    const result = await apiService.extendCheckIn({ checkInId: checkIn.id, additionalMinutes: minutes });
     setLoading(false);
 
-    if (result.success) {
+    if (result.data?.success) {
       toast.success(`Extended by ${minutes} minutes!`);
     } else {
       toast.error('Failed to extend check-in');
+    }
+  };
+
+  const handleSaveNotes = async () => {
+    try {
+      await updateDoc(doc(db, 'checkins', checkIn.id), {
+        notes: notes,
+      });
+      setEditingNotes(false);
+      toast.success('Notes updated!');
+    } catch (error) {
+      console.error('Error saving notes:', error);
+      toast.error('Failed to save notes');
+    }
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Photo must be less than 5MB');
+      return;
+    }
+
+    setUploadingPhoto(true);
+
+    try {
+      // Upload to Firebase Storage
+      const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Update Firestore
+      await updateDoc(doc(db, 'checkins', checkIn.id), {
+        photoURL: downloadURL,
+      });
+
+      setPhotoURL(downloadURL);
+      toast.success('Photo uploaded!');
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      toast.error('Failed to upload photo');
+    } finally {
+      setUploadingPhoto(false);
     }
   };
 
@@ -84,10 +137,109 @@ const CheckInCard = ({ checkIn }) => {
               <span className="badge badge-warning text-xs">ALERTED</span>
             )}
           </div>
-          {checkIn.notes && (
-            <p className="text-sm text-text-secondary">{checkIn.notes}</p>
+        </div>
+      </div>
+
+      {/* Photo Section */}
+      {(photoURL || !isAlerted) && (
+        <div className="mb-4">
+          {photoURL ? (
+            <div className="relative">
+              <img
+                src={photoURL}
+                alt="Check-in"
+                className="w-full h-48 object-cover rounded-xl"
+              />
+              {!isAlerted && (
+                <label className="absolute bottom-2 right-2 bg-white/90 hover:bg-white px-3 py-2 rounded-lg cursor-pointer text-sm font-semibold shadow-lg transition-all">
+                  📷 Change Photo
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    disabled={uploadingPhoto}
+                  />
+                </label>
+              )}
+            </div>
+          ) : !isAlerted && (
+            <label className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
+              <div className="text-4xl mb-2">📷</div>
+              <div className="text-sm font-semibold text-gray-600">
+                {uploadingPhoto ? 'Uploading...' : 'Add Photo'}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                Click to upload (max 5MB)
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+                disabled={uploadingPhoto}
+              />
+            </label>
           )}
         </div>
+      )}
+
+      {/* Notes Section */}
+      <div className="mb-4">
+        {editingNotes ? (
+          <div>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full p-3 border-2 border-gray-300 rounded-xl focus:border-primary focus:outline-none resize-none"
+              rows="3"
+              placeholder="Add notes about your check-in..."
+            />
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleSaveNotes}
+                className="btn btn-primary text-sm flex-1"
+              >
+                💾 Save Notes
+              </button>
+              <button
+                onClick={() => {
+                  setEditingNotes(false);
+                  setNotes(checkIn.notes || '');
+                }}
+                className="btn btn-secondary text-sm flex-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            {notes ? (
+              <div className="bg-gray-50 p-3 rounded-xl">
+                <div className="flex items-start justify-between mb-1">
+                  <div className="text-xs font-semibold text-gray-500">NOTES:</div>
+                  {!isAlerted && (
+                    <button
+                      onClick={() => setEditingNotes(true)}
+                      className="text-xs text-primary font-semibold hover:underline"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
+                <p className="text-sm text-text-secondary">{notes}</p>
+              </div>
+            ) : !isAlerted && (
+              <button
+                onClick={() => setEditingNotes(true)}
+                className="w-full border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm font-semibold text-gray-600 hover:border-primary hover:bg-primary/5 transition-all"
+              >
+                📝 Add Notes
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Timer */}
@@ -99,7 +251,7 @@ const CheckInCard = ({ checkIn }) => {
           </span>
         </div>
         <div className="progress-bar">
-          <div 
+          <div
             className="progress-fill"
             style={{ width: `${getProgressPercentage()}%` }}
           />

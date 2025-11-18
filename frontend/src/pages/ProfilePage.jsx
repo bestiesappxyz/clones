@@ -5,7 +5,7 @@ import { db } from '../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import Header from '../components/Header';
 import BestieCircle from '../components/BestieCircle';
-import ShareProfileModal from '../components/ShareProfileModal';
+import SocialShareCardsModal from '../components/SocialShareCardsModal';
 
 const ProfilePage = () => {
   const { currentUser, userData } = useAuth();
@@ -195,7 +195,7 @@ const ProfilePage = () => {
 
       {/* Share Modal */}
       {showShareModal && (
-        <ShareProfileModal onClose={() => setShowShareModal(false)} />
+        <SocialShareCardsModal onClose={() => setShowShareModal(false)} />
       )}
     </div>
   );

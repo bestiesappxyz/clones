@@ -6,12 +6,13 @@ import { authService, db } from '../services/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
+import apiService from '../services/api';
 
 const SettingsPage = () => {
   const { currentUser, userData } = useAuth();
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSignOut = async () => {
     const result = await authService.signOut();
@@ -54,19 +55,39 @@ const SettingsPage = () => {
   };
 
   const handleSMSSubscription = async () => {
-    // TODO: Implement Stripe checkout session
-    toast('SMS subscription coming soon! 🚀', {
-      icon: '⏳',
-      duration: 3000
-    });
+    setLoading(true);
+    try {
+      const result = await apiService.createCheckoutSession({ amount: 1, type: 'subscription' });
+
+      if (result.data && result.data.url) {
+        window.location.href = result.data.url;
+      } else {
+        toast.error('Failed to start subscription');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast.error('Failed to start subscription');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDonation = async (amount) => {
-    // TODO: Implement Stripe checkout session
-    toast(`Donations coming soon! Thank you for your interest 💜`, {
-      icon: '⏳',
-      duration: 3000
-    });
+    setLoading(true);
+    try {
+      const result = await apiService.createCheckoutSession({ amount, type: 'donation' });
+
+      if (result.data && result.data.url) {
+        window.location.href = result.data.url;
+      } else {
+        toast.error('Failed to start donation');
+      }
+    } catch (error) {
+      console.error('Donation error:', error);
+      toast.error('Failed to start donation');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

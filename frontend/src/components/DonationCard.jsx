@@ -7,13 +7,19 @@ const DonationCard = () => {
 
   const handleDonation = async (amount) => {
     setLoading(true);
-    const result = await apiService.createCheckoutSession(amount, 'donation');
-    setLoading(false);
+    try {
+      const result = await apiService.createCheckoutSession({ amount, type: 'donation' });
 
-    if (result.success) {
-      window.location.href = result.data.url;
-    } else {
+      if (result.data && result.data.url) {
+        window.location.href = result.data.url;
+      } else {
+        toast.error('Failed to start donation');
+      }
+    } catch (error) {
+      console.error('Donation error:', error);
       toast.error('Failed to start donation');
+    } finally {
+      setLoading(false);
     }
   };
 
