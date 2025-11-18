@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { db } from '../services/firebase';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
+// eslint-disable-next-line no-unused-vars
+import { collection, getDocs, getDoc, doc, query, where, orderBy, Timestamp } from 'firebase/firestore';
 import Header from '../components/Header';
 
 const DevAnalyticsPage = () => {
@@ -38,23 +39,54 @@ const DevAnalyticsPage = () => {
       templatesCreated: 0,
       badgesEarned: 0,
     },
+    costs: {
+      estimatedSMS: 0,
+      estimatedWhatsApp: 0,
+      estimatedEmail: 0,
+      totalAlertsSent: 0,
+    },
+    growth: {
+      userGrowthRate: 0,
+      checkInGrowthRate: 0,
+      retentionRate: 0,
+    },
+    funnel: {
+      signups: 0,
+      completedOnboarding: 0,
+      addedBestie: 0,
+      firstCheckIn: 0,
+      onboardingRate: 0,
+      bestieRate: 0,
+      checkInRate: 0,
+    },
+    behavior: {
+      peakHour: 0,
+      peakDay: '',
+      mostCommonDuration: 0,
+    },
     topLocations: [],
     recentAlerts: [],
   });
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d'); // 7d, 30d, all
 
-  useEffect(() => {
-    loadAnalytics();
-  }, [timeRange]);
-
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     setLoading(true);
-    
+
     try {
       const now = new Date();
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      // Determine time filter based on selected range
+      let startDate = now;
+      if (timeRange === '7d') {
+        startDate = sevenDaysAgo;
+      } else if (timeRange === '30d') {
+        startDate = thirtyDaysAgo;
+      } else {
+        startDate = new Date(0); // All time = epoch
+      }
 
       // Users Analytics
       const usersSnap = await getDocs(collection(db, 'users'));
@@ -77,8 +109,16 @@ const DevAnalyticsPage = () => {
         if (lastActive && lastActive > thirtyDaysAgo) active30days++;
       });
 
-      // Check-ins Analytics
-      const checkInsSnap = await getDocs(collection(db, 'checkins'));
+      // Check-ins Analytics (filtered by time range)
+      let checkInsQuery = collection(db, 'checkins');
+      if (timeRange !== 'all') {
+        checkInsQuery = query(
+          checkInsQuery,
+          where('createdAt', '>=', Timestamp.fromDate(startDate))
+        );
+      }
+      const checkInsSnap = await getDocs(checkInsQuery);
+
       let totalCheckIns = 0;
       let activeCheckIns = 0;
       let completedCheckIns = 0;
@@ -149,26 +189,140 @@ const DevAnalyticsPage = () => {
         totalBadgesEarned += data.badges?.length || 0;
       });
 
-      // Recent Alerts
+      // Recent Alerts (fetch user names separately)
       const alertsQuery = query(
         collection(db, 'checkins'),
         where('status', '==', 'alerted'),
         orderBy('alertedAt', 'desc')
       );
-      
+
       const alertsSnap = await getDocs(alertsQuery);
       const recentAlerts = [];
+
+      // Fetch user names for each alert
+      const alertPromises = [];
       alertsSnap.forEach(doc => {
         if (recentAlerts.length < 10) {
           const data = doc.data();
-          recentAlerts.push({
-            id: doc.id,
-            location: data.location,
-            alertedAt: data.alertedAt,
-            userName: data.userName || 'Unknown',
-          });
+          alertPromises.push(
+            (async () => {
+              let userName = 'Unknown';
+              try {
+                const userDoc = await getDoc(doc(db, 'users', data.userId));
+                if (userDoc.exists()) {
+                  userName = userDoc.data().displayName || 'Unknown';
+                }
+              } catch (err) {
+                console.error('Error fetching user name:', err);
+              }
+
+              recentAlerts.push({
+                id: doc.id,
+                location: data.location,
+                alertedAt: data.alertedAt,
+                userName,
+              });
+            })()
+          );
         }
       });
+
+      await Promise.all(alertPromises);
+
+      // Cost Tracking (estimate based on alerts sent)
+      // Each alert can go to multiple besties via SMS, WhatsApp, and Email
+      let totalSMSSent = 0;
+      let totalWhatsAppSent = 0;
+
+      checkInsSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.status === 'alerted' && data.bestieIds) {
+          const bestieCount = data.bestieIds.length;
+          // Estimate: assume SMS to each bestie (conservative estimate)
+          totalSMSSent += bestieCount;
+          totalWhatsAppSent += bestieCount; // Many might have WhatsApp enabled
+        }
+      });
+
+      const estimatedSMSCost = (totalSMSSent * 0.0075).toFixed(2); // $0.0075 per SMS
+      const estimatedWhatsAppCost = (totalWhatsAppSent * 0.005).toFixed(2); // $0.005 per WhatsApp
+      const estimatedEmailCost = 0; // SendGrid free tier
+
+      // Growth Metrics
+      const prevWeekStart = new Date(sevenDaysAgo.getTime() - 7 * 24 * 60 * 60 * 1000);
+      let prevWeekUsers = 0;
+      let prevWeekCheckIns = 0;
+
+      usersSnap.forEach(doc => {
+        const data = doc.data();
+        const joinedAt = data.stats?.joinedAt?.toDate();
+        if (joinedAt && joinedAt > prevWeekStart && joinedAt < sevenDaysAgo) {
+          prevWeekUsers++;
+        }
+      });
+
+      checkInsSnap.forEach(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt?.toDate();
+        if (createdAt && createdAt > prevWeekStart && createdAt < sevenDaysAgo) {
+          prevWeekCheckIns++;
+        }
+      });
+
+      const userGrowthRate = prevWeekUsers > 0
+        ? (((new7days - prevWeekUsers) / prevWeekUsers) * 100).toFixed(1)
+        : 0;
+
+      const checkInGrowthRate = prevWeekCheckIns > 0
+        ? (((totalCheckIns - prevWeekCheckIns) / prevWeekCheckIns) * 100).toFixed(1)
+        : 0;
+
+      // Retention: users who created multiple check-ins
+      const userCheckInCounts = {};
+      checkInsSnap.forEach(doc => {
+        const userId = doc.data().userId;
+        userCheckInCounts[userId] = (userCheckInCounts[userId] || 0) + 1;
+      });
+      const returningUsers = Object.values(userCheckInCounts).filter(count => count > 1).length;
+      const retentionRate = totalUsers > 0 ? ((returningUsers / totalUsers) * 100).toFixed(1) : 0;
+
+      // Funnel Analytics
+      let completedOnboardingCount = 0;
+      let addedBestieCount = 0;
+      let firstCheckInCount = 0;
+
+      usersSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.onboardingCompleted) completedOnboardingCount++;
+        if (data.stats?.totalBesties > 0) addedBestieCount++;
+        if (data.stats?.totalCheckIns > 0) firstCheckInCount++;
+      });
+
+      const onboardingRate = totalUsers > 0 ? ((completedOnboardingCount / totalUsers) * 100).toFixed(1) : 0;
+      const bestieRate = completedOnboardingCount > 0 ? ((addedBestieCount / completedOnboardingCount) * 100).toFixed(1) : 0;
+      const checkInRate = addedBestieCount > 0 ? ((firstCheckInCount / addedBestieCount) * 100).toFixed(1) : 0;
+
+      // User Behavior
+      const hourCounts = new Array(24).fill(0);
+      const dayCounts = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+      const durationCounts = {};
+
+      checkInsSnap.forEach(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt?.toDate();
+        if (createdAt) {
+          hourCounts[createdAt.getHours()]++;
+          const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          dayCounts[dayNames[createdAt.getDay()]]++;
+        }
+        if (data.duration) {
+          durationCounts[data.duration] = (durationCounts[data.duration] || 0) + 1;
+        }
+      });
+
+      const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+      const peakDay = Object.entries(dayCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A';
+      const mostCommonDuration = Object.entries(durationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 30;
 
       setAnalytics({
         users: {
@@ -204,6 +358,31 @@ const DevAnalyticsPage = () => {
           templatesCreated: templatesSnap.size,
           badgesEarned: totalBadgesEarned,
         },
+        costs: {
+          estimatedSMS: estimatedSMSCost,
+          estimatedWhatsApp: estimatedWhatsAppCost,
+          estimatedEmail: estimatedEmailCost,
+          totalAlertsSent: totalSMSSent,
+        },
+        growth: {
+          userGrowthRate,
+          checkInGrowthRate,
+          retentionRate,
+        },
+        funnel: {
+          signups: totalUsers,
+          completedOnboarding: completedOnboardingCount,
+          addedBestie: addedBestieCount,
+          firstCheckIn: firstCheckInCount,
+          onboardingRate,
+          bestieRate,
+          checkInRate,
+        },
+        behavior: {
+          peakHour,
+          peakDay,
+          mostCommonDuration,
+        },
         topLocations,
         recentAlerts,
       });
@@ -211,9 +390,24 @@ const DevAnalyticsPage = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error loading analytics:', error);
+
+      // Show user-friendly error message based on error type
+      if (error.code === 'failed-precondition') {
+        console.error('Firestore index missing. Create index at:', error.message);
+        alert('Analytics require database indices. Check console for index creation link.');
+      } else if (error.code === 'permission-denied') {
+        alert('Permission denied. Make sure you have admin access.');
+      } else {
+        alert(`Failed to load analytics: ${error.message}`);
+      }
+
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
 
   if (loading) {
     return (
@@ -387,6 +581,108 @@ const DevAnalyticsPage = () => {
             <div className="card p-4 text-center">
               <div className="text-3xl font-display text-warning">{analytics.engagement.badgesEarned}</div>
               <div className="text-sm text-text-secondary">Badges Earned</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Cost Tracking */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-display text-text-primary mb-4">💸 Cost Tracking (Estimates)</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="card p-4 text-center bg-danger/10">
+              <div className="text-3xl font-display text-danger">${analytics.costs.estimatedSMS}</div>
+              <div className="text-sm text-text-secondary">SMS Costs</div>
+            </div>
+            <div className="card p-4 text-center bg-success/10">
+              <div className="text-3xl font-display text-success">${analytics.costs.estimatedWhatsApp}</div>
+              <div className="text-sm text-text-secondary">WhatsApp Costs</div>
+            </div>
+            <div className="card p-4 text-center bg-primary/10">
+              <div className="text-3xl font-display text-primary">${analytics.costs.estimatedEmail}</div>
+              <div className="text-sm text-text-secondary">Email Costs</div>
+            </div>
+            <div className="card p-4 text-center">
+              <div className="text-3xl font-display text-accent">{analytics.costs.totalAlertsSent}</div>
+              <div className="text-sm text-text-secondary">Total Alerts</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Growth Metrics */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-display text-text-primary mb-4">📊 Growth Metrics</h2>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="card p-4 text-center">
+              <div className={`text-3xl font-display ${parseFloat(analytics.growth.userGrowthRate) >= 0 ? 'text-success' : 'text-danger'}`}>
+                {analytics.growth.userGrowthRate > 0 ? '+' : ''}{analytics.growth.userGrowthRate}%
+              </div>
+              <div className="text-sm text-text-secondary">User Growth (WoW)</div>
+            </div>
+            <div className="card p-4 text-center">
+              <div className={`text-3xl font-display ${parseFloat(analytics.growth.checkInGrowthRate) >= 0 ? 'text-success' : 'text-danger'}`}>
+                {analytics.growth.checkInGrowthRate > 0 ? '+' : ''}{analytics.growth.checkInGrowthRate}%
+              </div>
+              <div className="text-sm text-text-secondary">Check-in Growth (WoW)</div>
+            </div>
+            <div className="card p-4 text-center">
+              <div className="text-3xl font-display text-primary">{analytics.growth.retentionRate}%</div>
+              <div className="text-sm text-text-secondary">Retention Rate</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Funnel Analytics */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-display text-text-primary mb-4">🎯 User Funnel</h2>
+          <div className="card p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-text-primary">1. Sign Ups</div>
+                  <div className="text-sm text-text-secondary">{analytics.funnel.signups} users</div>
+                </div>
+                <div className="text-2xl font-display text-primary">100%</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-text-primary">2. Completed Onboarding</div>
+                  <div className="text-sm text-text-secondary">{analytics.funnel.completedOnboarding} users</div>
+                </div>
+                <div className="text-2xl font-display text-success">{analytics.funnel.onboardingRate}%</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-text-primary">3. Added First Bestie</div>
+                  <div className="text-sm text-text-secondary">{analytics.funnel.addedBestie} users</div>
+                </div>
+                <div className="text-2xl font-display text-warning">{analytics.funnel.bestieRate}%</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-text-primary">4. Created First Check-in</div>
+                  <div className="text-sm text-text-secondary">{analytics.funnel.firstCheckIn} users</div>
+                </div>
+                <div className="text-2xl font-display text-accent">{analytics.funnel.checkInRate}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* User Behavior */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-display text-text-primary mb-4">🕐 User Behavior</h2>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="card p-4 text-center">
+              <div className="text-3xl font-display text-primary">{analytics.behavior.peakHour}:00</div>
+              <div className="text-sm text-text-secondary">Peak Hour (24h)</div>
+            </div>
+            <div className="card p-4 text-center">
+              <div className="text-3xl font-display text-secondary">{analytics.behavior.peakDay}</div>
+              <div className="text-sm text-text-secondary">Peak Day</div>
+            </div>
+            <div className="card p-4 text-center">
+              <div className="text-3xl font-display text-accent">{analytics.behavior.mostCommonDuration}m</div>
+              <div className="text-sm text-text-secondary">Common Duration</div>
             </div>
           </div>
         </div>
