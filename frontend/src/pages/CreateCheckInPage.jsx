@@ -10,7 +10,7 @@ import { isEnabled } from '../config/features';
 import errorTracker from '../services/errorTracking';
 
 const CreateCheckInPage = () => {
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,10 +31,12 @@ const CreateCheckInPage = () => {
 
   // Auto-redirect to onboarding if user hasn't completed it
   useEffect(() => {
-    if (userData && !userData.onboardingCompleted) {
+    if (authLoading) return;
+
+    if (userData && userData.onboardingCompleted === false) {
       navigate('/onboarding');
     }
-  }, [userData, navigate]);
+  }, [userData, authLoading, navigate]);
 
 
   useEffect(() => {
@@ -423,13 +425,17 @@ const CreateCheckInPage = () => {
                 <button
                   type="button"
                   onClick={handleGetLocation}
-                  className="btn btn-secondary px-4"
+                  className="btn btn-secondary px-4 whitespace-nowrap"
                   disabled={loading}
+                  title="Use my current GPS location"
                 >
-                  📍 GPS
+                  📍 Use GPS
                 </button>
               )}
             </div>
+            <p className="text-xs text-text-secondary mt-2">
+              Type your destination manually or use GPS to auto-fill your current location
+            </p>
           </div>
 
           {/* Who You're Meeting */}
