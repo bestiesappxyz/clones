@@ -89,7 +89,9 @@ const DevAnalyticsPage = () => {
       }
 
       // Users Analytics
+      console.log('[Analytics] Loading users...');
       const usersSnap = await getDocs(collection(db, 'users'));
+      console.log('[Analytics] ✓ Users loaded:', usersSnap.size);
       let totalUsers = 0;
       let new7days = 0;
       let new30days = 0;
@@ -117,7 +119,9 @@ const DevAnalyticsPage = () => {
           where('createdAt', '>=', Timestamp.fromDate(startDate))
         );
       }
+      console.log('[Analytics] Loading checkins...');
       const checkInsSnap = await getDocs(checkInsQuery);
+      console.log('[Analytics] ✓ Checkins loaded:', checkInsSnap.size);
 
       let totalCheckIns = 0;
       let activeCheckIns = 0;
@@ -151,7 +155,9 @@ const DevAnalyticsPage = () => {
         : 0;
 
       // Besties Analytics
+      console.log('[Analytics] Loading besties...');
       const bestiesSnap = await getDocs(collection(db, 'besties'));
+      console.log('[Analytics] ✓ Besties loaded:', bestiesSnap.size);
       let totalBesties = 0;
       let pendingBesties = 0;
       let acceptedBesties = 0;
@@ -180,8 +186,12 @@ const DevAnalyticsPage = () => {
       const mrr = (smsSubscribers * 1) + totalDonations;
 
       // Engagement Analytics
+      console.log('[Analytics] Loading templates...');
       const templatesSnap = await getDocs(collection(db, 'templates'));
+      console.log('[Analytics] ✓ Templates loaded:', templatesSnap.size);
+      console.log('[Analytics] Loading badges...');
       const badgesSnap = await getDocs(collection(db, 'badges'));
+      console.log('[Analytics] ✓ Badges loaded:', badgesSnap.size);
 
       let totalBadgesEarned = 0;
       badgesSnap.forEach(doc => {
@@ -190,6 +200,7 @@ const DevAnalyticsPage = () => {
       });
 
       // Recent Alerts (fetch user names separately)
+      console.log('[Analytics] Loading recent alerts...');
       const alertsQuery = query(
         collection(db, 'checkins'),
         where('status', '==', 'alerted'),
@@ -197,6 +208,7 @@ const DevAnalyticsPage = () => {
       );
 
       const alertsSnap = await getDocs(alertsQuery);
+      console.log('[Analytics] ✓ Recent alerts loaded:', alertsSnap.size);
       const recentAlerts = [];
 
       // Fetch user names for each alert
