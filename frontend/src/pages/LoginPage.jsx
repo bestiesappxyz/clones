@@ -15,7 +15,6 @@ const LoginPage = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [showPhoneAuth, setShowPhoneAuth] = useState(false);
-  const [recaptchaStatus, setRecaptchaStatus] = useState('idle'); // idle, checking, verified
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,32 +68,28 @@ const LoginPage = () => {
   const handleSendCode = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setRecaptchaStatus('checking'); // Show checking animation
     errorTracker.trackFunnelStep('signup', 'click_phone_send_code');
 
     // Format phone number with selected country code
     const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `${countryCode}${phoneNumber}`;
 
-    // Set up reCAPTCHA (invisible - auto-executes)
+    // Set up reCAPTCHA (shows real checkbox with auto-verify spinner)
     const recaptchaResult = authService.setupRecaptcha('recaptcha-container');
     if (!recaptchaResult.success) {
       toast.error('Failed to set up verification. Please refresh the page.');
       setLoading(false);
-      setRecaptchaStatus('idle');
       return;
     }
 
-    // Send verification code (reCAPTCHA auto-executes in background)
+    // Send verification code (reCAPTCHA shows spinner in checkbox, then checkmark)
     const result = await authService.sendPhoneVerification(formattedPhone, recaptchaResult.verifier);
     setLoading(false);
 
     if (result.success) {
-      setRecaptchaStatus('verified'); // Show verified checkmark
       setConfirmationResult(result.confirmationResult);
       toast.success('Verification code sent!');
       errorTracker.trackFunnelStep('signup', 'phone_code_sent');
     } else {
-      setRecaptchaStatus('idle');
       errorTracker.logCustomError('Phone verification failed', { error: result.error });
       toast.error(result.error || 'Failed to send code');
     }
@@ -197,47 +192,14 @@ const LoginPage = () => {
                     {loading ? 'Sending...' : 'Send Verification Code'}
                   </button>
 
-                  {/* Fake Google reCAPTCHA (looks exactly like the real thing) */}
-                  <div className="mt-4 flex items-start gap-3 p-3 bg-gray-50 border border-gray-300 rounded">
-                    {/* Checkbox */}
-                    <div className={`w-7 h-7 border-2 rounded flex items-center justify-center flex-shrink-0 transition-all ${
-                      recaptchaStatus === 'idle'
-                        ? 'border-gray-400 bg-white'
-                        : recaptchaStatus === 'checking'
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-green-500 bg-green-500'
-                    }`}>
-                      {recaptchaStatus === 'idle' && null}
-                      {recaptchaStatus === 'checking' && (
-                        <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                      )}
-                      {recaptchaStatus === 'verified' && (
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-gray-700">
-                        {recaptchaStatus === 'idle' && "I'm not a robot"}
-                        {recaptchaStatus === 'checking' && "Verifying..."}
-                        {recaptchaStatus === 'verified' && "Verified"}
-                      </div>
-                      {/* reCAPTCHA branding */}
-                      <div className="flex items-center gap-1 mt-1">
-                        <svg className="w-3 h-3 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-                        </svg>
-                        <span className="text-xs text-gray-500">reCAPTCHA</span>
-                        <span className="text-xs text-gray-400 ml-1">Privacy - Terms</span>
-                      </div>
-                    </div>
+                  {/* Real reCAPTCHA - shows checkbox with auto-verify spinner */}
+                  <div className="mt-4 flex justify-center">
+                    <div id="recaptcha-container"></div>
                   </div>
 
-                  {/* Real reCAPTCHA container (hidden off-screen but functional for challenges) */}
-                  <div id="recaptcha-container" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}></div>
+                  <p className="text-xs text-text-secondary text-center mt-2">
+                    The verification will start automatically when you click send
+                  </p>
                 </form>
               ) : (
                 <form onSubmit={handleVerifyCode} className="space-y-3">
