@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db, storage } from '../services/firebase';
-import { doc, updateDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import toast from 'react-hot-toast';
 
-const OnboardingPage = () => {
+const OnboardingFlow = ({ onComplete }) => {
   const { currentUser, userData } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState('welcome'); // welcome, slides, name, photo, bestie-circle
+  const [step, setStep] = useState('welcome'); // welcome, slides, name, photo, bestie-circle, check-in-intro
   const [slideIndex, setSlideIndex] = useState(0);
   const [displayName, setDisplayName] = useState(userData?.displayName || '');
   const [uploading, setUploading] = useState(false);
-  const [hasBesties, setHasBesties] = useState(false);
-  const [checkingBesties, setCheckingBesties] = useState(false);
 
   const slides = [
     {
@@ -45,29 +43,6 @@ const OnboardingPage = () => {
   ];
 
   const currentSlide = slides[slideIndex];
-
-  // Check if user already has besties
-  useEffect(() => {
-    if (step === 'bestie-circle' && currentUser) {
-      checkForBesties();
-    }
-  }, [step, currentUser]);
-
-  const checkForBesties = async () => {
-    setCheckingBesties(true);
-    try {
-      const [requesterQuery, recipientQuery] = await Promise.all([
-        getDocs(query(collection(db, 'besties'), where('requesterId', '==', currentUser.uid), where('status', '==', 'accepted'))),
-        getDocs(query(collection(db, 'besties'), where('recipientId', '==', currentUser.uid), where('status', '==', 'accepted'))),
-      ]);
-
-      setHasBesties(!requesterQuery.empty || !recipientQuery.empty);
-    } catch (error) {
-      console.error('Error checking besties:', error);
-    } finally {
-      setCheckingBesties(false);
-    }
-  };
 
   const handleSaveName = async () => {
     if (!displayName.trim()) {
@@ -125,12 +100,7 @@ const OnboardingPage = () => {
       await updateDoc(doc(db, 'users', currentUser.uid), {
         onboardingCompleted: true,
       });
-
-      if (hasBesties) {
-        navigate('/create');
-      } else {
-        navigate('/profile');
-      }
+      onComplete();
     } catch (error) {
       console.error('Error completing onboarding:', error);
       toast.error('Failed to complete onboarding');
@@ -140,7 +110,7 @@ const OnboardingPage = () => {
   // Welcome Screen
   if (step === 'welcome') {
     return (
-      <div className="min-h-screen bg-gradient-primary flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-gradient-primary flex items-center justify-center z-50 p-4">
         <div className="max-w-md w-full text-center">
           <div className="text-8xl mb-6 animate-bounce">💜</div>
           <h1 className="text-4xl font-display text-white mb-4">Welcome to Besties!</h1>
@@ -161,7 +131,7 @@ const OnboardingPage = () => {
   // Slides
   if (step === 'slides') {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+      <div className="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 p-4">
         <div className="max-w-md w-full text-center">
           <div className="text-7xl mb-6">{currentSlide.emoji}</div>
           <h2 className="text-3xl font-display text-text-primary mb-4">
@@ -205,7 +175,7 @@ const OnboardingPage = () => {
                 onClick={() => setStep('name')}
                 className="w-full btn btn-primary text-lg py-4"
               >
-                Okay, let's get logged in! →
+                Let's Go! ✨
               </button>
             )}
           </div>
@@ -217,7 +187,7 @@ const OnboardingPage = () => {
   // Name Edit
   if (step === 'name') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 p-4">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">👤</div>
@@ -251,7 +221,7 @@ const OnboardingPage = () => {
   // Photo Upload
   if (step === 'photo') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 p-4">
         <div className="max-w-md w-full">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">📷</div>
@@ -300,16 +270,8 @@ const OnboardingPage = () => {
 
   // Bestie Circle Intro
   if (step === 'bestie-circle') {
-    if (checkingBesties) {
-      return (
-        <div className="min-h-screen bg-white flex items-center justify-center">
-          <div className="spinner"></div>
-        </div>
-      );
-    }
-
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4 overflow-y-auto">
+      <div className="fixed inset-0 bg-white flex items-center justify-center z-50 p-4 overflow-y-auto">
         <div className="max-w-md w-full py-8">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">⭐</div>
@@ -319,22 +281,11 @@ const OnboardingPage = () => {
             <p className="text-text-secondary mb-6">
               These are the 5 besties who get notified if you miss a check-in.
             </p>
-
-            {!hasBesties && (
-              <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-6">
-                <p className="text-sm font-semibold text-yellow-800">
-                  ⚠️ You need at least one bestie to create a check-in
-                </p>
-              </div>
-            )}
-
-            {hasBesties && (
-              <div className="bg-green-50 border-2 border-green-300 rounded-xl p-4 mb-6">
-                <p className="text-sm font-semibold text-green-800">
-                  ✅ Great! You already have a bestie in your circle
-                </p>
-              </div>
-            )}
+            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-6">
+              <p className="text-sm font-semibold text-yellow-800">
+                ⚠️ You need at least one bestie to create a check-in
+              </p>
+            </div>
           </div>
 
           <div className="card p-6 mb-6">
@@ -355,27 +306,19 @@ const OnboardingPage = () => {
             </ul>
           </div>
 
-          {hasBesties ? (
-            <button
-              onClick={handleFinish}
-              className="w-full btn btn-primary text-lg py-4"
-            >
-              Start Creating Check-Ins! →
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleFinish}
-                className="w-full btn btn-primary text-lg py-4 mb-3"
-              >
-                ➕ Add Your First Bestie
-              </button>
+          <button
+            onClick={() => {
+              handleFinish();
+              navigate('/profile');
+            }}
+            className="w-full btn btn-primary text-lg py-4 mb-3"
+          >
+            ➕ Add Your First Bestie
+          </button>
 
-              <p className="text-xs text-center text-text-secondary">
-                You'll be taken to your profile. Click on a + button in your bestie circle to continue
-              </p>
-            </>
-          )}
+          <p className="text-xs text-center text-text-secondary">
+            Click on a + button in your bestie circle to continue
+          </p>
         </div>
       </div>
     );
@@ -384,4 +327,4 @@ const OnboardingPage = () => {
   return null;
 };
 
-export default OnboardingPage;
+export default OnboardingFlow;

@@ -256,6 +256,33 @@ const CheckInCard = ({ checkIn }) => {
             style={{ width: `${getProgressPercentage()}%` }}
           />
         </div>
+
+        {/* Extend Buttons - Right under timer */}
+        {!isAlerted && (
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            <button
+              onClick={() => handleExtend(15)}
+              disabled={loading}
+              className="btn btn-secondary text-sm py-2"
+            >
+              +15m
+            </button>
+            <button
+              onClick={() => handleExtend(30)}
+              disabled={loading}
+              className="btn btn-secondary text-sm py-2"
+            >
+              +30m
+            </button>
+            <button
+              onClick={() => handleExtend(60)}
+              disabled={loading}
+              className="btn btn-secondary text-sm py-2"
+            >
+              +1h
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Besties */}
@@ -265,43 +292,15 @@ const CheckInCard = ({ checkIn }) => {
         </div>
       </div>
 
-      {/* Actions */}
+      {/* I'm Safe Button */}
       {!isAlerted && (
-        <div className="space-y-3">
-          {/* I'm Safe Button */}
-          <button
-            onClick={handleComplete}
-            disabled={loading}
-            className="w-full btn btn-success text-lg"
-          >
-            ✅ I'm Safe!
-          </button>
-
-          {/* Extend Buttons */}
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleExtend(15)}
-              disabled={loading}
-              className="btn btn-secondary text-sm"
-            >
-              +15m
-            </button>
-            <button
-              onClick={() => handleExtend(30)}
-              disabled={loading}
-              className="btn btn-secondary text-sm"
-            >
-              +30m
-            </button>
-            <button
-              onClick={() => handleExtend(60)}
-              disabled={loading}
-              className="btn btn-secondary text-sm"
-            >
-              +1h
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={handleComplete}
+          disabled={loading}
+          className="w-full btn btn-success text-lg mb-4"
+        >
+          ✅ I'm Safe!
+        </button>
       )}
 
       {isAlerted && (
