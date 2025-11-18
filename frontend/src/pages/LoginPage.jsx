@@ -15,6 +15,7 @@ const LoginPage = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [showPhoneAuth, setShowPhoneAuth] = useState(false);
+  const [recaptchaStatus, setRecaptchaStatus] = useState('idle'); // idle, checking, verified
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,28 +69,32 @@ const LoginPage = () => {
   const handleSendCode = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setRecaptchaStatus('checking'); // Show checking animation
     errorTracker.trackFunnelStep('signup', 'click_phone_send_code');
 
     // Format phone number with selected country code
     const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `${countryCode}${phoneNumber}`;
 
-    // Set up reCAPTCHA
+    // Set up reCAPTCHA (invisible - auto-executes)
     const recaptchaResult = authService.setupRecaptcha('recaptcha-container');
     if (!recaptchaResult.success) {
       toast.error('Failed to set up verification. Please refresh the page.');
       setLoading(false);
+      setRecaptchaStatus('idle');
       return;
     }
 
-    // Send verification code
+    // Send verification code (reCAPTCHA auto-executes in background)
     const result = await authService.sendPhoneVerification(formattedPhone, recaptchaResult.verifier);
     setLoading(false);
 
     if (result.success) {
+      setRecaptchaStatus('verified'); // Show verified checkmark
       setConfirmationResult(result.confirmationResult);
       toast.success('Verification code sent!');
       errorTracker.trackFunnelStep('signup', 'phone_code_sent');
     } else {
+      setRecaptchaStatus('idle');
       errorTracker.logCustomError('Phone verification failed', { error: result.error });
       toast.error(result.error || 'Failed to send code');
     }
@@ -191,6 +196,29 @@ const LoginPage = () => {
                   >
                     {loading ? 'Sending...' : 'Send Verification Code'}
                   </button>
+
+                  {/* Fake reCAPTCHA Visual (shows auto-verification) */}
+                  {recaptchaStatus !== 'idle' && (
+                    <div className="flex items-center justify-center gap-2 py-2">
+                      <div className={`w-6 h-6 border-2 rounded flex items-center justify-center ${
+                        recaptchaStatus === 'checking' ? 'border-gray-400 bg-white' : 'border-green-500 bg-green-500'
+                      }`}>
+                        {recaptchaStatus === 'checking' ? (
+                          <div className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-sm text-text-secondary font-medium">
+                        {recaptchaStatus === 'checking' ? 'Verifying you\'re human...' : 'Verified ✓'}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Invisible reCAPTCHA container */}
+                  <div id="recaptcha-container"></div>
                 </form>
               ) : (
                 <form onSubmit={handleVerifyCode} className="space-y-3">
@@ -255,9 +283,6 @@ const LoginPage = () => {
               <span className="px-2 bg-white text-text-secondary">Or</span>
             </div>
           </div>
-
-          {/* reCAPTCHA Container (invisible) */}
-          <div id="recaptcha-container"></div>
 
           {/* Email Form */}
           <form onSubmit={handleEmailAuth} className="space-y-4">
