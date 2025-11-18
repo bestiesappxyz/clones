@@ -8,6 +8,8 @@ export const sendBestieInvite = httpsCallable(functions, 'sendBestieInvite');
 export const acceptBestieRequest = httpsCallable(functions, 'acceptBestieRequest');
 export const declineBestieRequest = httpsCallable(functions, 'declineBestieRequest');
 export const triggerEmergencySOS = httpsCallable(functions, 'triggerEmergencySOS');
+export const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
+export const createPortalSession = httpsCallable(functions, 'createPortalSession');
 
 const apiService = {
   extendCheckIn,
@@ -16,6 +18,8 @@ const apiService = {
   acceptBestieRequest,
   declineBestieRequest,
   triggerEmergencySOS,
+  createCheckoutSession,
+  createPortalSession,
 };
 
 export default apiService;

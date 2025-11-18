@@ -492,31 +492,215 @@ exports.dailyAnalyticsAggregation = functions.pubsub
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const checkInsSnapshot = await db.collection('checkins')
       .where('createdAt', '>=', admin.firestore.Timestamp.fromDate(yesterday))
       .where('createdAt', '<', admin.firestore.Timestamp.fromDate(today))
       .get();
-    
+
     const stats = {
       date: admin.firestore.Timestamp.fromDate(yesterday),
       totalCheckIns: checkInsSnapshot.size,
       completedCheckIns: 0,
       alertedCheckIns: 0,
     };
-    
+
     checkInsSnapshot.forEach(doc => {
       const data = doc.data();
       if (data.status === 'completed') stats.completedCheckIns++;
       if (data.status === 'alerted') stats.alertedCheckIns++;
     });
-    
+
     await db.collection('daily_stats').add(stats);
-    
+
     return null;
   });
+
+// ========================================
+// STRIPE PAYMENT FUNCTIONS
+// ========================================
+
+const stripe = require('stripe')(functions.config().stripe.secret_key);
+
+// Create Stripe Checkout Session for donations/subscriptions
+exports.createCheckoutSession = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+  }
+
+  const { amount, type } = data; // type: 'donation' or 'subscription'
+
+  if (!amount || !type) {
+    throw new functions.https.HttpsError('invalid-argument', 'Missing amount or type');
+  }
+
+  const userDoc = await db.collection('users').doc(context.auth.uid).get();
+  const userData = userDoc.data();
+
+  try {
+    // Create or get Stripe customer
+    let customerId = userData.stripeCustomerId;
+
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: userData.email,
+        metadata: {
+          firebaseUID: context.auth.uid,
+        },
+      });
+      customerId = customer.id;
+
+      await db.collection('users').doc(context.auth.uid).update({
+        stripeCustomerId: customerId,
+      });
+    }
+
+    // Create checkout session
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      payment_method_types: ['card'],
+      mode: type === 'subscription' ? 'subscription' : 'subscription', // Both are subscriptions
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: type === 'subscription' ? 'SMS Alerts Subscription' : 'Besties Support',
+              description: type === 'subscription'
+                ? 'Monthly SMS alerts for safety check-ins'
+                : 'Help keep Besties free for everyone',
+            },
+            unit_amount: amount * 100, // Convert to cents
+            recurring: {
+              interval: 'month',
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `https://bestiesapp.web.app/?payment=success`,
+      cancel_url: `https://bestiesapp.web.app/?payment=cancelled`,
+      metadata: {
+        firebaseUID: context.auth.uid,
+        type: type,
+      },
+    });
+
+    return { success: true, url: session.url, sessionId: session.id };
+  } catch (error) {
+    console.error('Stripe checkout error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to create checkout session');
+  }
+});
+
+// Create Stripe Customer Portal Session for managing subscriptions
+exports.createPortalSession = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+  }
+
+  const userDoc = await db.collection('users').doc(context.auth.uid).get();
+  const userData = userDoc.data();
+  const customerId = userData.stripeCustomerId;
+
+  if (!customerId) {
+    throw new functions.https.HttpsError('failed-precondition', 'No active subscription');
+  }
+
+  try {
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: 'https://bestiesapp.web.app/settings',
+    });
+
+    return { success: true, url: session.url };
+  } catch (error) {
+    console.error('Portal session error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to create portal session');
+  }
+});
+
+// Webhook to handle Stripe events
+exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const webhookSecret = functions.config().stripe.webhook_secret;
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.rawBody, sig, webhookSecret);
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      const firebaseUID = session.metadata.firebaseUID;
+      const type = session.metadata.type;
+
+      if (type === 'subscription') {
+        // Activate SMS subscription
+        await db.collection('users').doc(firebaseUID).update({
+          'smsSubscription.active': true,
+          'smsSubscription.stripeSubscriptionId': session.subscription,
+          'smsSubscription.startedAt': admin.firestore.Timestamp.now(),
+        });
+      } else if (type === 'donation') {
+        // Track donation
+        const amount = session.amount_total / 100;
+        const userRef = db.collection('users').doc(firebaseUID);
+        const userDoc = await userRef.get();
+        const currentTotal = userDoc.data()?.donationStats?.totalDonated || 0;
+
+        await userRef.update({
+          'donationStats.isActive': true,
+          'donationStats.monthlyAmount': amount,
+          'donationStats.totalDonated': currentTotal + amount,
+          'donationStats.stripeSubscriptionId': session.subscription,
+          'donationStats.lastDonation': admin.firestore.Timestamp.now(),
+        });
+      }
+      break;
+
+    case 'customer.subscription.deleted':
+      const subscription = event.data.object;
+      const customer = subscription.customer;
+
+      // Find user by Stripe customer ID
+      const usersSnapshot = await db.collection('users')
+        .where('stripeCustomerId', '==', customer)
+        .get();
+
+      if (!usersSnapshot.empty) {
+        const userDoc = usersSnapshot.docs[0];
+        const userData = userDoc.data();
+
+        // Check which subscription was cancelled
+        if (userData.smsSubscription?.stripeSubscriptionId === subscription.id) {
+          await userDoc.ref.update({
+            'smsSubscription.active': false,
+            'smsSubscription.cancelledAt': admin.firestore.Timestamp.now(),
+          });
+        } else if (userData.donationStats?.stripeSubscriptionId === subscription.id) {
+          await userDoc.ref.update({
+            'donationStats.isActive': false,
+            'donationStats.cancelledAt': admin.firestore.Timestamp.now(),
+          });
+        }
+      }
+      break;
+
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  res.json({ received: true });
+});
 
 module.exports = exports;
