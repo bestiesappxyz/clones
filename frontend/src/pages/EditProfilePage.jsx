@@ -7,6 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { updatePassword, updateEmail } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
+import { isValidE164 } from '../utils/phoneUtils';
 
 const EditProfilePage = () => {
   const { currentUser, userData } = useAuth();
@@ -61,18 +62,52 @@ const EditProfilePage = () => {
       return;
     }
 
-    setLoading(true);
+    // Validate phone number format
+    const trimmed = phoneNumber.trim();
+
+    // Check for empty after trim
+    if (!trimmed) {
+      toast.error('Please enter a phone number');
+      return;
+    }
+
+    // Check for invalid characters (only allow digits, +, spaces, hyphens, parentheses)
+    if (!/^[0-9+\s\-()]+$/.test(trimmed)) {
+      toast.error('Phone number can only contain digits, +, spaces, hyphens, and parentheses');
+      return;
+    }
 
     // Format phone number - ensure it starts with +
-    let formattedPhone = phoneNumber.trim();
+    let formattedPhone = trimmed.replace(/[\s\-()]/g, ''); // Remove formatting characters
+
     if (!formattedPhone.startsWith('+')) {
       // If it doesn't start with +, assume Australia +61 and remove leading 0
       if (formattedPhone.startsWith('0')) {
         formattedPhone = '+61' + formattedPhone.slice(1);
       } else {
+        // If no country code and doesn't start with 0, assume it's missing +
         formattedPhone = '+' + formattedPhone;
       }
     }
+
+    // Validate E.164 format (+ followed by 1-15 digits)
+    if (!isValidE164(formattedPhone)) {
+      toast.error('Invalid phone number format. Please enter a valid international number (e.g., +61412345678 or 0412345678)', { duration: 5000 });
+      return;
+    }
+
+    // Check length (must be between 8-15 digits after country code)
+    const digitsOnly = formattedPhone.slice(1); // Remove the +
+    if (digitsOnly.length < 8) {
+      toast.error('Phone number is too short. Please enter a complete phone number');
+      return;
+    }
+    if (digitsOnly.length > 15) {
+      toast.error('Phone number is too long. Please check and try again');
+      return;
+    }
+
+    setLoading(true);
 
     // Setup reCAPTCHA
     const recaptchaResult = authService.setupRecaptcha('phone-recaptcha-container');
