@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 const OnboardingFlow = ({ onComplete }) => {
   const { currentUser, userData } = useAuth();
   const navigate = useNavigate();
-  const [step, setStep] = useState('welcome'); // welcome, slides, name, photo, bestie-circle, check-in-intro
+  const [step, setStep] = useState('welcome'); // Celebration will show after onboarding on HomePage
   const [slideIndex, setSlideIndex] = useState(0);
   const [displayName, setDisplayName] = useState(userData?.displayName || '');
   const [uploading, setUploading] = useState(false);
