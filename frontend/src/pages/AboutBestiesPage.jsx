@@ -697,88 +697,6 @@ const AboutBestiesPage = () => {
             </div>
           </div>
 
-          {/* Style 9: Sketchy & Sweet */}
-          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-rose-200">
-            <h3 className="font-semibold text-lg text-rose-900 mb-3">Style 9: Sketchy & Sweet</h3>
-            <p className="text-xs text-gray-600 mb-4">Hand-drawn lines, imperfect charm, personal touch</p>
-            <div className="flex items-center justify-center gap-8">
-              {/* Sketchy heart */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <linearGradient id="sketchFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#fce7f3" />
-                      <stop offset="100%" stopColor="#fbcfe8" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Sketchy heart outline - slightly wobbly */}
-                  <path d="M60,80 C60,80 38,67 38,49 C38,41 43,36 49,36 C54,36 57,39 60,45 C63,39 66,36 71,36 C77,36 82,41 82,49 C82,67 60,80 60,80 Z"
-                        fill="url(#sketchFill)"
-                        stroke="#f472b6"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        opacity="0.8" />
-
-                  {/* Inner sketch lines for shading effect */}
-                  <g stroke="#f472b6" strokeWidth="1" opacity="0.3">
-                    <line x1="45" y1="48" x2="52" y2="48" strokeLinecap="round" />
-                    <line x1="68" y1="48" x2="75" y2="48" strokeLinecap="round" />
-                    <line x1="48" y1="55" x2="56" y2="55" strokeLinecap="round" />
-                    <line x1="64" y1="55" x2="72" y2="55" strokeLinecap="round" />
-                    <line x1="52" y1="62" x2="58" y2="62" strokeLinecap="round" />
-                    <line x1="62" y1="62" x2="68" y2="62" strokeLinecap="round" />
-                  </g>
-
-                  {/* Small sketchy sparkles */}
-                  <g className="animate-pulse" style={{animationDuration: '2s'}}>
-                    <line x1="35" y1="35" x2="38" y2="38" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
-                    <line x1="38" y1="35" x2="35" y2="38" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
-                    <line x1="82" y1="38" x2="85" y2="41" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
-                    <line x1="85" y1="38" x2="82" y2="41" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Drawn with Love</p>
-              </div>
-
-              {/* Sketchy holding hands */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  {/* Two figures holding hands - sketchy style */}
-                  <g stroke="#c4b5fd" strokeWidth="2.5" fill="none" strokeLinecap="round">
-                    {/* Left person */}
-                    <circle cx="38" cy="48" r="10" opacity="0.7" />
-                    <path d="M38,58 L38,75" />
-                    <path d="M30,65 L38,65 L46,65" />
-
-                    {/* Right person */}
-                    <circle cx="82" cy="48" r="10" opacity="0.7" />
-                    <path d="M82,58 L82,75" />
-                    <path d="M74,65 L82,65 L90,65" />
-                  </g>
-
-                  {/* Holding hands line - slightly wavy for sketch effect */}
-                  <path d="M46,65 Q55,63 60,65 Q65,67 74,65"
-                        fill="none"
-                        stroke="#f472b6"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        className="animate-pulse"
-                        style={{animationDuration: '3s'}} />
-
-                  {/* Sketchy heart above */}
-                  <path d="M60,30 C60,30 54,26 54,22 C54,20 55,19 57,19 C58,19 59,20 60,22 C61,20 62,19 63,19 C65,19 66,20 66,22 C66,26 60,30 60,30 Z"
-                        fill="#f9a8d4"
-                        stroke="#f472b6"
-                        strokeWidth="1"
-                        opacity="0.7" />
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Hand in Hand</p>
-              </div>
-            </div>
-          </div>
-
           {/* Style 10: Ombre Magic */}
           <div className="p-6 bg-white rounded-xl border-2 border-purple-200">
             <h3 className="font-semibold text-lg text-purple-900 mb-3">Style 10: Ombre Magic</h3>
@@ -982,6 +900,93 @@ const AboutBestiesPage = () => {
           </div>
         </div>
 
+        {/* STYLE 9 - SAVED FOR REFERENCE - DO NOT DELETE UNTIL USER APPROVAL */}
+        <div className="card p-6 mb-6 bg-gradient-to-br from-rose-50 to-pink-50 border-4 border-rose-300">
+          <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-3 mb-4">
+            <p className="text-sm font-semibold text-yellow-900">⚠️ DO NOT DELETE - Saved for user review</p>
+          </div>
+
+          <h3 className="font-semibold text-xl text-rose-900 mb-3 text-center">Style 9: Sketchy & Sweet</h3>
+          <p className="text-sm text-gray-600 mb-4 text-center">Hand-drawn lines, imperfect charm, personal touch</p>
+
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            {/* Sketchy heart */}
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <linearGradient id="sketchFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fce7f3" />
+                    <stop offset="100%" stopColor="#fbcfe8" />
+                  </linearGradient>
+                </defs>
+
+                {/* Sketchy heart outline - slightly wobbly */}
+                <path d="M60,80 C60,80 38,67 38,49 C38,41 43,36 49,36 C54,36 57,39 60,45 C63,39 66,36 71,36 C77,36 82,41 82,49 C82,67 60,80 60,80 Z"
+                      fill="url(#sketchFill)"
+                      stroke="#f472b6"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      opacity="0.8" />
+
+                {/* Inner sketch lines for shading effect */}
+                <g stroke="#f472b6" strokeWidth="1" opacity="0.3">
+                  <line x1="45" y1="48" x2="52" y2="48" strokeLinecap="round" />
+                  <line x1="68" y1="48" x2="75" y2="48" strokeLinecap="round" />
+                  <line x1="48" y1="55" x2="56" y2="55" strokeLinecap="round" />
+                  <line x1="64" y1="55" x2="72" y2="55" strokeLinecap="round" />
+                  <line x1="52" y1="62" x2="58" y2="62" strokeLinecap="round" />
+                  <line x1="62" y1="62" x2="68" y2="62" strokeLinecap="round" />
+                </g>
+
+                {/* Small sketchy sparkles */}
+                <g className="animate-pulse" style={{animationDuration: '2s'}}>
+                  <line x1="35" y1="35" x2="38" y2="38" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+                  <line x1="38" y1="35" x2="35" y2="38" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+                  <line x1="82" y1="38" x2="85" y2="41" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+                  <line x1="85" y1="38" x2="82" y2="41" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" />
+                </g>
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Drawn with Love</p>
+            </div>
+
+            {/* Sketchy holding hands */}
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                {/* Two figures holding hands - sketchy style */}
+                <g stroke="#c4b5fd" strokeWidth="2.5" fill="none" strokeLinecap="round">
+                  {/* Left person */}
+                  <circle cx="38" cy="48" r="10" opacity="0.7" />
+                  <path d="M38,58 L38,75" />
+                  <path d="M30,65 L38,65 L46,65" />
+
+                  {/* Right person */}
+                  <circle cx="82" cy="48" r="10" opacity="0.7" />
+                  <path d="M82,58 L82,75" />
+                  <path d="M74,65 L82,65 L90,65" />
+                </g>
+
+                {/* Holding hands line - slightly wavy for sketch effect */}
+                <path d="M46,65 Q55,63 60,65 Q65,67 74,65"
+                      fill="none"
+                      stroke="#f472b6"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      className="animate-pulse"
+                      style={{animationDuration: '3s'}} />
+
+                {/* Sketchy heart above */}
+                <path d="M60,30 C60,30 54,26 54,22 C54,20 55,19 57,19 C58,19 59,20 60,22 C61,20 62,19 63,19 C65,19 66,20 66,22 C66,26 60,30 60,30 Z"
+                      fill="#f9a8d4"
+                      stroke="#f472b6"
+                      strokeWidth="1"
+                      opacity="0.7" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Hand in Hand</p>
+            </div>
+          </div>
+        </div>
+
         {/* Our Mission */}
         <div className="card p-8 mb-6 bg-gradient-to-br from-pink-50 to-purple-50">
           <h2 className="text-2xl font-display text-text-primary mb-4">Our Mission 🎯</h2>
@@ -1020,18 +1025,16 @@ const AboutBestiesPage = () => {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 flex items-center justify-center">
                   <svg viewBox="0 0 32 32" className="w-8 h-8 drop-shadow-md">
-                    <defs>
-                      <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ec4899" />
-                        <stop offset="50%" stopColor="#f472b6" />
-                        <stop offset="100%" stopColor="#fbcfe8" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M16,28 C16,28 4,20 4,12 C4,8 7,5 10,5 C12,5 14,6 16,8 C18,6 20,5 22,5 C25,5 28,8 28,12 C28,20 16,28 16,28 Z"
-                          fill="url(#heartGradient)"
-                          stroke="#db2777"
-                          strokeWidth="1"
-                          className="animate-pulse-slow" />
+                    {/* Minimal heart with sparkle accent */}
+                    <path d="M16,26 L6,16 C4,14 4,10 6,8 C8,6 12,6 14,8 L16,10 L18,8 C20,6 24,6 26,8 C28,10 28,14 26,16 Z"
+                          fill="none"
+                          stroke="#ec4899"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round" />
+                    {/* Sparkle accent */}
+                    <circle cx="24" cy="6" r="1.5" fill="#fbbf24" className="animate-pulse" style={{animationDuration: '2s'}} />
+                    <path d="M24,3 L24,9 M21,6 L27,6" stroke="#fbbf24" strokeWidth="1" className="animate-pulse" style={{animationDuration: '2s'}} />
                   </svg>
                 </div>
                 <h3 className="font-semibold text-sm text-pink-900">Good Over Profit</h3>
@@ -1045,20 +1048,21 @@ const AboutBestiesPage = () => {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 flex items-center justify-center">
                   <svg viewBox="0 0 32 32" className="w-8 h-8 drop-shadow-md">
-                    <defs>
-                      <linearGradient id="lockGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#a855f7" />
-                        <stop offset="50%" stopColor="#c084fc" />
-                        <stop offset="100%" stopColor="#e9d5ff" />
-                      </linearGradient>
-                    </defs>
-                    <rect x="10" y="14" width="12" height="12" rx="2" fill="url(#lockGradient)" stroke="#9333ea" strokeWidth="1.5"/>
-                    <path d="M12,14 L12,10 C12,7.8 13.8,6 16,6 C18.2,6 20,7.8 20,10 L20,14"
+                    {/* Minimal lock outline */}
+                    <rect x="11" y="15" width="10" height="10" rx="1.5"
                           fill="none"
-                          stroke="url(#lockGradient)"
+                          stroke="#a855f7"
+                          strokeWidth="2"
+                          strokeLinecap="round" />
+                    <path d="M13,15 L13,11 C13,8.8 14.3,7 16,7 C17.7,7 19,8.8 19,11 L19,15"
+                          fill="none"
+                          stroke="#a855f7"
                           strokeWidth="2"
                           strokeLinecap="round"/>
-                    <circle cx="16" cy="20" r="1.5" fill="#f3e8ff"/>
+                    <circle cx="16" cy="20" r="1.5" fill="#a855f7"/>
+                    {/* Sparkle accent */}
+                    <circle cx="8" cy="8" r="1" fill="#fbbf24" className="animate-pulse" style={{animationDuration: '2s'}} />
+                    <path d="M8,6 L8,10 M6,8 L10,8" stroke="#fbbf24" strokeWidth="0.8" className="animate-pulse" style={{animationDuration: '2s'}} />
                   </svg>
                 </div>
                 <h3 className="font-semibold text-sm text-purple-900">Privacy First</h3>
@@ -1072,28 +1076,22 @@ const AboutBestiesPage = () => {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 flex items-center justify-center">
                   <svg viewBox="0 0 32 32" className="w-8 h-8 drop-shadow-md">
-                    <defs>
-                      <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#d946ef" />
-                        <stop offset="50%" stopColor="#e879f9" />
-                        <stop offset="100%" stopColor="#fae8ff" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M16,4 L17,12 L25,13 L17,14 L16,22 L15,14 L7,13 L15,12 Z"
-                          fill="url(#sparkleGradient)"
-                          stroke="#c026d3"
-                          strokeWidth="1"
-                          className="animate-pulse-slow" />
-                    <path d="M24,6 L25,10 L29,11 L25,12 L24,16 L23,12 L19,11 L23,10 Z"
-                          fill="url(#sparkleGradient)"
-                          stroke="#c026d3"
-                          strokeWidth="0.8"
-                          opacity="0.8"/>
-                    <path d="M8,22 L9,25 L12,26 L9,27 L8,30 L7,27 L4,26 L7,25 Z"
-                          fill="url(#sparkleGradient)"
-                          stroke="#c026d3"
-                          strokeWidth="0.8"
-                          opacity="0.8"/>
+                    {/* Minimal dollar sign */}
+                    <path d="M16,6 L16,26" stroke="#d946ef" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M12,10 L18,10 C20,10 21,11 21,13 C21,15 20,16 18,16 L14,16 C12,16 11,17 11,19 C11,21 12,22 14,22 L20,22"
+                          fill="none"
+                          stroke="#d946ef"
+                          strokeWidth="2"
+                          strokeLinecap="round" />
+                    {/* Three sparkles */}
+                    <g className="animate-pulse" style={{animationDuration: '2s'}}>
+                      <circle cx="8" cy="8" r="1" fill="#fbbf24" />
+                      <path d="M8,6 L8,10 M6,8 L10,8" stroke="#fbbf24" strokeWidth="0.8" />
+                      <circle cx="24" cy="12" r="1" fill="#fbbf24" />
+                      <path d="M24,10 L24,14 M22,12 L26,12" stroke="#fbbf24" strokeWidth="0.8" />
+                      <circle cx="24" cy="24" r="1" fill="#fbbf24" />
+                      <path d="M24,22 L24,26 M22,24 L26,24" stroke="#fbbf24" strokeWidth="0.8" />
+                    </g>
                   </svg>
                 </div>
                 <h3 className="font-semibold text-sm text-fuchsia-900">Transparent Pricing</h3>
@@ -1107,22 +1105,23 @@ const AboutBestiesPage = () => {
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 flex items-center justify-center">
                   <svg viewBox="0 0 32 32" className="w-8 h-8 drop-shadow-md">
-                    <defs>
-                      <linearGradient id="crownGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#f43f5e" />
-                        <stop offset="50%" stopColor="#fb7185" />
-                        <stop offset="100%" stopColor="#fecdd3" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M6,24 L8,12 L12,18 L16,8 L20,18 L24,12 L26,24 Z"
-                          fill="url(#crownGradient)"
-                          stroke="#e11d48"
-                          strokeWidth="1.5"
-                          strokeLinejoin="round"/>
-                    <circle cx="8" cy="12" r="2" fill="#fef2f2"/>
-                    <circle cx="16" cy="8" r="2" fill="#fef2f2"/>
-                    <circle cx="24" cy="12" r="2" fill="#fef2f2"/>
-                    <path d="M6,24 L26,24" stroke="#e11d48" strokeWidth="2" strokeLinecap="round"/>
+                    {/* Connection lines - inspired by Logo 4 */}
+                    <line x1="16" y1="16" x2="16" y2="8" stroke="#f43f5e" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="24" y2="12" stroke="#f43f5e" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="24" y2="20" stroke="#f43f5e" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="8" y2="12" stroke="#f43f5e" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="8" y2="20" stroke="#f43f5e" strokeWidth="1.5" opacity="0.4" />
+                    {/* Center circle - main */}
+                    <circle cx="16" cy="16" r="3" fill="none" stroke="#f43f5e" strokeWidth="2" />
+                    {/* 5 surrounding circles - community */}
+                    <circle cx="16" cy="8" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="24" cy="12" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="24" cy="20" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="8" cy="12" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="8" cy="20" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    {/* Sparkle accent */}
+                    <circle cx="26" cy="26" r="1" fill="#fbbf24" className="animate-pulse" style={{animationDuration: '2s'}} />
+                    <path d="M26,24 L26,28 M24,26 L28,26" stroke="#fbbf24" strokeWidth="0.8" className="animate-pulse" style={{animationDuration: '2s'}} />
                   </svg>
                 </div>
                 <h3 className="font-semibold text-sm text-rose-900">Community Driven</h3>
