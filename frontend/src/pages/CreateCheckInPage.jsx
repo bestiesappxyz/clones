@@ -19,8 +19,8 @@ const CreateCheckInPage = () => {
   const [selectedBesties, setSelectedBesties] = useState([]);
   const [notes, setNotes] = useState('');
   const [meetingWith, setMeetingWith] = useState('');
-  const [photoFile, setPhotoFile] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFiles, setPhotoFiles] = useState([]);
+  const [photoPreviews, setPhotoPreviews] = useState([]);
   const [besties, setBesties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [autocompleteLoaded, setAutocompleteLoaded] = useState(false);
@@ -225,7 +225,23 @@ const CreateCheckInPage = () => {
     if (!currentUser) return;
 
     try {
-      // Get accepted besties where user is either requester or recipient
+      // Get user's bestie circle (featuredCircle)
+      const userDocRef = doc(db, 'users', currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        setBesties([]);
+        return;
+      }
+
+      const featuredIds = userDoc.data().featuredCircle || [];
+
+      if (featuredIds.length === 0) {
+        setBesties([]);
+        return;
+      }
+
+      // Get all accepted besties to find the ones in the circle
       const [requesterQuery, recipientQuery] = await Promise.all([
         getDocs(
           query(
@@ -243,11 +259,11 @@ const CreateCheckInPage = () => {
         ),
       ]);
 
-      const bestiesList = [];
+      const allBestiesList = [];
 
       requesterQuery.forEach((doc) => {
         const data = doc.data();
-        bestiesList.push({
+        allBestiesList.push({
           id: data.recipientId,
           name: data.recipientName || 'Bestie',
           phone: data.recipientPhone,
@@ -256,18 +272,21 @@ const CreateCheckInPage = () => {
 
       recipientQuery.forEach((doc) => {
         const data = doc.data();
-        bestiesList.push({
+        allBestiesList.push({
           id: data.requesterId,
           name: data.requesterName || 'Bestie',
           phone: data.requesterPhone,
         });
       });
 
-      setBesties(bestiesList);
+      // Filter to only show besties in the featured circle
+      const circleBesties = allBestiesList.filter(b => featuredIds.includes(b.id));
 
-      // Auto-select all besties when they load (only if not loading from template)
-      if (!location.state?.template && bestiesList.length > 0) {
-        setSelectedBesties(bestiesList.map(b => b.id));
+      setBesties(circleBesties);
+
+      // Auto-select all besties in circle when they load (only if not loading from template)
+      if (!location.state?.template && circleBesties.length > 0) {
+        setSelectedBesties(circleBesties.map(b => b.id));
       }
     } catch (error) {
       console.error('Error loading besties:', error);
@@ -330,29 +349,42 @@ const CreateCheckInPage = () => {
   };
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Photo must be less than 5MB');
+    // Check if adding these files would exceed the 5 photo limit
+    if (photoFiles.length + files.length > 5) {
+      toast.error('You can only upload up to 5 photos per check-in');
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
-      return;
+    // Validate each file
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`${file.name} is too large. Photos must be less than 5MB`);
+        return;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        toast.error(`${file.name} is not an image file`);
+        return;
+      }
     }
 
-    setPhotoFile(file);
-    setPhotoPreview(URL.createObjectURL(file));
-  };
+    // Add files and previews
+    setPhotoFiles([...photoFiles, ...files]);
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setPhotoPreviews([...photoPreviews, ...newPreviews]);
 
-  const removePhoto = () => {
-    setPhotoFile(null);
-    setPhotoPreview(null);
+    // Clear the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const removePhoto = (index) => {
+    setPhotoFiles(photoFiles.filter((_, i) => i !== index));
+    setPhotoPreviews(photoPreviews.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -360,7 +392,7 @@ const CreateCheckInPage = () => {
 
     if (selectedBesties.length === 0) {
       errorTracker.trackFunnelStep('checkin', 'error_no_besties');
-      toast.error('Please select at least one bestie');
+      toast.error('Please select at least one bestie from your circle to notify', { duration: 4000 });
       return;
     }
 
@@ -405,18 +437,22 @@ const CreateCheckInPage = () => {
       const now = new Date();
       const alertTime = new Date(now.getTime() + duration * 60 * 1000);
 
-      // Upload photo if provided
-      let photoURL = null;
-      if (photoFile) {
-        const photoToast = toast.loading('Uploading photo...');
+      // Upload photos if provided
+      const photoURLs = [];
+      if (photoFiles.length > 0) {
+        const photoToast = toast.loading(`Uploading ${photoFiles.length} photo${photoFiles.length > 1 ? 's' : ''}...`);
         try {
-          const storageRef = ref(storage, `checkin-photos/${currentUser.uid}/${Date.now()}_${photoFile.name}`);
-          await uploadBytes(storageRef, photoFile);
-          photoURL = await getDownloadURL(storageRef);
-          toast.success('Photo uploaded!', { id: photoToast });
+          for (let i = 0; i < photoFiles.length; i++) {
+            const file = photoFiles[i];
+            const storageRef = ref(storage, `checkin-photos/${currentUser.uid}/${Date.now()}_${i}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(storageRef);
+            photoURLs.push(downloadURL);
+          }
+          toast.success(`${photoURLs.length} photo${photoURLs.length > 1 ? 's' : ''} uploaded!`, { id: photoToast });
         } catch (photoError) {
           console.error('Photo upload failed:', photoError);
-          toast.error('Photo upload failed, continuing without photo', { id: photoToast });
+          toast.error('Some photos failed to upload, continuing with uploaded photos', { id: photoToast });
         }
       }
 
@@ -428,7 +464,7 @@ const CreateCheckInPage = () => {
         bestieIds: selectedBesties,
         notes: notes || null,
         meetingWith: meetingWith || null,
-        photoURL: photoURL,
+        photoURLs: photoURLs,
         status: 'active',
         createdAt: Timestamp.now(),
         lastUpdate: Timestamp.now(),
@@ -627,14 +663,15 @@ const CreateCheckInPage = () => {
             </label>
 
             {besties.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-text-secondary mb-4">You don't have any besties yet!</p>
+              <div className="text-center py-8 bg-orange-50 border-2 border-orange-200 rounded-xl">
+                <p className="font-semibold text-text-primary mb-2">⚠️ No besties in your circle</p>
+                <p className="text-text-secondary text-sm mb-4">Add besties to your bestie circle on the home page to create check-ins</p>
                 <button
                   type="button"
-                  onClick={() => navigate('/besties')}
+                  onClick={() => navigate('/')}
                   className="btn btn-primary"
                 >
-                  Add Your First Bestie
+                  Go to Home Page
                 </button>
               </div>
             ) : (
@@ -692,33 +729,42 @@ const CreateCheckInPage = () => {
             />
           </div>
 
-          {/* Photo */}
+          {/* Photos */}
           <div className="card p-6">
             <label className="block text-lg font-display text-text-primary mb-3">
-              Add a Photo (Optional) 📸
+              Add Photos (Optional) 📸 ({photoFiles.length}/5)
             </label>
 
-            {photoPreview ? (
-              <div className="relative">
-                <img
-                  src={photoPreview}
-                  alt="Check-in preview"
-                  className="w-full rounded-xl max-h-64 object-cover mb-3"
-                />
-                <button
-                  type="button"
-                  onClick={removePhoto}
-                  className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-red-600"
-                >
-                  ✕ Remove
-                </button>
+            {/* Photo grid */}
+            {photoPreviews.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+                {photoPreviews.map((preview, index) => (
+                  <div key={index} className="relative aspect-square">
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-full rounded-xl object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-sm font-bold hover:bg-red-600 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
               </div>
-            ) : (
+            )}
+
+            {/* Add more photos button */}
+            {photoFiles.length < 5 && (
               <div>
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handlePhotoChange}
                   className="hidden"
                   id="photo-input"
@@ -729,7 +775,7 @@ const CreateCheckInPage = () => {
                 >
                   <div className="text-4xl mb-2">📷</div>
                   <div className="text-sm text-text-secondary">
-                    Click to add a photo (max 5MB)
+                    Click to add photos (up to 5, max 5MB each)
                   </div>
                 </label>
               </div>
@@ -762,12 +808,17 @@ const CreateCheckInPage = () => {
                     <span className="font-semibold">Notes:</span> {notes}
                   </div>
                 )}
-                {photoPreview && (
-                  <img
-                    src={photoPreview}
-                    alt="Preview"
-                    className="w-full rounded-lg mt-2 max-h-32 object-cover"
-                  />
+                {photoPreviews.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2 mt-2">
+                    {photoPreviews.map((preview, index) => (
+                      <img
+                        key={index}
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full rounded-lg aspect-square object-cover"
+                      />
+                    ))}
+                  </div>
                 )}
                 <div className="text-xs text-text-secondary mt-2">
                   Alert time: {new Date(Date.now() + duration * 60 * 1000).toLocaleTimeString('en-US', {

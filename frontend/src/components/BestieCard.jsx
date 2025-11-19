@@ -45,15 +45,9 @@ const BestieCard = ({ bestie }) => {
         </div>
       </div>
 
-      {bestie.role && (
-        <div className={`badge text-xs ${
-          bestie.role === 'guardian'
-            ? 'badge-primary'
-            : 'badge-success'
-        }`}>
-          {bestie.role === 'guardian' ? '🛡️ Watching Over You' : '💜 You Watch Over'}
-        </div>
-      )}
+      <div className="badge badge-primary text-xs">
+        💜 Bestie
+      </div>
     </div>
   );
 };
