@@ -35,7 +35,6 @@ const CreateCheckInPage = () => {
   const fileInputRef = useRef(null);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
-  const markerRef = useRef(null);
 
   // Auto-redirect to onboarding if user hasn't completed it
   useEffect(() => {
