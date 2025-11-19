@@ -274,7 +274,7 @@ const CheckInCard = ({ checkIn }) => {
           // Upload each file
           for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${i}_${file.name}`);
+            const storageRef = ref(storage, `checkin-photos/${checkIn.userId}/${Date.now()}_${i}_${file.name}`);
             await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(storageRef);
             newPhotoURLs.push(downloadURL);
