@@ -2974,6 +2974,249 @@ const AboutBestiesPage = () => {
           </div>
         </div>
 
+        {/* SECTION REDESIGNS - OUR STORY */}
+        <div className="card p-6 mb-6 bg-gradient-to-br from-pink-50 to-purple-50 border-4 border-pink-300">
+          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">Our Story - Beautiful Layout Variations</h2>
+
+          {/* Design 1: Gradient Card with Large Quote */}
+          <div className="mb-12 p-8 bg-gradient-to-br from-fuchsia-100 via-pink-100 to-purple-100 rounded-3xl shadow-2xl border border-pink-200">
+            <div className="text-center mb-8">
+              <div className="inline-block">
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
+                  Our Story
+                </h3>
+                <div className="h-1 bg-gradient-to-r from-pink-400 via-purple-400 to-fuchsia-400 rounded-full"></div>
+              </div>
+            </div>
+
+            <div className="space-y-6 max-w-3xl mx-auto">
+              <div className="relative pl-6 border-l-4 border-pink-400">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+                </p>
+              </div>
+
+              <div className="relative pl-6 border-l-4 border-purple-400">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+                </p>
+              </div>
+
+              <div className="text-center mt-8 p-6 bg-white/60 rounded-2xl backdrop-blur-sm">
+                <p className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                  That's why we built Besties.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Design 2: Split Panel Design */}
+          <div className="mb-12 overflow-hidden rounded-3xl shadow-2xl">
+            <div className="grid md:grid-cols-2">
+              {/* Left Panel - Title */}
+              <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-fuchsia-500 p-12 flex items-center justify-center">
+                <div className="text-center">
+                  <h3 className="text-5xl font-black text-white mb-4 drop-shadow-lg">Our Story</h3>
+                  <div className="w-24 h-1 bg-white mx-auto rounded-full"></div>
+                  <div className="mt-6 space-y-2">
+                    <div className="w-16 h-16 mx-auto bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <div className="w-8 h-8 bg-white rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Panel - Content */}
+              <div className="bg-white p-12">
+                <div className="space-y-6 text-gray-700">
+                  <p className="text-base leading-relaxed">
+                    Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+                  </p>
+
+                  <p className="text-base leading-relaxed">
+                    We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+                  </p>
+
+                  <div className="pt-4 border-t-2 border-pink-200">
+                    <p className="text-xl font-bold text-purple-600">
+                      That's why we built Besties.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Design 3: Card Stack Design */}
+          <div className="mb-12 relative">
+            {/* Background decorative cards */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-full max-w-4xl h-64 bg-gradient-to-br from-purple-200 to-pink-200 rounded-3xl transform rotate-2 opacity-30"></div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-full max-w-4xl h-64 bg-gradient-to-br from-pink-200 to-fuchsia-200 rounded-3xl transform -rotate-1 opacity-50"></div>
+            </div>
+
+            {/* Main card */}
+            <div className="relative bg-white p-10 rounded-3xl shadow-2xl max-w-4xl mx-auto">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-3 rounded-full shadow-lg">
+                  <h3 className="text-2xl font-bold">Our Story</h3>
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-6 text-gray-700">
+                <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-2xl">
+                  <p className="text-lg leading-relaxed">
+                    Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-purple-50 to-fuchsia-50 p-6 rounded-2xl">
+                  <p className="text-lg leading-relaxed">
+                    We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+                  </p>
+                </div>
+
+                <div className="text-center bg-gradient-to-r from-pink-500 to-purple-500 p-6 rounded-2xl">
+                  <p className="text-2xl font-bold text-white">
+                    That's why we built Besties.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Design 4: Timeline Style */}
+          <div className="mb-12 p-8 bg-white rounded-3xl shadow-2xl">
+            <div className="text-center mb-10">
+              <h3 className="text-4xl font-black bg-gradient-to-r from-pink-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent inline-block">
+                Our Story
+              </h3>
+            </div>
+
+            <div className="max-w-3xl mx-auto">
+              {/* Timeline item 1 */}
+              <div className="flex gap-6 mb-8">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                    <div className="w-4 h-4 bg-white rounded-full"></div>
+                  </div>
+                  <div className="w-1 h-full bg-gradient-to-b from-pink-400 to-purple-400 flex-grow mt-2"></div>
+                </div>
+                <div className="flex-grow pb-8">
+                  <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-2xl shadow-md">
+                    <p className="text-gray-700 leading-relaxed">
+                      Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Timeline item 2 */}
+              <div className="flex gap-6 mb-8">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                    <div className="w-4 h-4 bg-white rounded-full"></div>
+                  </div>
+                  <div className="w-1 h-full bg-gradient-to-b from-purple-400 to-fuchsia-400 flex-grow mt-2"></div>
+                </div>
+                <div className="flex-grow pb-8">
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl shadow-md">
+                    <p className="text-gray-700 leading-relaxed">
+                      We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Timeline item 3 */}
+              <div className="flex gap-6">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                    <div className="w-6 h-6 bg-white rounded-full"></div>
+                  </div>
+                </div>
+                <div className="flex-grow">
+                  <div className="bg-gradient-to-br from-fuchsia-500 to-purple-600 p-6 rounded-2xl shadow-lg">
+                    <p className="text-xl font-bold text-white text-center">
+                      That's why we built Besties.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Design 5: Floating Bubble Design */}
+          <div className="mb-12 relative p-12 bg-gradient-to-br from-pink-100 via-purple-100 to-fuchsia-100 rounded-3xl overflow-hidden">
+            {/* Decorative bubbles */}
+            <div className="absolute top-4 right-4 w-32 h-32 bg-pink-300/30 rounded-full blur-2xl"></div>
+            <div className="absolute bottom-8 left-8 w-40 h-40 bg-purple-300/30 rounded-full blur-2xl"></div>
+            <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-fuchsia-300/30 rounded-full blur-2xl"></div>
+
+            <div className="relative">
+              <div className="text-center mb-8">
+                <div className="inline-block bg-white px-10 py-4 rounded-full shadow-xl">
+                  <h3 className="text-3xl font-black bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                    Our Story
+                  </h3>
+                </div>
+              </div>
+
+              <div className="space-y-6 max-w-3xl mx-auto">
+                <div className="bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                  <p className="text-lg text-gray-700 leading-relaxed text-center">
+                    Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+                  </p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                  <p className="text-lg text-gray-700 leading-relaxed text-center">
+                    We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-fuchsia-500 p-8 rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <p className="text-2xl font-bold text-white text-center drop-shadow-lg">
+                    That's why we built Besties.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Design 6: Newspaper/Magazine Style */}
+          <div className="mb-12 bg-white p-10 rounded-3xl shadow-2xl border-4 border-gray-200">
+            <div className="border-b-4 border-pink-500 pb-4 mb-8">
+              <h3 className="text-5xl font-black text-gray-900 text-center tracking-tight">OUR STORY</h3>
+              <div className="flex justify-center gap-2 mt-2">
+                <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div className="w-2 h-2 bg-fuchsia-500 rounded-full"></div>
+              </div>
+            </div>
+
+            <div className="columns-1 md:columns-2 gap-8 text-gray-700">
+              <p className="text-lg leading-relaxed mb-6 first-letter:text-7xl first-letter:font-bold first-letter:text-pink-600 first-letter:mr-2 first-letter:float-left">
+                Besties was born from a simple truth: <span className="font-bold text-pink-600">everyone deserves to feel safe</span>, especially when they're out there living their life.
+              </p>
+
+              <p className="text-lg leading-relaxed mb-6">
+                We've all been there - walking home alone at night, going on a first date, traveling somewhere new, or just wanting someone to know you made it home okay. Those moments when you wish your best friend could be right there with you, even when they can't.
+              </p>
+            </div>
+
+            <div className="mt-8 pt-6 border-t-2 border-gray-200">
+              <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-6 rounded-xl">
+                <p className="text-2xl font-bold text-white text-center">
+                  That's why we built Besties.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Our Mission */}
         <div className="card p-8 mb-6 bg-gradient-to-br from-pink-50 to-purple-50">
           <h2 className="text-2xl font-display text-text-primary mb-4">Our Mission 🎯</h2>
