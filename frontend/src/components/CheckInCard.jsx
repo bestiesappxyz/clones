@@ -14,7 +14,7 @@ const CheckInCard = ({ checkIn }) => {
   const [extendingButton, setExtendingButton] = useState(null); // Track which extend button is loading
   const [editingNotes, setEditingNotes] = useState(false);
   const [notes, setNotes] = useState(checkIn.notes || '');
-  const [photoURL, setPhotoURL] = useState(checkIn.photoURL || null);
+  const [photoURLs, setPhotoURLs] = useState(checkIn.photoURLs || checkIn.photoURL ? [checkIn.photoURL] : []);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [optimisticAlertTime, setOptimisticAlertTime] = useState(null); // For optimistic updates
 
@@ -141,35 +141,66 @@ const CheckInCard = ({ checkIn }) => {
   };
 
   const handlePhotoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Photo must be less than 5MB');
+    // Check if adding these files would exceed the 5 photo limit
+    if (photoURLs.length + files.length > 5) {
+      toast.error('You can only have up to 5 photos per check-in');
       return;
+    }
+
+    // Validate each file
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`${file.name} is too large. Photos must be less than 5MB`);
+        return;
+      }
     }
 
     setUploadingPhoto(true);
 
     try {
-      // Upload to Firebase Storage
-      const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+      const newPhotoURLs = [];
+
+      // Upload each file
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${i}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        newPhotoURLs.push(downloadURL);
+      }
+
+      const updatedPhotoURLs = [...photoURLs, ...newPhotoURLs];
 
       // Update Firestore
       await updateDoc(doc(db, 'checkins', checkIn.id), {
-        photoURL: downloadURL,
+        photoURLs: updatedPhotoURLs,
       });
 
-      setPhotoURL(downloadURL);
-      toast.success('Photo uploaded!');
+      setPhotoURLs(updatedPhotoURLs);
+      toast.success(`${newPhotoURLs.length} photo${newPhotoURLs.length > 1 ? 's' : ''} uploaded!`);
     } catch (error) {
-      console.error('Error uploading photo:', error);
-      toast.error('Failed to upload photo');
+      console.error('Error uploading photos:', error);
+      toast.error('Failed to upload photos');
     } finally {
       setUploadingPhoto(false);
+    }
+  };
+
+  const removePhoto = async (index) => {
+    const updatedPhotoURLs = photoURLs.filter((_, i) => i !== index);
+
+    try {
+      await updateDoc(doc(db, 'checkins', checkIn.id), {
+        photoURLs: updatedPhotoURLs,
+      });
+      setPhotoURLs(updatedPhotoURLs);
+      toast.success('Photo removed');
+    } catch (error) {
+      console.error('Error removing photo:', error);
+      toast.error('Failed to remove photo');
     }
   };
 
@@ -276,41 +307,50 @@ const CheckInCard = ({ checkIn }) => {
         </div>
       </div>
 
-      {/* Photo Section */}
-      {(photoURL || !isAlerted) && (
+      {/* Photos Section */}
+      {(photoURLs.length > 0 || !isAlerted) && (
         <div className="mb-4">
-          {photoURL ? (
-            <div className="relative">
-              <img
-                src={photoURL}
-                alt="Check-in"
-                className="w-full h-48 object-cover rounded-xl"
-              />
-              {!isAlerted && (
-                <label className="absolute bottom-2 right-2 bg-white/90 hover:bg-white px-3 py-2 rounded-lg cursor-pointer text-sm font-semibold shadow-lg transition-all">
-                  📷 Change Photo
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                    disabled={uploadingPhoto}
+          <div className="text-sm font-semibold text-text-secondary mb-2">
+            Photos ({photoURLs.length}/5)
+          </div>
+
+          {/* Photo grid */}
+          {photoURLs.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+              {photoURLs.map((url, index) => (
+                <div key={index} className="relative aspect-square">
+                  <img
+                    src={url}
+                    alt={`Check-in ${index + 1}`}
+                    className="w-full h-full object-cover rounded-xl"
                   />
-                </label>
-              )}
+                  {!isAlerted && (
+                    <button
+                      onClick={() => removePhoto(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full text-sm font-bold hover:bg-red-600 flex items-center justify-center"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
-          ) : !isAlerted && (
+          )}
+
+          {/* Add more photos */}
+          {!isAlerted && photoURLs.length < 5 && (
             <label className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all">
               <div className="text-4xl mb-2">📷</div>
               <div className="text-sm font-semibold text-gray-600">
-                {uploadingPhoto ? 'Uploading...' : 'Add Photo'}
+                {uploadingPhoto ? 'Uploading...' : photoURLs.length > 0 ? 'Add More Photos' : 'Add Photos'}
               </div>
               <div className="text-xs text-gray-500 mt-1">
-                Click to upload (max 5MB)
+                Click to upload (up to 5, max 5MB each)
               </div>
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handlePhotoUpload}
                 className="hidden"
                 disabled={uploadingPhoto}
