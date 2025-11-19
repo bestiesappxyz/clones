@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import { isEnabled } from '../config/features';
 import errorTracker from '../services/errorTracking';
+import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 
 const CreateCheckInPage = () => {
   const { currentUser, userData, loading: authLoading } = useAuth();
@@ -24,6 +25,7 @@ const CreateCheckInPage = () => {
   const [besties, setBesties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [autocompleteLoaded, setAutocompleteLoaded] = useState(false);
+  const { executeOptimistic } = useOptimisticUpdate();
   const [gpsCoords, setGpsCoords] = useState(null); // Store GPS coordinates for map display
   const [mapInitialized, setMapInitialized] = useState(false);
 
@@ -480,106 +482,102 @@ const CreateCheckInPage = () => {
       return;
     }
 
-    setLoading(true);
     errorTracker.trackFunnelStep('checkin', 'submit_checkin', {
       besties: selectedBesties.length,
       duration,
       hasNotes: !!notes,
     });
 
-    // Show loading toast
-    const loadingToast = toast.loading('Creating your check-in...');
-
-    try {
-      const now = new Date();
-      const alertTime = new Date(now.getTime() + duration * 60 * 1000);
-
-      // Upload photos if provided
-      const photoURLs = [];
-      if (photoFiles.length > 0) {
-        const photoToast = toast.loading(`Uploading ${photoFiles.length} photo${photoFiles.length > 1 ? 's' : ''}...`);
+    // Use optimistic update - navigate immediately and process in background
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Navigate immediately - user sees instant response
+        navigate('/');
+      },
+      serverUpdate: async () => {
+        setLoading(true);
         try {
-          for (let i = 0; i < photoFiles.length; i++) {
-            const file = photoFiles[i];
-            const storageRef = ref(storage, `checkin-photos/${currentUser.uid}/${Date.now()}_${i}_${file.name}`);
-            await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(storageRef);
-            photoURLs.push(downloadURL);
+          const now = new Date();
+          const alertTime = new Date(now.getTime() + duration * 60 * 1000);
+
+          // Upload photos if provided
+          const photoURLs = [];
+          if (photoFiles.length > 0) {
+            for (let i = 0; i < photoFiles.length; i++) {
+              const file = photoFiles[i];
+              const storageRef = ref(storage, `checkin-photos/${currentUser.uid}/${Date.now()}_${i}_${file.name}`);
+              await uploadBytes(storageRef, file);
+              const downloadURL = await getDownloadURL(storageRef);
+              photoURLs.push(downloadURL);
+            }
           }
-          toast.success(`${photoURLs.length} photo${photoURLs.length > 1 ? 's' : ''} uploaded!`, { id: photoToast });
-        } catch (photoError) {
-          console.error('Photo upload failed:', photoError);
-          toast.error('Some photos failed to upload, continuing with uploaded photos', { id: photoToast });
+
+          // Get current privacy setting and circle snapshot
+          const privacyLevel = userData?.privacySettings?.checkInVisibility || 'all_besties';
+          const circleSnapshot = userData?.featuredCircle || [];
+
+          const checkInData = {
+            userId: currentUser.uid,
+            location: locationInput,
+            duration: duration,
+            alertTime: Timestamp.fromDate(alertTime),
+            bestieIds: selectedBesties,
+            notes: notes || null,
+            meetingWith: meetingWith || null,
+            photoURLs: photoURLs,
+            status: 'active',
+            privacyLevel: privacyLevel,
+            circleSnapshot: circleSnapshot,
+            createdAt: Timestamp.now(),
+            lastUpdate: Timestamp.now(),
+          };
+
+          // Add document and get reference
+          const docRef = await addDoc(collection(db, 'checkins'), checkInData);
+
+          // Verify the document was created by reading it back
+          const docSnap = await getDoc(doc(db, 'checkins', docRef.id));
+
+          if (!docSnap.exists()) {
+            throw new Error('Check-in was not saved properly. Please try again.');
+          }
+
+          // Verify critical data
+          const savedData = docSnap.data();
+          if (savedData.userId !== currentUser.uid || savedData.status !== 'active') {
+            throw new Error('Check-in data verification failed. Please try again.');
+          }
+
+          // Verify besties were saved correctly
+          if (!savedData.bestieIds || savedData.bestieIds.length !== selectedBesties.length) {
+            throw new Error('Bestie list was not saved correctly. Please try again.');
+          }
+
+          // Verify all bestie IDs match exactly
+          const bestiesMatch = selectedBesties.every(id => savedData.bestieIds.includes(id));
+          if (!bestiesMatch) {
+            throw new Error('Bestie list verification failed. Please try again.');
+          }
+
+          errorTracker.trackFunnelStep('checkin', 'complete_checkin');
+          return docRef;
+        } finally {
+          setLoading(false);
         }
-      }
-
-      // Get current privacy setting and circle snapshot
-      const privacyLevel = userData?.privacySettings?.checkInVisibility || 'all_besties';
-      const circleSnapshot = userData?.featuredCircle || [];
-
-      const checkInData = {
-        userId: currentUser.uid,
-        location: locationInput,
-        duration: duration,
-        alertTime: Timestamp.fromDate(alertTime),
-        bestieIds: selectedBesties,
-        notes: notes || null,
-        meetingWith: meetingWith || null,
-        photoURLs: photoURLs,
-        status: 'active',
-        privacyLevel: privacyLevel,
-        circleSnapshot: circleSnapshot,
-        createdAt: Timestamp.now(),
-        lastUpdate: Timestamp.now(),
-      };
-
-      // Add document and get reference
-      const docRef = await addDoc(collection(db, 'checkins'), checkInData);
-
-      // Verify the document was created by reading it back
-      const docSnap = await getDoc(doc(db, 'checkins', docRef.id));
-
-      if (!docSnap.exists()) {
-        throw new Error('Check-in was not saved properly. Please try again.');
-      }
-
-      // Verify critical data
-      const savedData = docSnap.data();
-      if (savedData.userId !== currentUser.uid || savedData.status !== 'active') {
-        throw new Error('Check-in data verification failed. Please try again.');
-      }
-
-      // Verify besties were saved correctly
-      if (!savedData.bestieIds || savedData.bestieIds.length !== selectedBesties.length) {
-        throw new Error('Bestie list was not saved correctly. Please try again.');
-      }
-
-      // Verify all bestie IDs match exactly
-      const bestiesMatch = selectedBesties.every(id => savedData.bestieIds.includes(id));
-      if (!bestiesMatch) {
-        throw new Error('Bestie list verification failed. Please try again.');
-      }
-
-      errorTracker.trackFunnelStep('checkin', 'complete_checkin');
-      toast.success('Check-in created! Stay safe! 💜', { id: loadingToast });
-      navigate('/');
-    } catch (error) {
-      console.error('Error creating check-in:', error);
-      errorTracker.logCustomError('Failed to create check-in', { error: error.message });
-
-      // Provide specific error messages
-      if (error.code === 'permission-denied') {
-        toast.error('Permission denied. Please check your account settings.', { id: loadingToast });
-      } else if (error.code === 'unavailable') {
-        toast.error('Unable to connect to server. Please check your internet connection.', { id: loadingToast });
-      } else if (error.message.includes('verification failed')) {
-        toast.error(error.message, { id: loadingToast });
-      } else {
-        toast.error('Failed to create check-in. Please try again.', { id: loadingToast });
-      }
-    } finally {
-      setLoading(false);
-    }
+      },
+      rollback: () => {
+        // Navigate back to creation page on error
+        // User is already navigated away, so we don't need to do anything
+      },
+      onError: (error) => {
+        console.error('Error creating check-in:', error);
+        errorTracker.logCustomError('Failed to create check-in', { error: error.message });
+      },
+      successMessage: 'Check-in created! Stay safe! 💜',
+      errorMessage: 'Failed to create check-in. Please try creating it again.',
+      showLoadingToast: true,
+      loadingMessage: 'Creating your check-in...'
+    });
   };
 
   return (

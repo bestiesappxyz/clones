@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { db } from '../services/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 
 const EmergencySOSButton = () => {
   const { currentUser, userData } = useAuth();
@@ -13,6 +14,7 @@ const EmergencySOSButton = () => {
   const countdownInterval = useRef(null);
   const holdIntervalRef = useRef(null);
   const holdStartTimeRef = useRef(null);
+  const { executeOptimistic } = useOptimisticUpdate();
 
   // Prevent navigation away from orange alert screen
   useEffect(() => {
@@ -63,39 +65,49 @@ const EmergencySOSButton = () => {
   };
 
   const sendSOS = async () => {
-    try {
-      // Get location
-      let location = 'Location unavailable';
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
-          });
-          location = `GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
-        } catch (err) {
-          console.error('Location error:', err);
+    // Use optimistic update - show alert screen immediately
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Show orange alert screen instantly - user needs immediate feedback
+        setActivating(false);
+        setAlertSent(true);
+      },
+      serverUpdate: async () => {
+        // Get location in background
+        let location = 'Location unavailable';
+        if (navigator.geolocation) {
+          try {
+            const position = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
+            });
+            location = `GPS: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
+          } catch (err) {
+            console.error('Location error:', err);
+          }
         }
-      }
 
-      // Create emergency alert (matches backend collection name)
-      await addDoc(collection(db, 'emergency_sos'), {
-        userId: currentUser.uid,
-        userName: userData?.displayName || 'User',
-        location,
-        timestamp: Timestamp.now(),
-        status: 'active',
-        type: 'sos',
-        message: '🚨 EMERGENCY - User needs immediate help!'
-      });
+        // Create emergency alert (matches backend collection name)
+        const docRef = await addDoc(collection(db, 'emergency_sos'), {
+          userId: currentUser.uid,
+          userName: userData?.displayName || 'User',
+          location,
+          timestamp: Timestamp.now(),
+          status: 'active',
+          type: 'sos',
+          message: '🚨 EMERGENCY - User needs immediate help!'
+        });
 
-      toast.success('🚨 Emergency alert sent to all besties!');
-      setActivating(false);
-      setAlertSent(true); // Show orange alert screen
-    } catch (error) {
-      console.error('Error sending SOS:', error);
-      toast.error('Failed to send emergency alert');
-      setActivating(false);
-    }
+        return docRef;
+      },
+      rollback: () => {
+        // Hide alert screen if backend fails
+        setAlertSent(false);
+        setActivating(false);
+      },
+      successMessage: '🚨 Emergency alert sent to all besties!',
+      errorMessage: 'Failed to send emergency alert. Please try again.',
+      skipSuccessToast: false
+    });
   };
 
   const handleHoldStart = () => {
