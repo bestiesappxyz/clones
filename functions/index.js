@@ -310,14 +310,40 @@ exports.declineBestieRequest = functions.https.onCall(async (data, context) => {
 // BADGE FUNCTIONS & STATS TRACKING
 // ========================================
 
+// Helper: Update analytics cache
+async function updateAnalyticsCache(updates) {
+  const cacheRef = db.collection('analytics_cache').doc('realtime');
+  try {
+    await cacheRef.set(updates, { merge: true });
+  } catch (error) {
+    // If document doesn't exist, create it with defaults
+    console.error('Analytics cache update failed, initializing:', error);
+    await cacheRef.set({
+      lastUpdated: admin.firestore.Timestamp.now(),
+      checkIns: { total: 0, active: 0, completed: 0, alerted: 0 },
+      besties: { total: 0, accepted: 0, pending: 0 },
+      users: { total: 0 },
+      ...updates
+    });
+  }
+}
+
 // Track when check-ins are created
 exports.onCheckInCreated = functions.firestore
   .document('checkins/{checkInId}')
   .onCreate(async (snap, context) => {
     const checkIn = snap.data();
-    // Increment total check-in count
+
+    // Update user stats
     await db.collection('users').doc(checkIn.userId).update({
       'stats.totalCheckIns': admin.firestore.FieldValue.increment(1)
+    });
+
+    // Update analytics cache
+    await updateAnalyticsCache({
+      'checkIns.total': admin.firestore.FieldValue.increment(1),
+      'checkIns.active': admin.firestore.FieldValue.increment(1),
+      lastUpdated: admin.firestore.Timestamp.now()
     });
   });
 
@@ -328,6 +354,7 @@ exports.onCheckInCountUpdate = functions.firestore
     const newData = change.after.data();
     const oldData = change.before.data();
     const userRef = db.collection('users').doc(newData.userId);
+    const cacheUpdates = { lastUpdated: admin.firestore.Timestamp.now() };
 
     // Update stats when status changes to 'completed'
     if (newData.status === 'completed' && oldData.status !== 'completed') {
@@ -335,6 +362,12 @@ exports.onCheckInCountUpdate = functions.firestore
       await userRef.update({
         'stats.completedCheckIns': admin.firestore.FieldValue.increment(1)
       });
+
+      // Update analytics cache
+      cacheUpdates['checkIns.completed'] = admin.firestore.FieldValue.increment(1);
+      if (oldData.status === 'active') {
+        cacheUpdates['checkIns.active'] = admin.firestore.FieldValue.increment(-1);
+      }
 
       const count = await db.collection('checkins')
         .where('userId', '==', newData.userId)
@@ -363,6 +396,17 @@ exports.onCheckInCountUpdate = functions.firestore
       await userRef.update({
         'stats.alertedCheckIns': admin.firestore.FieldValue.increment(1)
       });
+
+      // Update analytics cache
+      cacheUpdates['checkIns.alerted'] = admin.firestore.FieldValue.increment(1);
+      if (oldData.status === 'active') {
+        cacheUpdates['checkIns.active'] = admin.firestore.FieldValue.increment(-1);
+      }
+    }
+
+    // Apply cache updates if any
+    if (Object.keys(cacheUpdates).length > 1) {
+      await updateAnalyticsCache(cacheUpdates);
     }
   });
 
@@ -381,9 +425,51 @@ exports.onBestieCountUpdate = functions.firestore
         'stats.totalBesties': admin.firestore.FieldValue.increment(1)
       });
 
+      // Update analytics cache
+      const cacheUpdates = {
+        'besties.accepted': admin.firestore.FieldValue.increment(1),
+        lastUpdated: admin.firestore.Timestamp.now()
+      };
+      if (oldData.status === 'pending') {
+        cacheUpdates['besties.pending'] = admin.firestore.FieldValue.increment(-1);
+      }
+      await updateAnalyticsCache(cacheUpdates);
+
       await awardBestieBadge(newData.requesterId);
       await awardBestieBadge(newData.recipientId);
     }
+  });
+
+// Track when besties are created
+exports.onBestieCreated = functions.firestore
+  .document('besties/{bestieId}')
+  .onCreate(async (snap, context) => {
+    const bestie = snap.data();
+
+    // Update analytics cache
+    const cacheUpdates = {
+      'besties.total': admin.firestore.FieldValue.increment(1),
+      lastUpdated: admin.firestore.Timestamp.now()
+    };
+
+    if (bestie.status === 'pending') {
+      cacheUpdates['besties.pending'] = admin.firestore.FieldValue.increment(1);
+    } else if (bestie.status === 'accepted') {
+      cacheUpdates['besties.accepted'] = admin.firestore.FieldValue.increment(1);
+    }
+
+    await updateAnalyticsCache(cacheUpdates);
+  });
+
+// Track when users are created
+exports.onUserCreated = functions.firestore
+  .document('users/{userId}')
+  .onCreate(async (snap, context) => {
+    // Update analytics cache
+    await updateAnalyticsCache({
+      'users.total': admin.firestore.FieldValue.increment(1),
+      lastUpdated: admin.firestore.Timestamp.now()
+    });
   });
 
 async function awardBestieBadge(userId) {
@@ -1265,6 +1351,83 @@ exports.migratePhoneNumbers = functions.https.onCall(async (data, context) => {
   } catch (error) {
     console.error('Error in phone migration:', error);
     throw new functions.https.HttpsError('internal', 'Migration failed');
+  }
+});
+
+// ========================================
+// ANALYTICS CACHE MANAGEMENT
+// ========================================
+
+/**
+ * Initialize or rebuild analytics cache from raw data
+ * Admin-only function to rebuild cache if it gets out of sync
+ */
+exports.rebuildAnalyticsCache = functions.https.onCall(async (data, context) => {
+  // Check authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+  }
+
+  // Check admin status
+  const userDoc = await db.collection('users').doc(context.auth.uid).get();
+  if (!userDoc.exists || !userDoc.data().isAdmin) {
+    throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+  }
+
+  try {
+    console.log('Starting analytics cache rebuild...');
+
+    // Count users
+    const usersCount = await db.collection('users').count().get();
+    const totalUsers = usersCount.data().count;
+
+    // Count check-ins by status
+    const [totalCheckIns, activeCheckIns, completedCheckIns, alertedCheckIns] = await Promise.all([
+      db.collection('checkins').count().get(),
+      db.collection('checkins').where('status', '==', 'active').count().get(),
+      db.collection('checkins').where('status', '==', 'completed').count().get(),
+      db.collection('checkins').where('status', '==', 'alerted').count().get()
+    ]);
+
+    // Count besties by status
+    const [totalBesties, acceptedBesties, pendingBesties] = await Promise.all([
+      db.collection('besties').count().get(),
+      db.collection('besties').where('status', '==', 'accepted').count().get(),
+      db.collection('besties').where('status', '==', 'pending').count().get()
+    ]);
+
+    // Build cache object
+    const cacheData = {
+      lastUpdated: admin.firestore.Timestamp.now(),
+      lastRebuild: admin.firestore.Timestamp.now(),
+      users: {
+        total: totalUsers
+      },
+      checkIns: {
+        total: totalCheckIns.data().count,
+        active: activeCheckIns.data().count,
+        completed: completedCheckIns.data().count,
+        alerted: alertedCheckIns.data().count
+      },
+      besties: {
+        total: totalBesties.data().count,
+        accepted: acceptedBesties.data().count,
+        pending: pendingBesties.data().count
+      }
+    };
+
+    // Write to cache
+    await db.collection('analytics_cache').doc('realtime').set(cacheData);
+
+    console.log('Analytics cache rebuilt successfully:', cacheData);
+
+    return {
+      success: true,
+      cache: cacheData
+    };
+  } catch (error) {
+    console.error('Error rebuilding analytics cache:', error);
+    throw new functions.https.HttpsError('internal', 'Cache rebuild failed');
   }
 });
 
