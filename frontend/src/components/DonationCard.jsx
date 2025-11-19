@@ -33,7 +33,7 @@ const DonationCard = () => {
           Keep Besties Free
         </h3>
         <p className="text-text-secondary text-sm">
-          Your donation helps us keep safety accessible to everyone
+          Our goal is to keep it free for everyone, but we rely on donations to make it happen
         </p>
       </div>
 
@@ -70,7 +70,7 @@ const DonationCard = () => {
         </button>
 
         <div className="text-xs text-text-secondary text-center">
-          100% goes to keeping the app free 💜
+          Every donation helps keep Besties free 💜
         </div>
       </div>
     </div>
