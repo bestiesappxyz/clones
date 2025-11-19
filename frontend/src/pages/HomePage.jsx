@@ -160,7 +160,17 @@ const HomePage = () => {
 
         {/* Quick Check-In Buttons */}
         {activeCheckIns.length === 0 && (
-          <QuickButtons onQuickCheckIn={handleQuickCheckIn} />
+          <>
+            <QuickButtons onQuickCheckIn={handleQuickCheckIn} />
+
+            {/* Create Custom Check-In Button - Moved here! */}
+            <button
+              onClick={() => navigate('/create')}
+              className="w-full btn btn-primary text-lg py-4 mb-6"
+            >
+              ✨ Create Custom Check-In
+            </button>
+          </>
         )}
 
         {/* Active Check-Ins */}
@@ -177,8 +187,8 @@ const HomePage = () => {
         {templates.length > 0 && activeCheckIns.length === 0 && (
           <div className="mb-6">
             <h2 className="text-xl font-display text-text-primary mb-4">Your Templates</h2>
-            <TemplateSelector 
-              templates={templates} 
+            <TemplateSelector
+              templates={templates}
               onSelect={handleTemplateSelect}
             />
           </div>
@@ -217,17 +227,62 @@ const HomePage = () => {
           </div>
         </div>
 
+        {/* You're Part of Something Special - Appreciation Card */}
+        <div className="card p-6 mb-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100">
+          <div className="text-center">
+            <div className="text-4xl mb-3">💜</div>
+            <h3 className="font-display text-2xl text-gradient mb-3">
+              You're Part of Something Special
+            </h3>
+            <p className="text-text-secondary leading-relaxed mb-4">
+              Hey bestie! We just wanted to say—you being here means everything.
+              Every check-in you create, every friend you add, every safe moment you share...
+              you're part of a community that's got each other's backs.
+              We're building this together, and we couldn't do it without amazing people like you.
+              You're not just using an app—you're part of the squad. 💕
+            </p>
+            <p className="text-sm text-primary font-semibold">
+              Keep slaying safely, queen! 👑✨
+            </p>
+          </div>
+        </div>
+
         {/* Donation Card */}
         {!userData?.donationStats?.isActive && <DonationCard />}
 
-        {/* Create Check-In Button */}
-        {activeCheckIns.length === 0 && (
-          <button
-            onClick={() => navigate('/create')}
-            className="w-full btn btn-primary text-lg py-4"
-          >
-            ✨ Create Custom Check-In
-          </button>
+        {/* OR Divider */}
+        {!userData?.donationStats?.isActive && (
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <span className="text-text-secondary font-semibold">OR</span>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+        )}
+
+        {/* Invite Friends Card */}
+        {!userData?.donationStats?.isActive && (
+          <div className="card p-6 mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-100">
+            <div className="text-center">
+              <div className="text-4xl mb-3">👯‍♀️</div>
+              <h3 className="font-display text-2xl text-gradient mb-3">
+                Grow the Squad!
+              </h3>
+              <p className="text-text-secondary leading-relaxed mb-4">
+                Love Besties? Invite your friends! The more people who join,
+                the stronger our safety network becomes. Plus, spreading the word
+                helps us keep the app free for everyone. Share the love! 💖
+              </p>
+              <button
+                onClick={() => navigate('/besties')}
+                className="btn btn-secondary w-full text-lg py-3"
+              >
+                🎉 Invite Friends
+              </button>
+              <p className="text-xs text-text-secondary mt-3">
+                Every new friend makes Besties better for everyone!
+              </p>
+            </div>
+          </div>
         )}
       </div>
 
