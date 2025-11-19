@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 
 // Design variation showcase for HomePage, BestiesPage, and ProfilePage
-// 5 themes: Soft Pastel, Bold Vibrant, Minimal Clean, Playful Cards, Magazine Editorial
+// Each variation is a completely different design philosophy
 
 const PageDesignVariations = () => {
-  const navigate = useNavigate();
   const [activePage, setActivePage] = useState('home');
   const [activeVariation, setActiveVariation] = useState(1);
 
@@ -17,11 +15,11 @@ const PageDesignVariations = () => {
   ];
 
   const variations = [
-    { id: 1, name: 'Soft Pastel Dream', description: 'Light gradients, extra rounded, lots of white space' },
-    { id: 2, name: 'Bold Vibrant', description: 'Saturated pinks/purples, high contrast, bigger text' },
-    { id: 3, name: 'Minimal Clean', description: 'Simplified layout, breathing room, subtle accents' },
-    { id: 4, name: 'Playful Cards', description: 'Heavy card use, layered effects, playful spacing' },
-    { id: 5, name: 'Magazine Editorial', description: 'Split panels, bold typography, structured grid' },
+    { id: 1, name: 'Dreamy Cloud', description: 'Ethereal, soft, cloud-like with floating elements' },
+    { id: 2, name: 'Neon Nights', description: 'Cyberpunk vibes, glowing accents, dark mode energy' },
+    { id: 3, name: 'Swiss Minimal', description: 'Grid-based, typographic hierarchy, stark contrast' },
+    { id: 4, name: 'Kawaii Sticker', description: 'Cute Japanese aesthetic, stickers, notebook feel' },
+    { id: 5, name: 'Luxury Editorial', description: 'High fashion magazine, serif fonts, sophisticated' },
   ];
 
   return (
@@ -32,7 +30,7 @@ const PageDesignVariations = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-display text-gradient mb-4">Page Design Variations</h1>
-          <p className="text-text-secondary">Explore 5 visual themes for each page</p>
+          <p className="text-text-secondary">5 completely different design philosophies</p>
         </div>
 
         {/* Page Selector */}
@@ -78,13 +76,8 @@ const PageDesignVariations = () => {
 
         {/* Design Preview */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* HomePage Variations */}
           {activePage === 'home' && <HomePageVariations variation={activeVariation} />}
-
-          {/* BestiesPage Variations */}
           {activePage === 'besties' && <BestiesPageVariations variation={activeVariation} />}
-
-          {/* ProfilePage Variations */}
           {activePage === 'profile' && <ProfilePageVariations variation={activeVariation} />}
         </div>
       </div>
@@ -98,285 +91,341 @@ const PageDesignVariations = () => {
 
 const HomePageVariations = ({ variation }) => {
   switch (variation) {
-    case 1:
-      return <HomePageSoftPastel />;
-    case 2:
-      return <HomePageBoldVibrant />;
-    case 3:
-      return <HomePageMinimalClean />;
-    case 4:
-      return <HomePagePlayfulCards />;
-    case 5:
-      return <HomePageMagazine />;
-    default:
-      return <HomePageSoftPastel />;
+    case 1: return <HomePageDreamyCloud />;
+    case 2: return <HomePageNeonNights />;
+    case 3: return <HomePageSwissMinimal />;
+    case 4: return <HomePageKawaiiSticker />;
+    case 5: return <HomePageLuxuryEditorial />;
+    default: return <HomePageDreamyCloud />;
   }
 };
 
-// Variation 1: Soft Pastel Dream
-const HomePageSoftPastel = () => (
-  <div className="p-8 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 min-h-[600px]">
-    {/* Welcome Section */}
-    <div className="mb-8 animate-fade-in">
-      <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-sm">
-        <h1 className="text-4xl font-display text-gray-700 mb-3">
-          Hey Sarah! 👋
-        </h1>
-        <p className="text-lg text-gray-500">
-          Your besties have your back! 💜
-        </p>
-      </div>
-    </div>
+// Variation 1: Dreamy Cloud - Ethereal, soft, floating
+const HomePageDreamyCloud = () => (
+  <div className="relative p-8 min-h-[700px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #fef7ff 0%, #fdf4ff 50%, #fae8ff 100%)' }}>
+    {/* Floating cloud decorations */}
+    <div className="absolute top-10 left-10 w-40 h-20 bg-white/60 rounded-full blur-xl"></div>
+    <div className="absolute top-32 right-8 w-32 h-16 bg-pink-100/60 rounded-full blur-xl"></div>
+    <div className="absolute bottom-40 left-20 w-48 h-24 bg-purple-100/50 rounded-full blur-2xl"></div>
+    <div className="absolute bottom-20 right-16 w-36 h-18 bg-white/70 rounded-full blur-xl"></div>
 
-    {/* Quick Buttons */}
-    <div className="grid grid-cols-3 gap-4 mb-8">
-      {['15 min', '30 min', '1 hour'].map((time, i) => (
-        <button
-          key={i}
-          className="py-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm hover:shadow-md transition-all border border-pink-100"
-        >
-          <div className="text-2xl mb-2">{['⚡', '☕', '🌟'][i]}</div>
-          <div className="text-sm font-semibold text-gray-600">{time}</div>
-        </button>
-      ))}
-    </div>
-
-    {/* Main CTA */}
-    <button className="w-full py-5 bg-gradient-to-r from-pink-200 to-purple-200 rounded-2xl font-semibold text-gray-700 shadow-sm hover:shadow-md transition-all mb-8">
-      ✨ Create Custom Check-In
-    </button>
-
-    {/* Stats Card */}
-    <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-sm">
-      <h3 className="font-display text-lg text-gray-700 mb-4">Your Safety Stats</h3>
-      <div className="grid grid-cols-3 gap-4">
-        {[
-          { num: '12', label: 'Safe Check-ins', color: 'pink' },
-          { num: '5', label: 'Besties', color: 'purple' },
-          { num: '0', label: 'Active Now', color: 'blue' }
-        ].map((stat, i) => (
-          <div key={i} className="text-center">
-            <div className={`text-3xl font-display text-${stat.color}-400`}>{stat.num}</div>
-            <div className="text-xs text-gray-500">{stat.label}</div>
+    {/* Content */}
+    <div className="relative z-10">
+      {/* Welcome - Floating card */}
+      <div className="mb-10 transform hover:-translate-y-1 transition-transform">
+        <div className="bg-white/80 backdrop-blur-md rounded-[2rem] p-8 shadow-[0_8px_32px_rgba(236,72,153,0.15)] border border-white/50">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-3xl animate-bounce">✨</span>
+            <span className="text-sm text-pink-400 font-medium tracking-wide">WELCOME BACK</span>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-// Variation 2: Bold Vibrant
-const HomePageBoldVibrant = () => (
-  <div className="p-8 bg-gradient-to-br from-fuchsia-600 via-purple-600 to-pink-600 min-h-[600px]">
-    {/* Welcome Section */}
-    <div className="mb-8">
-      <h1 className="text-5xl font-black text-white mb-3 drop-shadow-lg">
-        Hey Sarah! 👋
-      </h1>
-      <p className="text-xl text-pink-100 font-semibold">
-        Your besties have your back! 💜
-      </p>
-    </div>
-
-    {/* Quick Buttons */}
-    <div className="grid grid-cols-3 gap-4 mb-8">
-      {['15 min', '30 min', '1 hour'].map((time, i) => (
-        <button
-          key={i}
-          className="py-6 bg-white rounded-2xl shadow-xl hover:scale-105 transition-transform border-4 border-pink-300"
-        >
-          <div className="text-3xl mb-2">{['⚡', '☕', '🌟'][i]}</div>
-          <div className="text-sm font-black text-fuchsia-600">{time}</div>
-        </button>
-      ))}
-    </div>
-
-    {/* Main CTA */}
-    <button className="w-full py-6 bg-yellow-400 rounded-2xl font-black text-xl text-gray-900 shadow-xl hover:scale-105 transition-transform mb-8">
-      ✨ CREATE CHECK-IN
-    </button>
-
-    {/* Stats Card */}
-    <div className="bg-white rounded-3xl p-6 shadow-xl border-4 border-pink-300">
-      <h3 className="font-black text-xl text-fuchsia-600 mb-4">YOUR STATS</h3>
-      <div className="grid grid-cols-3 gap-4">
-        {[
-          { num: '12', label: 'Check-ins', color: 'pink' },
-          { num: '5', label: 'Besties', color: 'purple' },
-          { num: '0', label: 'Active', color: 'fuchsia' }
-        ].map((stat, i) => (
-          <div key={i} className="text-center">
-            <div className={`text-4xl font-black text-${stat.color}-600`}>{stat.num}</div>
-            <div className="text-xs font-bold text-gray-600">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-// Variation 3: Minimal Clean
-const HomePageMinimalClean = () => (
-  <div className="p-12 bg-gray-50 min-h-[600px]">
-    {/* Welcome Section */}
-    <div className="mb-12">
-      <h1 className="text-3xl font-light text-gray-800 mb-2">
-        Hey Sarah
-      </h1>
-      <p className="text-gray-400">
-        Your besties have your back
-      </p>
-    </div>
-
-    {/* Quick Buttons */}
-    <div className="flex gap-6 mb-12">
-      {['15m', '30m', '1h'].map((time, i) => (
-        <button
-          key={i}
-          className="flex-1 py-8 bg-white rounded-xl hover:shadow-md transition-shadow"
-        >
-          <div className="text-sm text-gray-400 mb-1">{['Quick', 'Medium', 'Long'][i]}</div>
-          <div className="text-lg font-semibold text-gray-700">{time}</div>
-        </button>
-      ))}
-    </div>
-
-    {/* Main CTA */}
-    <button className="w-full py-4 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors mb-12">
-      Create Check-In
-    </button>
-
-    {/* Stats */}
-    <div className="border-t pt-8">
-      <div className="flex justify-between">
-        {[
-          { num: '12', label: 'Check-ins' },
-          { num: '5', label: 'Besties' },
-          { num: '0', label: 'Active' }
-        ].map((stat, i) => (
-          <div key={i}>
-            <div className="text-2xl font-semibold text-gray-800">{stat.num}</div>
-            <div className="text-xs text-gray-400">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-// Variation 4: Playful Cards
-const HomePagePlayfulCards = () => (
-  <div className="p-8 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 min-h-[600px]">
-    {/* Welcome Card */}
-    <div className="relative mb-8">
-      <div className="absolute inset-0 bg-pink-200 rounded-3xl transform rotate-2"></div>
-      <div className="absolute inset-0 bg-purple-200 rounded-3xl transform -rotate-1"></div>
-      <div className="relative bg-white rounded-3xl p-6 shadow-lg">
-        <h1 className="text-3xl font-display text-gray-800 mb-2">
-          Hey Sarah! 👋
-        </h1>
-        <p className="text-gray-600">
-          Your besties have your back! 💜
-        </p>
-      </div>
-    </div>
-
-    {/* Quick Buttons - Staggered */}
-    <div className="space-y-3 mb-8">
-      {[
-        { time: '15 min', emoji: '⚡', color: 'pink', rotate: '1deg' },
-        { time: '30 min', emoji: '☕', color: 'purple', rotate: '-1deg' },
-        { time: '1 hour', emoji: '🌟', color: 'blue', rotate: '0.5deg' }
-      ].map((item, i) => (
-        <button
-          key={i}
-          className={`w-full py-4 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all flex items-center gap-4 px-6`}
-          style={{ transform: `rotate(${item.rotate})` }}
-        >
-          <span className="text-2xl">{item.emoji}</span>
-          <span className="font-semibold text-gray-700">{item.time}</span>
-        </button>
-      ))}
-    </div>
-
-    {/* Main CTA */}
-    <div className="relative mb-8">
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-400 rounded-2xl transform rotate-1"></div>
-      <button className="relative w-full py-5 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-2xl font-semibold shadow-lg">
-        ✨ Create Custom Check-In
-      </button>
-    </div>
-
-    {/* Stats Cards */}
-    <div className="grid grid-cols-3 gap-3">
-      {[
-        { num: '12', label: 'Safe', emoji: '✅', color: 'green' },
-        { num: '5', label: 'Besties', emoji: '💜', color: 'purple' },
-        { num: '0', label: 'Active', emoji: '🔔', color: 'blue' }
-      ].map((stat, i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 shadow-md text-center transform hover:scale-105 transition-transform">
-          <div className="text-xl mb-1">{stat.emoji}</div>
-          <div className={`text-2xl font-display text-${stat.color}-500`}>{stat.num}</div>
-          <div className="text-xs text-gray-500">{stat.label}</div>
+          <h1 className="text-4xl font-light text-gray-700 mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+            Hello, <span className="font-normal text-pink-500">Sarah</span>
+          </h1>
+          <p className="text-gray-400 italic">float through your day safely...</p>
         </div>
-      ))}
+      </div>
+
+      {/* Quick actions - Cloud buttons */}
+      <div className="grid grid-cols-3 gap-4 mb-10">
+        {[
+          { time: '15 min', icon: '🌸', label: 'quick' },
+          { time: '30 min', icon: '🌷', label: 'medium' },
+          { time: '1 hour', icon: '🌺', label: 'long' }
+        ].map((item, i) => (
+          <button
+            key={i}
+            className="group bg-white/70 backdrop-blur-sm rounded-[1.5rem] p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-white/50"
+          >
+            <div className="text-2xl mb-3 group-hover:scale-110 transition-transform">{item.icon}</div>
+            <div className="text-lg font-medium text-gray-600">{item.time}</div>
+            <div className="text-xs text-pink-300 uppercase tracking-wider">{item.label}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Main CTA - Gradient pill */}
+      <button className="w-full py-5 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 rounded-full text-white font-medium shadow-lg hover:shadow-xl transition-all mb-10 relative overflow-hidden">
+        <span className="relative z-10">✨ Create Check-In</span>
+        <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+      </button>
+
+      {/* Stats - Floating bubbles */}
+      <div className="flex justify-center gap-6">
+        {[
+          { num: '12', label: 'safe arrivals', color: 'pink' },
+          { num: '5', label: 'besties', color: 'purple' },
+          { num: '7', label: 'day streak', color: 'fuchsia' }
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className={`w-20 h-20 bg-gradient-to-br from-${stat.color}-100 to-${stat.color}-200 rounded-full flex items-center justify-center shadow-lg mb-2`}>
+              <span className={`text-2xl font-light text-${stat.color}-500`}>{stat.num}</span>
+            </div>
+            <span className="text-xs text-gray-400">{stat.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 );
 
-// Variation 5: Magazine Editorial
-const HomePageMagazine = () => (
-  <div className="min-h-[600px]">
-    {/* Hero Split */}
-    <div className="grid md:grid-cols-2">
-      {/* Left - Bold Typography */}
-      <div className="bg-gray-900 p-12 flex flex-col justify-center">
-        <div className="text-pink-400 text-sm font-bold tracking-widest mb-4">WELCOME BACK</div>
-        <h1 className="text-5xl font-black text-white leading-tight mb-4">
-          Hey<br />Sarah
+// Variation 2: Neon Nights - Cyberpunk, dark mode, glowing
+const HomePageNeonNights = () => (
+  <div className="p-8 min-h-[700px] bg-gray-900 relative overflow-hidden">
+    {/* Grid background */}
+    <div className="absolute inset-0 opacity-10">
+      <div className="h-full w-full" style={{
+        backgroundImage: 'linear-gradient(#ec4899 1px, transparent 1px), linear-gradient(90deg, #ec4899 1px, transparent 1px)',
+        backgroundSize: '40px 40px'
+      }}></div>
+    </div>
+
+    {/* Glow effects */}
+    <div className="absolute top-0 left-1/4 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+
+    <div className="relative z-10">
+      {/* Welcome */}
+      <div className="mb-8">
+        <div className="inline-block px-4 py-1 bg-pink-500/20 rounded-full border border-pink-500/50 mb-4">
+          <span className="text-pink-400 text-sm font-mono">STATUS: ONLINE</span>
+        </div>
+        <h1 className="text-5xl font-black text-white mb-2">
+          Hey <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">Sarah</span>
         </h1>
-        <div className="w-16 h-1 bg-pink-500 mb-4"></div>
-        <p className="text-gray-400">Your safety squad is ready</p>
+        <p className="text-gray-400 font-mono text-sm">// your squad is watching out</p>
       </div>
 
-      {/* Right - Quick Actions */}
-      <div className="bg-pink-50 p-12">
-        <div className="text-xs font-bold text-gray-500 tracking-widest mb-6">QUICK CHECK-IN</div>
-        <div className="space-y-4">
-          {['15 min', '30 min', '1 hour'].map((time, i) => (
-            <button
-              key={i}
-              className="w-full py-4 bg-white border-l-4 border-pink-500 text-left px-6 hover:bg-pink-100 transition-colors"
-            >
-              <span className="font-bold text-gray-800">{time}</span>
-            </button>
+      {/* Quick actions - Neon buttons */}
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        {[
+          { time: '15m', color: 'pink' },
+          { time: '30m', color: 'purple' },
+          { time: '1h', color: 'cyan' }
+        ].map((item, i) => (
+          <button
+            key={i}
+            className={`py-6 bg-gray-800 border-2 border-${item.color}-500/50 rounded-lg hover:border-${item.color}-500 hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all relative overflow-hidden group`}
+          >
+            <div className={`absolute inset-0 bg-${item.color}-500/10 group-hover:bg-${item.color}-500/20 transition-colors`}></div>
+            <span className={`relative text-${item.color}-400 font-mono font-bold text-lg`}>{item.time}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Main CTA */}
+      <button className="w-full py-5 bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg font-bold text-white mb-8 relative overflow-hidden group">
+        <span className="relative z-10 font-mono">[ CREATE CHECK-IN ]</span>
+        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
+      </button>
+
+      {/* Stats - Terminal style */}
+      <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700 font-mono">
+        <div className="text-gray-500 text-xs mb-3">$ stats --user sarah</div>
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: 'check_ins', value: '12', color: 'green' },
+            { label: 'besties', value: '5', color: 'pink' },
+            { label: 'streak', value: '7', color: 'yellow' }
+          ].map((stat, i) => (
+            <div key={i}>
+              <div className={`text-${stat.color}-400 text-2xl font-bold`}>{stat.value}</div>
+              <div className="text-gray-500 text-xs">{stat.label}</div>
+            </div>
           ))}
         </div>
       </div>
     </div>
+  </div>
+);
 
-    {/* Stats Bar */}
-    <div className="bg-white border-t-4 border-pink-500 p-8">
-      <div className="grid grid-cols-3 divide-x">
+// Variation 3: Swiss Minimal - Grid-based, typographic, stark
+const HomePageSwissMinimal = () => (
+  <div className="p-0 min-h-[700px] bg-white">
+    {/* Top bar */}
+    <div className="h-2 bg-black"></div>
+
+    <div className="p-8">
+      {/* Welcome - Strong typography */}
+      <div className="mb-12">
+        <div className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4">Dashboard / Home</div>
+        <h1 className="text-6xl font-black text-black leading-none mb-4">
+          Sarah.
+        </h1>
+        <div className="w-16 h-1 bg-black"></div>
+      </div>
+
+      {/* Quick actions - Grid system */}
+      <div className="grid grid-cols-3 gap-px bg-black mb-12">
+        {['15', '30', '60'].map((num, i) => (
+          <button
+            key={i}
+            className="bg-white p-8 hover:bg-gray-50 transition-colors text-left"
+          >
+            <div className="text-4xl font-black text-black">{num}</div>
+            <div className="text-xs uppercase tracking-widest text-gray-400 mt-2">minutes</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Main CTA */}
+      <button className="w-full py-6 bg-black text-white font-bold uppercase tracking-widest hover:bg-gray-900 transition-colors mb-12">
+        Create Check-In
+      </button>
+
+      {/* Stats - Strict grid */}
+      <div className="border-t-2 border-black pt-8">
+        <div className="grid grid-cols-3">
+          {[
+            { num: '12', label: 'Completed' },
+            { num: '05', label: 'Connections' },
+            { num: '07', label: 'Day Streak' }
+          ].map((stat, i) => (
+            <div key={i} className={`${i > 0 ? 'border-l-2 border-black pl-6' : ''}`}>
+              <div className="text-4xl font-black text-black">{stat.num}</div>
+              <div className="text-xs uppercase tracking-widest text-gray-400">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 4: Kawaii Sticker - Cute, playful, notebook aesthetic
+const HomePageKawaiiSticker = () => (
+  <div className="p-6 min-h-[700px] relative" style={{ background: '#fff9f9' }}>
+    {/* Notebook lines */}
+    <div className="absolute inset-0 opacity-30" style={{
+      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 27px, #ffccd5 28px)',
+      backgroundSize: '100% 28px'
+    }}></div>
+
+    {/* Doodle decorations */}
+    <div className="absolute top-4 right-4 text-4xl transform rotate-12">⭐</div>
+    <div className="absolute top-20 left-4 text-3xl transform -rotate-6">🌈</div>
+    <div className="absolute bottom-40 right-8 text-3xl transform rotate-6">💖</div>
+
+    <div className="relative z-10">
+      {/* Welcome - Sticker style */}
+      <div className="mb-8">
+        <div className="inline-block bg-pink-100 px-4 py-2 rounded-full transform -rotate-2 mb-4">
+          <span className="text-pink-500 font-bold">✿ welcome back!</span>
+        </div>
+        <h1 className="text-4xl font-black text-gray-800 mb-2">
+          Hi Sarah~ <span className="text-2xl">(*´▽`*)</span>
+        </h1>
+        <p className="text-gray-500">let's stay safe today! ♪</p>
+      </div>
+
+      {/* Quick actions - Sticker buttons */}
+      <div className="space-y-3 mb-8">
         {[
-          { num: '12', label: 'COMPLETED' },
-          { num: '5', label: 'BESTIES' },
-          { num: '0', label: 'ACTIVE' }
+          { time: '15 min', emoji: '🍓', color: 'red', rotate: '-1deg' },
+          { time: '30 min', emoji: '🍰', color: 'pink', rotate: '1deg' },
+          { time: '1 hour', emoji: '🧁', color: 'purple', rotate: '-0.5deg' }
+        ].map((item, i) => (
+          <button
+            key={i}
+            className={`w-full flex items-center gap-4 bg-${item.color}-50 p-4 rounded-2xl border-2 border-${item.color}-200 border-dashed hover:border-solid transition-all`}
+            style={{ transform: `rotate(${item.rotate})` }}
+          >
+            <span className="text-3xl">{item.emoji}</span>
+            <span className={`font-bold text-${item.color}-400`}>{item.time}</span>
+            <span className="ml-auto text-gray-300">→</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Main CTA - Tape effect */}
+      <div className="relative mb-8">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-yellow-200/80 transform -rotate-2"></div>
+        <button className="w-full py-5 bg-pink-400 rounded-xl text-white font-bold shadow-[4px_4px_0_0_#f472b6]">
+          ✧ Create Check-In ✧
+        </button>
+      </div>
+
+      {/* Stats - Badge stickers */}
+      <div className="flex justify-center gap-4">
+        {[
+          { num: '12', label: 'safe!', emoji: '✓' },
+          { num: '5', label: 'besties', emoji: '♡' },
+          { num: '7', label: 'streak', emoji: '★' }
         ].map((stat, i) => (
-          <div key={i} className="text-center px-4">
-            <div className="text-3xl font-black text-gray-900">{stat.num}</div>
-            <div className="text-xs font-bold text-gray-400 tracking-widest">{stat.label}</div>
+          <div key={i} className="text-center">
+            <div className="w-16 h-16 bg-white rounded-full border-4 border-dashed border-pink-300 flex items-center justify-center mb-1 shadow-sm">
+              <div>
+                <div className="text-lg font-black text-pink-500">{stat.num}</div>
+                <div className="text-xs text-pink-300">{stat.emoji}</div>
+              </div>
+            </div>
+            <span className="text-xs text-gray-400">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 5: Luxury Editorial - High fashion, sophisticated, serif
+const HomePageLuxuryEditorial = () => (
+  <div className="min-h-[700px]">
+    {/* Hero Section */}
+    <div className="relative h-72 bg-stone-900 flex items-end p-8">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      <div className="relative">
+        <div className="text-stone-400 text-xs tracking-[0.5em] uppercase mb-2">Welcome</div>
+        <h1 className="text-5xl text-white mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+          Sarah
+        </h1>
+        <div className="w-20 h-px bg-white/50"></div>
+      </div>
+    </div>
+
+    {/* Quick Actions */}
+    <div className="p-8 bg-stone-50">
+      <div className="text-xs tracking-[0.3em] uppercase text-stone-400 mb-6">Quick Check-In</div>
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { time: '15', unit: 'min' },
+          { time: '30', unit: 'min' },
+          { time: '60', unit: 'min' }
+        ].map((item, i) => (
+          <button
+            key={i}
+            className="py-8 bg-white border border-stone-200 hover:border-stone-900 transition-colors text-center"
+          >
+            <div className="text-3xl text-stone-900" style={{ fontFamily: 'Georgia, serif' }}>{item.time}</div>
+            <div className="text-xs text-stone-400 tracking-wider uppercase">{item.unit}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Main CTA */}
+    <div className="px-8 py-6 bg-white">
+      <button className="w-full py-5 bg-stone-900 text-white text-sm tracking-[0.2em] uppercase hover:bg-stone-800 transition-colors">
+        Create Check-In
+      </button>
+    </div>
+
+    {/* Stats */}
+    <div className="p-8 bg-white border-t border-stone-100">
+      <div className="grid grid-cols-3 gap-px">
+        {[
+          { num: '12', label: 'Completed' },
+          { num: '5', label: 'Connections' },
+          { num: '7', label: 'Streak' }
+        ].map((stat, i) => (
+          <div key={i} className="text-center py-4">
+            <div className="text-3xl text-stone-900 mb-1" style={{ fontFamily: 'Georgia, serif' }}>{stat.num}</div>
+            <div className="text-xs tracking-[0.2em] uppercase text-stone-400">{stat.label}</div>
           </div>
         ))}
       </div>
     </div>
 
-    {/* CTA */}
-    <div className="p-8 bg-gray-100">
-      <button className="w-full py-4 bg-gray-900 text-white font-bold tracking-wide hover:bg-gray-800 transition-colors">
-        CREATE CUSTOM CHECK-IN →
-      </button>
-    </div>
+    {/* Bottom accent */}
+    <div className="h-1 bg-gradient-to-r from-stone-200 via-stone-900 to-stone-200"></div>
   </div>
 );
 
@@ -386,188 +435,60 @@ const HomePageMagazine = () => (
 
 const BestiesPageVariations = ({ variation }) => {
   switch (variation) {
-    case 1:
-      return <BestiesPageSoftPastel />;
-    case 2:
-      return <BestiesPageBoldVibrant />;
-    case 3:
-      return <BestiesPageMinimalClean />;
-    case 4:
-      return <BestiesPagePlayfulCards />;
-    case 5:
-      return <BestiesPageMagazine />;
-    default:
-      return <BestiesPageSoftPastel />;
+    case 1: return <BestiesPageDreamyCloud />;
+    case 2: return <BestiesPageNeonNights />;
+    case 3: return <BestiesPageSwissMinimal />;
+    case 4: return <BestiesPageKawaiiSticker />;
+    case 5: return <BestiesPageLuxuryEditorial />;
+    default: return <BestiesPageDreamyCloud />;
   }
 };
 
-// Variation 1: Soft Pastel Dream
-const BestiesPageSoftPastel = () => (
-  <div className="p-8 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 min-h-[600px]">
-    {/* Header */}
-    <div className="mb-8">
-      <h1 className="text-3xl font-display text-gray-700 mb-2">💜 Your Besties</h1>
-      <p className="text-gray-500">Your safety squad activity hub</p>
-    </div>
+// Variation 1: Dreamy Cloud
+const BestiesPageDreamyCloud = () => (
+  <div className="relative p-8 min-h-[700px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #f5f3ff 0%, #faf5ff 50%, #fdf4ff 100%)' }}>
+    {/* Floating clouds */}
+    <div className="absolute top-20 right-10 w-32 h-16 bg-purple-100/60 rounded-full blur-xl"></div>
+    <div className="absolute bottom-32 left-10 w-40 h-20 bg-pink-100/50 rounded-full blur-xl"></div>
 
-    {/* Filters */}
-    <div className="flex gap-2 mb-6">
-      {['All', '💜 Circle', '🔔 Active'].map((filter, i) => (
-        <button
-          key={i}
-          className={`px-4 py-2 rounded-full text-sm font-semibold ${
-            i === 0 ? 'bg-pink-200 text-pink-800' : 'bg-white/80 text-gray-600'
-          }`}
-        >
-          {filter}
-        </button>
-      ))}
-    </div>
-
-    {/* Activity Feed */}
-    <div className="mb-6">
-      <h2 className="text-lg font-display text-gray-700 mb-4">📰 Activity Feed</h2>
-      <div className="space-y-3">
-        {[
-          { name: 'Emma', action: 'completed check-in safely ✅', time: '5 min ago' },
-          { name: 'Sophie', action: 'is currently checked in 🔔', time: '15 min ago' },
-          { name: 'Lily', action: 'earned a badge! 🏆', time: '1 hour ago' }
-        ].map((activity, i) => (
-          <div key={i} className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 shadow-sm">
-            <div className="font-semibold text-gray-700">
-              <span className="text-pink-500">{activity.name}</span> {activity.action}
-            </div>
-            <div className="text-sm text-gray-500">{activity.time}</div>
-          </div>
-        ))}
+    <div className="relative z-10">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="text-purple-300 text-sm tracking-wide mb-2">✨ your circle</div>
+        <h1 className="text-3xl font-light text-gray-700" style={{ fontFamily: 'Georgia, serif' }}>
+          Your <span className="text-purple-400">Besties</span>
+        </h1>
       </div>
-    </div>
 
-    {/* Besties Grid */}
-    <div className="grid grid-cols-2 gap-3">
-      {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
-        <div key={i} className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm">
-          <div className="w-12 h-12 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full mx-auto mb-2 flex items-center justify-center text-lg">
-            {name[0]}
-          </div>
-          <div className="font-semibold text-gray-700 text-sm">{name}</div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-// Variation 2: Bold Vibrant
-const BestiesPageBoldVibrant = () => (
-  <div className="p-8 bg-gradient-to-br from-purple-600 via-fuchsia-600 to-pink-600 min-h-[600px]">
-    {/* Header */}
-    <div className="mb-8">
-      <h1 className="text-4xl font-black text-white mb-2 drop-shadow-lg">💜 YOUR BESTIES</h1>
-      <p className="text-pink-100 font-semibold">Your safety squad</p>
-    </div>
-
-    {/* Filters */}
-    <div className="flex gap-2 mb-6">
-      {['ALL', '💜 CIRCLE', '🔔 ACTIVE'].map((filter, i) => (
-        <button
-          key={i}
-          className={`px-4 py-2 rounded-full text-xs font-black ${
-            i === 0 ? 'bg-yellow-400 text-gray-900' : 'bg-white/20 text-white'
-          }`}
-        >
-          {filter}
-        </button>
-      ))}
-    </div>
-
-    {/* Activity Feed */}
-    <div className="mb-6">
-      <h2 className="text-xl font-black text-white mb-4">📰 ACTIVITY</h2>
-      <div className="space-y-3">
+      {/* Activity */}
+      <div className="mb-8">
+        <div className="text-xs text-purple-300 uppercase tracking-widest mb-4">recent moments</div>
         {[
-          { name: 'Emma', status: 'SAFE', color: 'green' },
-          { name: 'Sophie', status: 'ACTIVE', color: 'blue' },
-          { name: 'Lily', status: 'BADGE', color: 'yellow' }
-        ].map((activity, i) => (
-          <div key={i} className="bg-white rounded-2xl p-4 shadow-xl border-4 border-pink-300">
-            <div className="flex items-center justify-between">
-              <span className="font-black text-fuchsia-600">{activity.name}</span>
-              <span className={`px-3 py-1 bg-${activity.color}-100 text-${activity.color}-700 text-xs font-black rounded-full`}>
-                {activity.status}
-              </span>
+          { name: 'Emma', action: 'arrived safely', emoji: '🌸', time: '5 min' },
+          { name: 'Sophie', action: 'out exploring', emoji: '🦋', time: '20 min' }
+        ].map((item, i) => (
+          <div key={i} className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-3 shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{item.emoji}</span>
+              <div className="flex-1">
+                <span className="text-purple-400">{item.name}</span>
+                <span className="text-gray-500"> {item.action}</span>
+              </div>
+              <span className="text-xs text-gray-300">{item.time}</span>
             </div>
           </div>
         ))}
       </div>
-    </div>
 
-    {/* Besties Grid */}
-    <div className="grid grid-cols-2 gap-4">
-      {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 text-center shadow-xl border-4 border-pink-300 transform hover:scale-105 transition-transform">
-          <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-pink-400 rounded-full mx-auto mb-2 flex items-center justify-center text-xl text-white font-black">
-            {name[0]}
-          </div>
-          <div className="font-black text-fuchsia-600">{name}</div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-// Variation 3: Minimal Clean
-const BestiesPageMinimalClean = () => (
-  <div className="p-12 bg-white min-h-[600px]">
-    {/* Header */}
-    <div className="mb-12">
-      <h1 className="text-2xl font-light text-gray-800 mb-1">Your Besties</h1>
-      <p className="text-sm text-gray-400">4 connections</p>
-    </div>
-
-    {/* Filters */}
-    <div className="flex gap-4 mb-8 border-b pb-4">
-      {['All', 'Circle', 'Active'].map((filter, i) => (
-        <button
-          key={i}
-          className={`text-sm ${
-            i === 0 ? 'text-gray-900 font-semibold' : 'text-gray-400'
-          }`}
-        >
-          {filter}
-        </button>
-      ))}
-    </div>
-
-    {/* Activity List */}
-    <div className="mb-8">
-      <div className="text-xs text-gray-400 uppercase tracking-widest mb-4">Recent Activity</div>
-      <div className="space-y-4">
-        {[
-          { name: 'Emma', action: 'Checked in safely', time: '5m' },
-          { name: 'Sophie', action: 'Currently active', time: '15m' },
-          { name: 'Lily', action: 'Earned badge', time: '1h' }
-        ].map((activity, i) => (
-          <div key={i} className="flex items-center justify-between py-2 border-b border-gray-100">
-            <div>
-              <span className="font-medium text-gray-800">{activity.name}</span>
-              <span className="text-gray-400 ml-2">{activity.action}</span>
-            </div>
-            <span className="text-sm text-gray-400">{activity.time}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Besties List */}
-    <div>
-      <div className="text-xs text-gray-400 uppercase tracking-widest mb-4">All Besties</div>
-      <div className="space-y-3">
+      {/* Besties */}
+      <div className="grid grid-cols-2 gap-4">
         {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
-          <div key={i} className="flex items-center gap-3 py-2">
-            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
+          <div key={i} className="bg-white/60 backdrop-blur-sm rounded-[1.5rem] p-6 text-center shadow-sm hover:-translate-y-1 transition-transform">
+            <div className="w-14 h-14 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full mx-auto mb-3 flex items-center justify-center text-xl text-white shadow-md">
               {name[0]}
             </div>
-            <span className="font-medium text-gray-700">{name}</span>
+            <div className="text-gray-600 font-medium">{name}</div>
+            <div className="text-xs text-purple-300">online</div>
           </div>
         ))}
       </div>
@@ -575,121 +496,200 @@ const BestiesPageMinimalClean = () => (
   </div>
 );
 
-// Variation 4: Playful Cards
-const BestiesPagePlayfulCards = () => (
-  <div className="p-8 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 min-h-[600px]">
-    {/* Header Card */}
-    <div className="relative mb-8">
-      <div className="absolute inset-0 bg-purple-200 rounded-3xl transform rotate-2"></div>
-      <div className="relative bg-white rounded-3xl p-6 shadow-lg">
-        <h1 className="text-2xl font-display text-gray-800">💜 Your Besties</h1>
-        <p className="text-gray-600">Your safety squad</p>
+// Variation 2: Neon Nights
+const BestiesPageNeonNights = () => (
+  <div className="p-8 min-h-[700px] bg-gray-900 relative overflow-hidden">
+    {/* Glow effects */}
+    <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl"></div>
+
+    <div className="relative z-10">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="text-cyan-400 text-xs font-mono mb-2">[ NETWORK STATUS: ACTIVE ]</div>
+        <h1 className="text-4xl font-black text-white">BESTIES</h1>
+        <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-cyan-500 mt-2"></div>
+      </div>
+
+      {/* Activity feed - Terminal style */}
+      <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700 mb-8 font-mono text-sm">
+        <div className="text-gray-500 mb-2">$ activity --recent</div>
+        {[
+          { name: 'EMMA', status: 'SAFE', color: 'green' },
+          { name: 'SOPHIE', status: 'ACTIVE', color: 'cyan' }
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-2 py-1">
+            <span className={`w-2 h-2 bg-${item.color}-400 rounded-full animate-pulse`}></span>
+            <span className="text-gray-300">{item.name}</span>
+            <span className={`text-${item.color}-400 ml-auto`}>{item.status}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Besties grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
+          <div
+            key={i}
+            className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-center hover:border-pink-500/50 hover:shadow-[0_0_20px_rgba(236,72,153,0.2)] transition-all"
+          >
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg mx-auto mb-2 flex items-center justify-center text-white font-bold">
+              {name[0]}
+            </div>
+            <div className="text-white font-mono">{name}</div>
+            <div className="text-xs text-green-400">● online</div>
+          </div>
+        ))}
       </div>
     </div>
+  </div>
+);
 
-    {/* Champions Card */}
-    <div className="relative mb-6">
-      <div className="absolute inset-0 bg-yellow-200 rounded-3xl transform -rotate-1"></div>
-      <div className="relative bg-gradient-to-br from-yellow-50 to-orange-50 rounded-3xl p-6 shadow-lg">
-        <h2 className="text-lg font-display text-gray-800 mb-3">🏆 Champions</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { title: 'Most Reliable', emoji: '💖' },
-            { title: 'Fastest', emoji: '✨' }
-          ].map((item, i) => (
-            <div key={i} className="bg-white rounded-xl p-3 shadow-sm">
-              <div className="text-xl mb-1">{item.emoji}</div>
-              <div className="text-xs font-semibold text-gray-600">{item.title}</div>
+// Variation 3: Swiss Minimal
+const BestiesPageSwissMinimal = () => (
+  <div className="min-h-[700px] bg-white">
+    <div className="h-2 bg-black"></div>
+
+    <div className="p-8">
+      {/* Header */}
+      <div className="mb-12">
+        <div className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4">Network / Besties</div>
+        <h1 className="text-5xl font-black text-black">Besties.</h1>
+        <div className="w-12 h-1 bg-black mt-4"></div>
+      </div>
+
+      {/* Activity */}
+      <div className="border-t-2 border-black pt-8 mb-12">
+        <div className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Activity</div>
+        {[
+          { name: 'Emma', action: 'Safe arrival', time: '5m' },
+          { name: 'Sophie', action: 'Currently active', time: '20m' }
+        ].map((item, i) => (
+          <div key={i} className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div>
+              <span className="font-bold">{item.name}</span>
+              <span className="text-gray-400 ml-2">{item.action}</span>
             </div>
-          ))}
+            <span className="text-xs text-gray-400">{item.time}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Besties grid */}
+      <div className="grid grid-cols-2 gap-px bg-black">
+        {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
+          <div key={i} className="bg-white p-6 text-center">
+            <div className="w-12 h-12 bg-black text-white mx-auto mb-2 flex items-center justify-center font-bold">
+              {name[0]}
+            </div>
+            <div className="font-bold text-sm uppercase tracking-wider">{name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 4: Kawaii Sticker
+const BestiesPageKawaiiSticker = () => (
+  <div className="p-6 min-h-[700px] relative" style={{ background: '#f5f0ff' }}>
+    {/* Doodles */}
+    <div className="absolute top-4 left-4 text-3xl transform -rotate-12">💫</div>
+    <div className="absolute top-16 right-6 text-2xl transform rotate-6">🎀</div>
+
+    <div className="relative z-10">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="inline-block bg-purple-100 px-3 py-1 rounded-full transform rotate-1 mb-3">
+          <span className="text-purple-400 text-sm font-bold">♡ your besties ♡</span>
         </div>
+        <h1 className="text-3xl font-black text-gray-800">
+          Besties~ <span className="text-xl">(◕‿◕)</span>
+        </h1>
+      </div>
+
+      {/* Activity */}
+      <div className="mb-6">
+        <div className="text-xs text-purple-300 mb-3">recent news! ★</div>
+        {[
+          { name: 'Emma', emoji: '🌟', text: 'is safe!', color: 'green' },
+          { name: 'Sophie', emoji: '🌸', text: 'is out~', color: 'pink' }
+        ].map((item, i) => (
+          <div key={i} className={`bg-${item.color}-50 rounded-xl p-3 mb-2 border-2 border-${item.color}-200 border-dashed`}>
+            <span className="text-lg mr-2">{item.emoji}</span>
+            <span className="font-bold text-gray-700">{item.name}</span>
+            <span className="text-gray-500"> {item.text}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Besties - Sticker collection */}
+      <div className="grid grid-cols-2 gap-3">
+        {[
+          { name: 'Emma', emoji: '🐰', color: 'pink' },
+          { name: 'Sophie', emoji: '🐱', color: 'purple' },
+          { name: 'Lily', emoji: '🐻', color: 'yellow' },
+          { name: 'Mia', emoji: '🐼', color: 'green' }
+        ].map((bestie, i) => (
+          <div
+            key={i}
+            className={`bg-white rounded-2xl p-4 text-center border-4 border-dashed border-${bestie.color}-200 shadow-[3px_3px_0_0_#fecdd3]`}
+          >
+            <div className="text-3xl mb-2">{bestie.emoji}</div>
+            <div className="font-bold text-gray-700">{bestie.name}</div>
+            <div className="text-xs text-green-400">online ✓</div>
+          </div>
+        ))}
       </div>
     </div>
+  </div>
+);
 
-    {/* Besties Cards */}
-    <div className="grid grid-cols-2 gap-4">
+// Variation 5: Luxury Editorial
+const BestiesPageLuxuryEditorial = () => (
+  <div className="min-h-[700px]">
+    {/* Hero */}
+    <div className="bg-stone-900 p-8">
+      <div className="text-stone-400 text-xs tracking-[0.5em] uppercase mb-2">Network</div>
+      <h1 className="text-4xl text-white" style={{ fontFamily: 'Georgia, serif' }}>Besties</h1>
+      <div className="w-16 h-px bg-white/30 mt-4"></div>
+    </div>
+
+    {/* Activity */}
+    <div className="p-8 bg-stone-50">
+      <div className="text-xs tracking-[0.3em] uppercase text-stone-400 mb-6">Recent Activity</div>
       {[
-        { name: 'Emma', color: 'pink' },
-        { name: 'Sophie', color: 'purple' },
-        { name: 'Lily', color: 'blue' },
-        { name: 'Mia', color: 'green' }
-      ].map((bestie, i) => (
-        <div key={i} className="relative">
-          <div className={`absolute inset-0 bg-${bestie.color}-200 rounded-2xl transform ${i % 2 === 0 ? 'rotate-2' : '-rotate-2'}`}></div>
-          <div className="relative bg-white rounded-2xl p-4 text-center shadow-md">
-            <div className={`w-12 h-12 bg-gradient-to-br from-${bestie.color}-300 to-${bestie.color}-400 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold`}>
-              {bestie.name[0]}
+        { name: 'Emma', action: 'Arrived safely', time: '5 min' },
+        { name: 'Sophie', action: 'Currently active', time: '20 min' }
+      ].map((item, i) => (
+        <div key={i} className="py-4 border-b border-stone-200">
+          <div className="flex justify-between">
+            <div>
+              <span className="font-semibold text-stone-900">{item.name}</span>
+              <span className="text-stone-500"> — {item.action}</span>
             </div>
-            <div className="font-semibold text-gray-700 text-sm">{bestie.name}</div>
+            <span className="text-xs text-stone-400">{item.time}</span>
           </div>
         </div>
       ))}
     </div>
-  </div>
-);
 
-// Variation 5: Magazine Editorial
-const BestiesPageMagazine = () => (
-  <div className="min-h-[600px]">
-    {/* Hero Header */}
-    <div className="bg-gray-900 p-8">
-      <div className="text-pink-400 text-xs font-bold tracking-widest mb-2">YOUR NETWORK</div>
-      <h1 className="text-4xl font-black text-white">Besties</h1>
-      <div className="w-12 h-1 bg-pink-500 mt-4"></div>
-    </div>
-
-    {/* Filters */}
-    <div className="bg-white border-b p-4">
-      <div className="flex gap-6">
-        {['ALL', 'CIRCLE', 'ACTIVE'].map((filter, i) => (
-          <button
-            key={i}
-            className={`text-xs font-bold tracking-widest ${
-              i === 0 ? 'text-pink-600 border-b-2 border-pink-600 pb-2' : 'text-gray-400'
-            }`}
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
-    </div>
-
-    {/* Activity Section */}
-    <div className="p-8 bg-gray-50">
-      <div className="text-xs font-bold text-gray-500 tracking-widest mb-4">RECENT ACTIVITY</div>
-      <div className="space-y-4">
-        {[
-          { name: 'Emma', action: 'Safe check-in', status: 'COMPLETED' },
-          { name: 'Sophie', action: 'Active now', status: 'IN PROGRESS' },
-          { name: 'Lily', action: 'New badge earned', status: 'ACHIEVEMENT' }
-        ].map((item, i) => (
-          <div key={i} className="bg-white p-4 border-l-4 border-pink-500">
-            <div className="flex justify-between items-start">
-              <div>
-                <div className="font-bold text-gray-900">{item.name}</div>
-                <div className="text-sm text-gray-500">{item.action}</div>
-              </div>
-              <div className="text-xs font-bold text-pink-600">{item.status}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Besties Grid */}
+    {/* Besties grid */}
     <div className="p-8 bg-white">
-      <div className="text-xs font-bold text-gray-500 tracking-widest mb-4">ALL BESTIES</div>
+      <div className="text-xs tracking-[0.3em] uppercase text-stone-400 mb-6">Your Circle</div>
       <div className="grid grid-cols-4 gap-4">
         {['Emma', 'Sophie', 'Lily', 'Mia'].map((name, i) => (
           <div key={i} className="text-center">
-            <div className="w-16 h-16 bg-gray-900 text-white rounded-none mx-auto mb-2 flex items-center justify-center text-xl font-bold">
+            <div className="w-16 h-16 bg-stone-900 text-white mx-auto mb-3 flex items-center justify-center text-xl" style={{ fontFamily: 'Georgia, serif' }}>
               {name[0]}
             </div>
-            <div className="text-xs font-bold text-gray-600 tracking-wide">{name.toUpperCase()}</div>
+            <div className="text-xs tracking-[0.15em] uppercase text-stone-600">{name}</div>
           </div>
         ))}
       </div>
     </div>
+
+    <div className="h-1 bg-gradient-to-r from-stone-200 via-stone-900 to-stone-200"></div>
   </div>
 );
 
@@ -699,230 +699,59 @@ const BestiesPageMagazine = () => (
 
 const ProfilePageVariations = ({ variation }) => {
   switch (variation) {
-    case 1:
-      return <ProfilePageSoftPastel />;
-    case 2:
-      return <ProfilePageBoldVibrant />;
-    case 3:
-      return <ProfilePageMinimalClean />;
-    case 4:
-      return <ProfilePagePlayfulCards />;
-    case 5:
-      return <ProfilePageMagazine />;
-    default:
-      return <ProfilePageSoftPastel />;
+    case 1: return <ProfilePageDreamyCloud />;
+    case 2: return <ProfilePageNeonNights />;
+    case 3: return <ProfilePageSwissMinimal />;
+    case 4: return <ProfilePageKawaiiSticker />;
+    case 5: return <ProfilePageLuxuryEditorial />;
+    default: return <ProfilePageDreamyCloud />;
   }
 };
 
-// Variation 1: Soft Pastel Dream
-const ProfilePageSoftPastel = () => (
-  <div className="p-8 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 min-h-[600px]">
-    {/* Profile Header */}
-    <div className="text-center mb-8">
-      <div className="w-24 h-24 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl shadow-sm">
-        S
-      </div>
-      <h1 className="text-2xl font-display text-gray-700 mb-1">Sarah Smith</h1>
-      <p className="text-gray-500 italic">"Living my best life safely"</p>
-    </div>
+// Variation 1: Dreamy Cloud
+const ProfilePageDreamyCloud = () => (
+  <div className="relative p-8 min-h-[700px] overflow-hidden" style={{ background: 'linear-gradient(180deg, #fff1f2 0%, #fdf2f8 50%, #faf5ff 100%)' }}>
+    {/* Floating elements */}
+    <div className="absolute top-10 right-10 w-40 h-20 bg-pink-100/50 rounded-full blur-xl"></div>
+    <div className="absolute bottom-20 left-10 w-32 h-16 bg-purple-100/40 rounded-full blur-xl"></div>
 
-    {/* Profile Completion */}
-    <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 mb-6 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
-        <span className="font-display text-gray-700">Profile Completion</span>
-        <span className="text-pink-400 font-semibold">4/5</span>
-      </div>
-      <div className="w-full h-3 bg-white rounded-full overflow-hidden">
-        <div className="h-full w-4/5 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full"></div>
-      </div>
-    </div>
-
-    {/* Stats */}
-    <div className="grid grid-cols-3 gap-3 mb-6">
-      {[
-        { num: '5', label: 'Besties', emoji: '💜' },
-        { num: '12', label: 'Check-ins', emoji: '✅' },
-        { num: '3', label: 'Badges', emoji: '🏆' }
-      ].map((stat, i) => (
-        <div key={i} className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 text-center shadow-sm">
-          <div className="text-lg mb-1">{stat.emoji}</div>
-          <div className="text-2xl font-display text-gray-700">{stat.num}</div>
-          <div className="text-xs text-gray-500">{stat.label}</div>
+    <div className="relative z-10">
+      {/* Profile header */}
+      <div className="text-center mb-10">
+        <div className="relative inline-block mb-4">
+          <div className="w-28 h-28 bg-gradient-to-br from-pink-200 via-purple-200 to-pink-200 rounded-full flex items-center justify-center text-4xl shadow-lg">
+            S
+          </div>
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md">
+            ✨
+          </div>
         </div>
-      ))}
-    </div>
+        <h1 className="text-2xl font-light text-gray-700 mb-1" style={{ fontFamily: 'Georgia, serif' }}>Sarah Smith</h1>
+        <p className="text-gray-400 italic text-sm">"floating through life safely"</p>
+      </div>
 
-    {/* Featured Badges */}
-    <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-6 shadow-sm">
-      <h2 className="font-display text-gray-700 mb-4">Featured Badges</h2>
-      <div className="flex justify-center gap-4">
-        {['🛡️', '⭐', '🔥'].map((badge, i) => (
-          <div key={i} className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full flex items-center justify-center text-xl shadow-sm">
-            {badge}
+      {/* Stats - Floating bubbles */}
+      <div className="flex justify-center gap-6 mb-10">
+        {[
+          { num: '5', label: 'besties' },
+          { num: '12', label: 'check-ins' },
+          { num: '7', label: 'streak' }
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className="w-16 h-16 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md mb-1">
+              <span className="text-xl font-light text-pink-400">{stat.num}</span>
+            </div>
+            <span className="text-xs text-gray-400">{stat.label}</span>
           </div>
         ))}
       </div>
-    </div>
-  </div>
-);
 
-// Variation 2: Bold Vibrant
-const ProfilePageBoldVibrant = () => (
-  <div className="p-8 bg-gradient-to-br from-fuchsia-600 via-purple-600 to-pink-600 min-h-[600px]">
-    {/* Profile Header */}
-    <div className="text-center mb-8">
-      <div className="w-28 h-28 bg-white rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-black text-fuchsia-600 border-4 border-yellow-400 shadow-xl">
-        S
-      </div>
-      <h1 className="text-3xl font-black text-white mb-2 drop-shadow-lg">SARAH SMITH</h1>
-      <p className="text-pink-100 font-semibold">"Living my best life safely"</p>
-    </div>
-
-    {/* Profile Completion */}
-    <div className="bg-white rounded-3xl p-6 mb-6 shadow-xl border-4 border-pink-300">
-      <div className="flex items-center justify-between mb-3">
-        <span className="font-black text-fuchsia-600">COMPLETION</span>
-        <span className="text-2xl font-black text-fuchsia-600">80%</span>
-      </div>
-      <div className="w-full h-4 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full w-4/5 bg-gradient-to-r from-fuchsia-500 to-pink-500 rounded-full"></div>
-      </div>
-    </div>
-
-    {/* Stats */}
-    <div className="grid grid-cols-3 gap-3 mb-6">
-      {[
-        { num: '5', label: 'BESTIES', color: 'purple' },
-        { num: '12', label: 'CHECK-INS', color: 'pink' },
-        { num: '3', label: 'BADGES', color: 'yellow' }
-      ].map((stat, i) => (
-        <div key={i} className="bg-white rounded-2xl p-4 text-center shadow-xl border-4 border-pink-300">
-          <div className={`text-3xl font-black text-${stat.color}-600`}>{stat.num}</div>
-          <div className="text-xs font-black text-gray-600">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-
-    {/* Featured Badges */}
-    <div className="bg-white rounded-3xl p-6 shadow-xl border-4 border-yellow-400">
-      <h2 className="font-black text-fuchsia-600 mb-4">🏆 FEATURED</h2>
-      <div className="flex justify-center gap-4">
-        {['🛡️', '⭐', '🔥'].map((badge, i) => (
-          <div key={i} className="w-14 h-14 bg-gradient-to-br from-yellow-300 to-orange-300 rounded-full flex items-center justify-center text-2xl shadow-lg transform hover:scale-110 transition-transform">
-            {badge}
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-// Variation 3: Minimal Clean
-const ProfilePageMinimalClean = () => (
-  <div className="p-12 bg-white min-h-[600px]">
-    {/* Profile Header */}
-    <div className="text-center mb-12">
-      <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl text-gray-600">
-        S
-      </div>
-      <h1 className="text-xl font-medium text-gray-800 mb-1">Sarah Smith</h1>
-      <p className="text-sm text-gray-400">Living my best life safely</p>
-    </div>
-
-    {/* Profile Completion */}
-    <div className="mb-12">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-500">Profile completion</span>
-        <span className="text-sm text-gray-800 font-semibold">80%</span>
-      </div>
-      <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-        <div className="h-full w-4/5 bg-gray-800 rounded-full"></div>
-      </div>
-    </div>
-
-    {/* Stats */}
-    <div className="flex justify-between mb-12 border-t border-b py-6">
-      {[
-        { num: '5', label: 'Besties' },
-        { num: '12', label: 'Check-ins' },
-        { num: '3', label: 'Badges' }
-      ].map((stat, i) => (
-        <div key={i} className="text-center">
-          <div className="text-2xl font-semibold text-gray-800">{stat.num}</div>
-          <div className="text-xs text-gray-400">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-
-    {/* Badges */}
-    <div>
-      <div className="text-xs text-gray-400 uppercase tracking-widest mb-4">Featured Badges</div>
-      <div className="flex gap-3">
-        {['🛡️', '⭐', '🔥'].map((badge, i) => (
-          <div key={i} className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-lg">
-            {badge}
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-// Variation 4: Playful Cards
-const ProfilePagePlayfulCards = () => (
-  <div className="p-8 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 min-h-[600px]">
-    {/* Profile Header Card */}
-    <div className="relative mb-8">
-      <div className="absolute inset-0 bg-pink-200 rounded-3xl transform rotate-2"></div>
-      <div className="absolute inset-0 bg-purple-200 rounded-3xl transform -rotate-1"></div>
-      <div className="relative bg-white rounded-3xl p-6 shadow-lg text-center">
-        <div className="w-20 h-20 bg-gradient-to-br from-pink-300 to-purple-300 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl text-white font-bold shadow-md">
-          S
-        </div>
-        <h1 className="text-xl font-display text-gray-800 mb-1">Sarah Smith</h1>
-        <p className="text-gray-600 italic text-sm">"Living my best life safely"</p>
-      </div>
-    </div>
-
-    {/* Completion Card */}
-    <div className="relative mb-6">
-      <div className="absolute inset-0 bg-green-200 rounded-2xl transform -rotate-1"></div>
-      <div className="relative bg-white rounded-2xl p-4 shadow-md">
-        <div className="flex items-center justify-between mb-2">
-          <span className="font-semibold text-gray-700">Completion</span>
-          <span className="text-green-500 font-bold">80%</span>
-        </div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full w-4/5 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full"></div>
-        </div>
-      </div>
-    </div>
-
-    {/* Stats Cards */}
-    <div className="grid grid-cols-3 gap-3 mb-6">
-      {[
-        { num: '5', label: 'Besties', color: 'purple', rotate: '1deg' },
-        { num: '12', label: 'Check-ins', color: 'pink', rotate: '-1deg' },
-        { num: '3', label: 'Badges', color: 'yellow', rotate: '0.5deg' }
-      ].map((stat, i) => (
-        <div key={i} className="relative">
-          <div className={`absolute inset-0 bg-${stat.color}-200 rounded-xl`} style={{ transform: `rotate(${stat.rotate})` }}></div>
-          <div className="relative bg-white rounded-xl p-3 text-center shadow-sm">
-            <div className={`text-xl font-display text-${stat.color}-500`}>{stat.num}</div>
-            <div className="text-xs text-gray-500">{stat.label}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    {/* Badges Card */}
-    <div className="relative">
-      <div className="absolute inset-0 bg-orange-200 rounded-2xl transform rotate-1"></div>
-      <div className="relative bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-4 shadow-md">
-        <h2 className="font-semibold text-gray-700 mb-3">🏆 Featured</h2>
-        <div className="flex justify-center gap-3">
+      {/* Badges */}
+      <div className="bg-white/60 backdrop-blur-sm rounded-[1.5rem] p-6 shadow-sm">
+        <div className="text-xs text-purple-300 uppercase tracking-widest mb-4">achievements</div>
+        <div className="flex justify-center gap-4">
           {['🛡️', '⭐', '🔥'].map((badge, i) => (
-            <div key={i} className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg shadow-sm transform hover:scale-110 transition-transform">
+            <div key={i} className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full flex items-center justify-center text-xl shadow-sm">
               {badge}
             </div>
           ))}
@@ -932,64 +761,208 @@ const ProfilePagePlayfulCards = () => (
   </div>
 );
 
-// Variation 5: Magazine Editorial
-const ProfilePageMagazine = () => (
-  <div className="min-h-[600px]">
-    {/* Hero Header */}
-    <div className="bg-gray-900 p-8 text-center">
-      <div className="w-24 h-24 bg-white text-gray-900 mx-auto mb-4 flex items-center justify-center text-3xl font-black">
-        S
-      </div>
-      <h1 className="text-3xl font-black text-white tracking-tight">SARAH SMITH</h1>
-      <div className="w-12 h-1 bg-pink-500 mx-auto mt-4 mb-3"></div>
-      <p className="text-gray-400 text-sm">"Living my best life safely"</p>
-    </div>
+// Variation 2: Neon Nights
+const ProfilePageNeonNights = () => (
+  <div className="p-8 min-h-[700px] bg-gray-900 relative overflow-hidden">
+    {/* Glow effects */}
+    <div className="absolute top-0 left-1/2 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
+    <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
 
-    {/* Completion Bar */}
-    <div className="bg-pink-500 p-4">
-      <div className="flex items-center justify-between text-white">
-        <span className="text-xs font-bold tracking-widest">PROFILE COMPLETION</span>
-        <span className="font-black">80%</span>
+    <div className="relative z-10">
+      {/* Profile header */}
+      <div className="text-center mb-8">
+        <div className="relative inline-block mb-4">
+          <div className="w-28 h-28 bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg flex items-center justify-center text-4xl text-white font-black shadow-[0_0_30px_rgba(236,72,153,0.5)]">
+            S
+          </div>
+          <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-cyan-400 rounded flex items-center justify-center text-sm font-bold">
+            7
+          </div>
+        </div>
+        <h1 className="text-3xl font-black text-white">SARAH</h1>
+        <p className="text-gray-400 font-mono text-sm">// status: protected</p>
       </div>
-      <div className="w-full h-2 bg-pink-300 mt-2">
-        <div className="h-full w-4/5 bg-white"></div>
+
+      {/* Stats - Terminal style */}
+      <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700 font-mono mb-8">
+        <div className="text-gray-500 text-xs mb-3">$ stats --profile</div>
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { num: '5', label: 'connections', color: 'pink' },
+            { num: '12', label: 'check_ins', color: 'green' },
+            { num: '7', label: 'streak', color: 'yellow' }
+          ].map((stat, i) => (
+            <div key={i}>
+              <div className={`text-${stat.color}-400 text-2xl font-bold`}>{stat.num}</div>
+              <div className="text-gray-500 text-xs">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Badges */}
+      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div className="text-cyan-400 text-xs font-mono mb-3">[ ACHIEVEMENTS ]</div>
+        <div className="flex justify-center gap-3">
+          {['🛡️', '⭐', '🔥'].map((badge, i) => (
+            <div key={i} className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center text-xl hover:shadow-[0_0_15px_rgba(236,72,153,0.3)] transition-shadow">
+              {badge}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 3: Swiss Minimal
+const ProfilePageSwissMinimal = () => (
+  <div className="min-h-[700px] bg-white">
+    <div className="h-2 bg-black"></div>
+
+    <div className="p-8">
+      {/* Profile header */}
+      <div className="mb-12">
+        <div className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-8">Profile / Sarah</div>
+        <div className="flex items-end gap-6 mb-6">
+          <div className="w-20 h-20 bg-black text-white flex items-center justify-center text-3xl font-black">
+            S
+          </div>
+          <div>
+            <h1 className="text-4xl font-black text-black leading-none">Sarah</h1>
+            <h1 className="text-4xl font-black text-black leading-none">Smith.</h1>
+          </div>
+        </div>
+        <div className="w-12 h-1 bg-black"></div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 border-t-2 border-black pt-8 mb-12">
+        {[
+          { num: '05', label: 'Besties' },
+          { num: '12', label: 'Check-ins' },
+          { num: '07', label: 'Streak' }
+        ].map((stat, i) => (
+          <div key={i} className={`${i > 0 ? 'border-l-2 border-black pl-6' : ''}`}>
+            <div className="text-3xl font-black text-black">{stat.num}</div>
+            <div className="text-xs uppercase tracking-widest text-gray-400">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Badges */}
+      <div>
+        <div className="text-xs uppercase tracking-[0.2em] text-gray-400 mb-4">Badges</div>
+        <div className="flex gap-2">
+          {['🛡️', '⭐', '🔥'].map((badge, i) => (
+            <div key={i} className="w-12 h-12 bg-gray-100 flex items-center justify-center text-xl">
+              {badge}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 4: Kawaii Sticker
+const ProfilePageKawaiiSticker = () => (
+  <div className="p-6 min-h-[700px] relative" style={{ background: '#fff5f5' }}>
+    {/* Doodles */}
+    <div className="absolute top-4 right-4 text-3xl transform rotate-12">🌟</div>
+    <div className="absolute bottom-32 left-4 text-2xl transform -rotate-6">✿</div>
+
+    <div className="relative z-10">
+      {/* Profile header */}
+      <div className="text-center mb-8">
+        <div className="relative inline-block mb-4">
+          <div className="w-24 h-24 bg-pink-100 rounded-full border-4 border-dashed border-pink-300 flex items-center justify-center text-3xl shadow-[3px_3px_0_0_#fecdd3]">
+            🌸
+          </div>
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-yellow-100 rounded-full border-2 border-dashed border-yellow-300 flex items-center justify-center text-sm">
+            7✨
+          </div>
+        </div>
+        <h1 className="text-2xl font-black text-gray-800 mb-1">
+          Sarah~ <span className="text-xl">(｡◕‿◕｡)</span>
+        </h1>
+        <p className="text-gray-500 text-sm">staying safe & cute! ♪</p>
+      </div>
+
+      {/* Stats - Badge stickers */}
+      <div className="flex justify-center gap-3 mb-8">
+        {[
+          { num: '5', label: 'besties', color: 'pink' },
+          { num: '12', label: 'safe!', color: 'green' },
+          { num: '7', label: 'streak', color: 'yellow' }
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className={`w-14 h-14 bg-${stat.color}-50 rounded-full border-4 border-dashed border-${stat.color}-200 flex items-center justify-center shadow-sm`}>
+              <span className={`text-lg font-black text-${stat.color}-400`}>{stat.num}</span>
+            </div>
+            <span className="text-xs text-gray-400">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Badges */}
+      <div className="bg-white rounded-2xl p-4 border-4 border-dashed border-pink-200 shadow-[3px_3px_0_0_#fecdd3]">
+        <div className="text-xs text-pink-300 mb-3">★ achievements ★</div>
+        <div className="flex justify-center gap-3">
+          {['🛡️', '⭐', '🔥'].map((badge, i) => (
+            <div key={i} className="w-10 h-10 bg-yellow-50 rounded-full border-2 border-dashed border-yellow-200 flex items-center justify-center text-lg">
+              {badge}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Variation 5: Luxury Editorial
+const ProfilePageLuxuryEditorial = () => (
+  <div className="min-h-[700px]">
+    {/* Hero */}
+    <div className="relative h-64 bg-stone-900 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-24 h-24 bg-white text-stone-900 mx-auto mb-4 flex items-center justify-center text-3xl" style={{ fontFamily: 'Georgia, serif' }}>
+          S
+        </div>
+        <h1 className="text-3xl text-white" style={{ fontFamily: 'Georgia, serif' }}>Sarah Smith</h1>
+        <div className="w-12 h-px bg-white/30 mx-auto mt-4"></div>
       </div>
     </div>
 
     {/* Stats */}
-    <div className="bg-white p-8">
-      <div className="grid grid-cols-3 divide-x">
+    <div className="p-8 bg-white border-t border-stone-100">
+      <div className="grid grid-cols-3 gap-px">
         {[
-          { num: '5', label: 'BESTIES' },
-          { num: '12', label: 'CHECK-INS' },
-          { num: '3', label: 'BADGES' }
+          { num: '5', label: 'Connections' },
+          { num: '12', label: 'Check-ins' },
+          { num: '7', label: 'Streak' }
         ].map((stat, i) => (
-          <div key={i} className="text-center px-4">
-            <div className="text-3xl font-black text-gray-900">{stat.num}</div>
-            <div className="text-xs font-bold text-gray-400 tracking-widest">{stat.label}</div>
+          <div key={i} className="text-center py-4">
+            <div className="text-3xl text-stone-900 mb-1" style={{ fontFamily: 'Georgia, serif' }}>{stat.num}</div>
+            <div className="text-xs tracking-[0.2em] uppercase text-stone-400">{stat.label}</div>
           </div>
         ))}
       </div>
     </div>
 
-    {/* Featured Badges */}
-    <div className="bg-gray-100 p-8">
-      <div className="text-xs font-bold text-gray-500 tracking-widest mb-4">FEATURED BADGES</div>
+    {/* Badges */}
+    <div className="p-8 bg-stone-50">
+      <div className="text-xs tracking-[0.3em] uppercase text-stone-400 mb-6">Achievements</div>
       <div className="flex gap-4">
         {['🛡️', '⭐', '🔥'].map((badge, i) => (
-          <div key={i} className="w-12 h-12 bg-gray-900 text-white flex items-center justify-center text-xl">
+          <div key={i} className="w-14 h-14 bg-stone-900 text-white flex items-center justify-center text-xl">
             {badge}
           </div>
         ))}
       </div>
     </div>
 
-    {/* Settings */}
-    <div className="p-8 bg-white border-t">
-      <button className="w-full py-3 bg-gray-900 text-white font-bold tracking-wide">
-        SETTINGS →
-      </button>
-    </div>
+    <div className="h-1 bg-gradient-to-r from-stone-200 via-stone-900 to-stone-200"></div>
   </div>
 );
 
