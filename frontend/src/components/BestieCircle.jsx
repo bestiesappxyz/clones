@@ -101,20 +101,6 @@ const BestieCircle = ({ userId, onAddClick }) => {
     });
   };
 
-  const handleRemoveFromCircle = async (index) => {
-    // Only allow removal if circle is full (5 members)
-    if (circleBesties.length < 5) {
-      toast.error('Circle must be full to remove members. Use Replace instead.');
-      setSelectedSlot(null);
-      return;
-    }
-
-    const newCircle = circleBesties.filter((_, i) => i !== index);
-    setCircleBesties(newCircle);
-    await saveFeaturedCircle(newCircle);
-    setSelectedSlot(null);
-    toast.success('Removed from circle');
-  };
 
   const handleReplaceBestie = async (newBestie) => {
     const newCircle = [...circleBesties];
@@ -253,12 +239,6 @@ const BestieCircle = ({ userId, onAddClick }) => {
                           className="w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm font-semibold text-gray-700"
                         >
                           🔄 Replace
-                        </button>
-                        <button
-                          onClick={() => handleRemoveFromCircle(index)}
-                          className="w-full text-left px-3 py-2 hover:bg-red-50 rounded text-sm font-semibold text-red-600"
-                        >
-                          ❌ Remove
                         </button>
                       </div>
                     )}

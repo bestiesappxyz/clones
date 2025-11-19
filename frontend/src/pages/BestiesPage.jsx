@@ -34,6 +34,7 @@ const BestiesPage = () => {
 
   // Filter state
   const [activeFilter, setActiveFilter] = useState('all');
+  const [bestieFilter, setBestieFilter] = useState('all');
 
   // Modal state
   const [selectedCheckIn, setSelectedCheckIn] = useState(null);
@@ -302,7 +303,7 @@ const BestiesPage = () => {
     }
   };
 
-  // Filter besties
+  // Filter besties for activity feed
   const getFilteredBesties = () => {
     let filtered = [...besties];
 
@@ -310,33 +311,45 @@ const BestiesPage = () => {
       case 'circle':
         filtered = filtered.filter(b => b.isFavorite);
         break;
-      case 'active':
-        // Filter besties with check-ins in last hour
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-        filtered = filtered.filter(b =>
-          activityFeed.some(a => a.userId === b.userId && a.timestamp > oneHourAgo && a.status === 'active')
-        );
+      default:
+        // Show all besties
         break;
+    }
+
+    return filtered;
+  };
+
+  // Filter all besties list (sidebar)
+  const getAllBestiesFiltered = () => {
+    let filtered = [...besties];
+
+    switch (bestieFilter) {
       case 'reliable':
-        // Sort by completion rate (would need actual data)
+        // Sort by completion rate
         filtered.sort((a, b) => {
           const aCompleted = activityFeed.filter(f => f.userId === a.userId && f.status === 'completed').length;
           const bCompleted = activityFeed.filter(f => f.userId === b.userId && f.status === 'completed').length;
           return bCompleted - aCompleted;
         });
         break;
-      case 'recent':
-        // Sort by most recent activity
+      case 'active':
+        // Sort by most check-ins
         filtered.sort((a, b) => {
-          const aRecent = activityFeed.find(f => f.userId === a.userId);
-          const bRecent = activityFeed.find(f => f.userId === b.userId);
-          if (!aRecent) return 1;
-          if (!bRecent) return -1;
-          return bRecent.timestamp - aRecent.timestamp;
+          const aCount = activityFeed.filter(f => f.userId === a.userId).length;
+          const bCount = activityFeed.filter(f => f.userId === b.userId).length;
+          return bCount - aCount;
         });
         break;
+      case 'alphabetical':
+        // Sort A-Z
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        break;
+      case 'newest':
+        // Newest first (reverse order they were added)
+        filtered.reverse();
+        break;
       default:
-        // Favorites first, then alphabetical
+        // All - favorites first, then alphabetical
         filtered.sort((a, b) => {
           if (a.isFavorite && !b.isFavorite) return -1;
           if (!a.isFavorite && b.isFavorite) return 1;
@@ -349,6 +362,7 @@ const BestiesPage = () => {
 
   // const rankings = getPowerRankings(); // TODO: Implement rankings when metrics are available
   const filteredBesties = getFilteredBesties();
+  const allBestiesFiltered = getAllBestiesFiltered();
   const hasAlerts = missedCheckIns.length > 0 || requestsForAttention.length > 0;
 
   if (loading) {
@@ -473,58 +487,28 @@ const BestiesPage = () => {
         <div className="space-y-6 lg:grid lg:grid-cols-3 lg:gap-6 lg:space-y-0">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Filters - Horizontal Scroll on Mobile */}
+            {/* Feed View Toggle - Simplified */}
             <div className="card p-3 md:p-4">
-              <div className="flex gap-2 overflow-x-auto pb-2 -mx-3 px-3 md:mx-0 md:px-0">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setActiveFilter('all')}
-                  className={`px-3 md:px-4 py-2 rounded-full whitespace-nowrap font-semibold text-xs md:text-sm flex-shrink-0 ${
+                  className={`flex-1 px-3 md:px-4 py-2 rounded-full font-semibold text-xs md:text-sm ${
                     activeFilter === 'all'
                       ? 'bg-primary text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  All Besties
+                  All Activity
                 </button>
                 <button
                   onClick={() => setActiveFilter('circle')}
-                  className={`px-3 md:px-4 py-2 rounded-full whitespace-nowrap font-semibold text-xs md:text-sm flex-shrink-0 ${
+                  className={`flex-1 px-3 md:px-4 py-2 rounded-full font-semibold text-xs md:text-sm ${
                     activeFilter === 'circle'
                       ? 'bg-primary text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  💜 Circle
-                </button>
-                <button
-                  onClick={() => setActiveFilter('active')}
-                  className={`px-3 md:px-4 py-2 rounded-full whitespace-nowrap font-semibold text-xs md:text-sm flex-shrink-0 ${
-                    activeFilter === 'active'
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  🔔 Active
-                </button>
-                <button
-                  onClick={() => setActiveFilter('reliable')}
-                  className={`px-3 md:px-4 py-2 rounded-full whitespace-nowrap font-semibold text-xs md:text-sm flex-shrink-0 ${
-                    activeFilter === 'reliable'
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  🛡️ Reliable
-                </button>
-                <button
-                  onClick={() => setActiveFilter('recent')}
-                  className={`px-3 md:px-4 py-2 rounded-full whitespace-nowrap font-semibold text-xs md:text-sm flex-shrink-0 ${
-                    activeFilter === 'recent'
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  ⏰ Recent
+                  💜 Circle Only
                 </button>
               </div>
             </div>
@@ -651,119 +635,164 @@ const BestiesPage = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* This Week's Champions - Enhanced */}
-            <div className="card p-4 md:p-6 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200">
+            {/* This Week's Champions - Girly Edition ✨ */}
+            <div className="card p-4 md:p-6 bg-gradient-to-br from-pink-50 via-purple-50 to-pink-100 border-2 border-pink-200 shadow-lg">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg md:text-xl font-display text-gradient">
-                  🏆 This Week's Champions
+                <h2 className="text-lg md:text-xl font-display text-gradient flex items-center gap-2">
+                  <span className="text-2xl">👑</span>
+                  This Week's Queens
                 </h2>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {/* Most Reliable */}
-                <div className="bg-white rounded-xl p-3 shadow-sm border border-yellow-100">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-sm border-2 border-purple-200 hover:border-purple-300 transition-all">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
                       🛡️
                     </div>
                     <div className="flex-1">
-                      <div className="font-display text-sm font-bold text-gray-800">Most Reliable</div>
-                      <div className="text-xs text-gray-500">Always there when needed</div>
+                      <div className="font-display text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Most Reliable</div>
+                      <div className="text-xs text-purple-600">Always there when needed 💜</div>
                     </div>
                   </div>
-                  {/* Placeholder - will show actual bestie when data available */}
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <div className="text-xs text-center text-gray-400 italic py-2">
-                      Building stats... Check back soon!
+                  <div className="mt-2 pt-2 border-t border-purple-100">
+                    <div className="text-xs text-center text-purple-400 italic py-2">
+                      ✨ Building stats... Check back soon!
                     </div>
                   </div>
                 </div>
 
                 {/* Fastest Responder */}
-                <div className="bg-white rounded-xl p-3 shadow-sm border border-yellow-100">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-sm border-2 border-pink-200 hover:border-pink-300 transition-all">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
+                    <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
                       ⚡
                     </div>
                     <div className="flex-1">
-                      <div className="font-display text-sm font-bold text-gray-800">Fastest Responder</div>
-                      <div className="text-xs text-gray-500">Lightning quick replies</div>
+                      <div className="font-display text-sm font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Fastest Responder</div>
+                      <div className="text-xs text-pink-600">Lightning quick replies ⚡</div>
                     </div>
                   </div>
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <div className="text-xs text-center text-gray-400 italic py-2">
-                      Building stats... Check back soon!
+                  <div className="mt-2 pt-2 border-t border-pink-100">
+                    <div className="text-xs text-center text-pink-400 italic py-2">
+                      ✨ Building stats... Check back soon!
                     </div>
                   </div>
                 </div>
 
                 {/* Safety Champion */}
-                <div className="bg-white rounded-xl p-3 shadow-sm border border-yellow-100">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-sm border-2 border-purple-200 hover:border-purple-300 transition-all">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
+                    <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-400 to-purple-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
                       🏅
                     </div>
                     <div className="flex-1">
-                      <div className="font-display text-sm font-bold text-gray-800">Safety Champion</div>
-                      <div className="text-xs text-gray-500">Most check-ins completed</div>
+                      <div className="font-display text-sm font-bold bg-gradient-to-r from-fuchsia-600 to-purple-600 bg-clip-text text-transparent">Safety Champion</div>
+                      <div className="text-xs text-purple-600">Most check-ins completed 🏅</div>
                     </div>
                   </div>
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <div className="text-xs text-center text-gray-400 italic py-2">
-                      Building stats... Check back soon!
+                  <div className="mt-2 pt-2 border-t border-purple-100">
+                    <div className="text-xs text-center text-purple-400 italic py-2">
+                      ✨ Building stats... Check back soon!
                     </div>
                   </div>
                 </div>
 
                 {/* Streak Master */}
-                <div className="bg-white rounded-xl p-3 shadow-sm border border-yellow-100">
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-3 shadow-sm border-2 border-pink-200 hover:border-pink-300 transition-all">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
+                    <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
                       🔥
                     </div>
                     <div className="flex-1">
-                      <div className="font-display text-sm font-bold text-gray-800">Streak Master</div>
-                      <div className="text-xs text-gray-500">Longest active streak</div>
+                      <div className="font-display text-sm font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Streak Master</div>
+                      <div className="text-xs text-pink-600">Longest active streak 🔥</div>
                     </div>
                   </div>
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <div className="text-xs text-center text-gray-400 italic py-2">
-                      Building stats... Check back soon!
+                  <div className="mt-2 pt-2 border-t border-pink-100">
+                    <div className="text-xs text-center text-pink-400 italic py-2">
+                      ✨ Building stats... Check back soon!
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-yellow-200 text-center">
-                <p className="text-xs text-gray-600 font-semibold">
-                  🎯 Resets every Monday
+              <div className="mt-4 pt-3 border-t-2 border-pink-200 text-center">
+                <p className="text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  ✨ Resets every Monday ✨
                 </p>
               </div>
             </div>
 
-            {/* Besties Grid */}
+            {/* All Besties - With Filters */}
             <div>
-              <h2 className="text-lg md:text-xl font-display text-text-primary mb-3 md:mb-4">
-                {activeFilter === 'circle' && '💜 Bestie Circle'}
-                {activeFilter === 'all' && 'All Besties'}
-                {activeFilter === 'active' && '🔔 Active Now'}
-                {activeFilter === 'reliable' && '🛡️ Most Reliable'}
-                {activeFilter === 'recent' && '⏰ Recent Activity'}
+              <h2 className="text-lg md:text-xl font-display text-text-primary mb-3">
+                All Your Besties
               </h2>
 
-              {filteredBesties.length === 0 ? (
+              {/* Bestie Filters */}
+              <div className="flex gap-2 overflow-x-auto pb-3 -mx-2 px-2">
+                <button
+                  onClick={() => setBestieFilter('all')}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap font-semibold text-xs flex-shrink-0 ${
+                    bestieFilter === 'all'
+                      ? 'bg-gradient-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  💜 All
+                </button>
+                <button
+                  onClick={() => setBestieFilter('reliable')}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap font-semibold text-xs flex-shrink-0 ${
+                    bestieFilter === 'reliable'
+                      ? 'bg-gradient-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🛡️ Reliable
+                </button>
+                <button
+                  onClick={() => setBestieFilter('active')}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap font-semibold text-xs flex-shrink-0 ${
+                    bestieFilter === 'active'
+                      ? 'bg-gradient-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔥 Most Active
+                </button>
+                <button
+                  onClick={() => setBestieFilter('alphabetical')}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap font-semibold text-xs flex-shrink-0 ${
+                    bestieFilter === 'alphabetical'
+                      ? 'bg-gradient-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔤 A-Z
+                </button>
+                <button
+                  onClick={() => setBestieFilter('newest')}
+                  className={`px-3 py-1.5 rounded-full whitespace-nowrap font-semibold text-xs flex-shrink-0 ${
+                    bestieFilter === 'newest'
+                      ? 'bg-gradient-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  ⭐ Newest
+                </button>
+              </div>
+
+              {allBestiesFiltered.length === 0 ? (
                 <div className="card p-6 md:p-8 text-center">
                   <div className="text-3xl md:text-4xl mb-2">💜</div>
-                  <p className="text-sm md:text-base text-text-secondary">No besties in this filter</p>
-                  {activeFilter === 'circle' && (
-                    <p className="text-xs md:text-sm text-text-secondary mt-2">
-                      Add besties to your circle by favoriting them
-                    </p>
-                  )}
+                  <p className="text-sm md:text-base text-text-secondary">No besties yet!</p>
                 </div>
               ) : (
                 <div className="grid gap-3">
-                  {filteredBesties.map((bestie) => {
+                  {allBestiesFiltered.map((bestie) => {
                     const indicators = getBestieIndicators(bestie);
                     return (
                       <div key={bestie.id} className="relative">
