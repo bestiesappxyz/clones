@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const { sendBulkNotifications, formatCheckInSafe } = require('../../utils/messaging');
-const { updateUserBadges, checkForNewBadge } = require('../../utils/badges');
 
 /**
  * HTTP Function: Mark check-in as complete (I'm Safe!)
@@ -60,18 +59,8 @@ async function completeCheckIn(req, res, config) {
       );
     }
 
-    // Update user stats
-    const previousCheckInCount = userData.stats?.completedCheckIns || 0;
-    await db.collection('users').doc(userId).update({
-      'stats.completedCheckIns': admin.firestore.FieldValue.increment(1),
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
-
-    // Check for new badge
-    const newBadge = await checkForNewBadge(userId, previousCheckInCount, 'checkins');
-    if (newBadge) {
-      await updateUserBadges(userId);
-    }
+    // Note: Stats increment and badge checks are handled by the onCheckInCountUpdate Firestore trigger
+    // to avoid double counting. The trigger fires when status changes to 'completed'.
 
     // Save as template if requested
     if (saveAsTemplate && templateName) {
@@ -101,9 +90,7 @@ async function completeCheckIn(req, res, config) {
 
     return res.status(200).json({
       success: true,
-      checkinId,
-      newBadge: newBadge || null,
-      totalCheckIns: previousCheckInCount + 1
+      checkinId
     });
 
   } catch (error) {
