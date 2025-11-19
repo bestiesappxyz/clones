@@ -54,6 +54,8 @@ const BestieRequestModal = ({ onClose }) => {
   const [customMessage, setCustomMessage] = useState(CARD_TEMPLATES[0].defaultMessage);
   const [generatingImage, setGeneratingImage] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
+  const [showShareChoice, setShowShareChoice] = useState(false);
+  const [pendingPlatform, setPendingPlatform] = useState(null);
   const cardRef = useRef(null);
 
   const shareUrl = `${window.location.origin}/?invite=${currentUser?.uid}`;
@@ -81,116 +83,145 @@ const BestieRequestModal = ({ onClose }) => {
 
       const imageUrl = canvas.toDataURL('image/png');
       setGeneratedImageUrl(imageUrl);
-      toast.success('Card ready to share! 🎉');
+      return imageUrl;
     } catch (error) {
       console.error('Error generating image:', error);
       toast.error('Failed to generate card');
+      return null;
     } finally {
       setGeneratingImage(false);
     }
   };
 
-  const downloadImage = () => {
-    if (!generatedImageUrl) return;
+  const downloadImage = async () => {
+    let imageUrl = generatedImageUrl;
+
+    if (!imageUrl) {
+      imageUrl = await generateShareImage();
+      if (!imageUrl) return;
+    }
 
     const link = document.createElement('a');
     link.download = `besties-request-${selectedTemplate.id}.png`;
-    link.href = generatedImageUrl;
+    link.href = imageUrl;
     link.click();
     toast.success('Card downloaded! Share it with your friend 💜');
   };
 
-  const handleShareWhatsApp = () => {
-    const message = `${customMessage}\n\nView my profile: ${shareUrl}`;
-    const encoded = encodeURIComponent(message);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `whatsapp://send?text=${encoded}`;
-    } else {
-      window.open(`https://wa.me/?text=${encoded}`, '_blank');
-    }
-  };
-
-  const handleShareFacebook = () => {
-    const encoded = encodeURIComponent(shareUrl);
-    const text = encodeURIComponent(customMessage);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `fb://profile/${currentUser.uid}`;
-      setTimeout(() => {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encoded}&quote=${text}`, '_blank');
-      }, 1500);
-    } else {
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encoded}&quote=${text}`, '_blank', 'width=600,height=400');
-    }
-  };
-
-  const handleShareTwitter = () => {
-    const text = encodeURIComponent(customMessage);
-    const url = encodeURIComponent(shareUrl);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `twitter://post?message=${text} ${url}`;
-      setTimeout(() => {
-        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-      }, 1500);
-    } else {
-      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
-    }
-  };
-
-  const handleShareSMS = () => {
-    const message = `${customMessage}\n\nView my profile: ${shareUrl}`;
-    const encoded = encodeURIComponent(message);
-    window.location.href = `sms:?body=${encoded}`;
-  };
-
-  const handleShareMessenger = () => {
-    const encoded = encodeURIComponent(shareUrl);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      window.location.href = `fb-messenger://share?link=${encoded}`;
-      setTimeout(() => {
-        window.open(`https://www.facebook.com/dialog/send?link=${encoded}&app_id=&redirect_uri=${encoded}`, '_blank');
-      }, 1500);
-    } else {
-      window.open(`https://www.facebook.com/dialog/send?link=${encoded}&app_id=&redirect_uri=${encoded}`, '_blank', 'width=600,height=400');
-    }
-  };
-
-  const handleShareInstagram = async () => {
-    const message = `${customMessage}\n\n${shareUrl}`;
-    try {
-      await navigator.clipboard.writeText(message);
-      toast.success('Link copied! Opening Instagram...');
-
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        // Try to open Instagram app
-        window.location.href = 'instagram://';
-        setTimeout(() => {
-          // Fallback to Instagram web if app not installed
-          window.open('https://www.instagram.com/', '_blank');
-        }, 1500);
-      } else {
-        window.open('https://www.instagram.com/direct/inbox/', '_blank');
-      }
-    } catch (error) {
-      toast.error('Failed to copy link');
-    }
-  };
-
   const handleCopyText = async () => {
-    const text = `${customMessage}\n\nView my profile: ${shareUrl}`;
+    const text = `${customMessage}\n\n${shareUrl}`;
     try {
       await navigator.clipboard.writeText(text);
       toast.success('Message copied to clipboard!');
     } catch (error) {
       toast.error('Failed to copy');
+    }
+  };
+
+  // Show share choice popup
+  const showShareChoicePopup = (platform) => {
+    setPendingPlatform(platform);
+    setShowShareChoice(true);
+  };
+
+  // Handle share with card
+  const handleShareWithCard = async () => {
+    setShowShareChoice(false);
+
+    // Generate image if not already generated
+    let imageUrl = generatedImageUrl;
+    if (!imageUrl) {
+      imageUrl = await generateShareImage();
+      if (!imageUrl) return;
+    }
+
+    toast.success('Card ready! Download and share it 💜');
+    downloadImage();
+
+    // Then proceed to share
+    setTimeout(() => {
+      executePlatformShare(pendingPlatform, true);
+    }, 1000);
+  };
+
+  // Handle share with link only
+  const handleShareWithLink = () => {
+    setShowShareChoice(false);
+    executePlatformShare(pendingPlatform, false);
+  };
+
+  // Execute the actual platform share
+  const executePlatformShare = (platform, withCard) => {
+    const message = `${customMessage}\n\n${shareUrl}`;
+    const encoded = encodeURIComponent(message);
+    const urlEncoded = encodeURIComponent(shareUrl);
+    const textEncoded = encodeURIComponent(customMessage);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    switch (platform) {
+      case 'whatsapp':
+        if (isMobile) {
+          window.location.href = `whatsapp://send?text=${encoded}`;
+        } else {
+          window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+        break;
+
+      case 'messenger':
+        if (isMobile) {
+          window.location.href = `fb-messenger://share?link=${urlEncoded}`;
+          setTimeout(() => {
+            window.open(`https://www.facebook.com/dialog/send?link=${urlEncoded}&app_id=&redirect_uri=${urlEncoded}`, '_blank');
+          }, 1500);
+        } else {
+          window.open(`https://www.facebook.com/dialog/send?link=${urlEncoded}&app_id=&redirect_uri=${urlEncoded}`, '_blank', 'width=600,height=400');
+        }
+        break;
+
+      case 'instagram':
+        navigator.clipboard.writeText(message).then(() => {
+          toast.success('Link copied! Opening Instagram DMs...');
+          if (isMobile) {
+            window.location.href = 'instagram://direct/inbox';
+            setTimeout(() => {
+              window.open('https://www.instagram.com/direct/inbox/', '_blank');
+            }, 1500);
+          } else {
+            window.open('https://www.instagram.com/direct/inbox/', '_blank');
+          }
+        }).catch(() => {
+          toast.error('Failed to copy link');
+        });
+        break;
+
+      case 'facebook':
+        if (isMobile) {
+          window.location.href = `fb://profile/${currentUser.uid}`;
+          setTimeout(() => {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textEncoded}`, '_blank');
+          }, 1500);
+        } else {
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${urlEncoded}&quote=${textEncoded}`, '_blank', 'width=600,height=400');
+        }
+        break;
+
+      case 'twitter':
+        if (isMobile) {
+          window.location.href = `twitter://post?message=${textEncoded} ${urlEncoded}`;
+          setTimeout(() => {
+            window.open(`https://twitter.com/intent/tweet?text=${textEncoded}&url=${urlEncoded}`, '_blank');
+          }, 1500);
+        } else {
+          window.open(`https://twitter.com/intent/tweet?text=${textEncoded}&url=${urlEncoded}`, '_blank', 'width=600,height=400');
+        }
+        break;
+
+      case 'sms':
+        window.location.href = `sms:?body=${encoded}`;
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -256,18 +287,7 @@ const BestieRequestModal = ({ onClose }) => {
 
         {/* Card Preview */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-display text-text-primary">Card Preview</h3>
-            {!generatedImageUrl && (
-              <button
-                onClick={generateShareImage}
-                disabled={generatingImage}
-                className="btn btn-secondary btn-sm"
-              >
-                {generatingImage ? 'Generating...' : '🖼️ Generate Image'}
-              </button>
-            )}
-          </div>
+          <h3 className="text-lg font-display text-text-primary mb-3">Preview</h3>
 
           <div
             ref={cardRef}
@@ -309,39 +329,12 @@ const BestieRequestModal = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Generated Image Actions */}
-        {generatedImageUrl && (
-          <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">✅</span>
-              <p className="text-green-800 font-semibold">Card ready to share!</p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={downloadImage}
-                className="flex-1 btn btn-primary flex items-center justify-center gap-2"
-              >
-                📥 Download Card
-              </button>
-              <button
-                onClick={generateShareImage}
-                className="flex-1 btn btn-secondary flex items-center justify-center gap-2"
-              >
-                🔄 Regenerate
-              </button>
-            </div>
-            <p className="text-xs text-gray-600 text-center mt-3">
-              Download and share on Instagram, TikTok, or anywhere!
-            </p>
-          </div>
-        )}
-
         {/* Share Buttons */}
         <div className="mb-4">
           <h3 className="text-lg font-display text-text-primary mb-3">Share With Friends</h3>
           <div className="grid grid-cols-2 gap-3">
             <button
-              onClick={handleShareWhatsApp}
+              onClick={() => showShareChoicePopup('whatsapp')}
               className="btn bg-[#25D366] text-white hover:bg-[#20BA5A] flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -351,7 +344,7 @@ const BestieRequestModal = ({ onClose }) => {
             </button>
 
             <button
-              onClick={handleShareMessenger}
+              onClick={() => showShareChoicePopup('messenger')}
               className="btn bg-[#0084FF] text-white hover:bg-[#0073E6] flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -361,17 +354,17 @@ const BestieRequestModal = ({ onClose }) => {
             </button>
 
             <button
-              onClick={handleShareInstagram}
+              onClick={() => showShareChoicePopup('instagram')}
               className="btn bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] text-white hover:opacity-90 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
               </svg>
-              Instagram
+              Instagram DM
             </button>
 
             <button
-              onClick={handleShareFacebook}
+              onClick={() => showShareChoicePopup('facebook')}
               className="btn bg-[#1877F2] text-white hover:bg-[#166FE5] flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -381,7 +374,7 @@ const BestieRequestModal = ({ onClose }) => {
             </button>
 
             <button
-              onClick={handleShareTwitter}
+              onClick={() => showShareChoicePopup('twitter')}
               className="btn bg-black text-white hover:bg-gray-800 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -391,7 +384,7 @@ const BestieRequestModal = ({ onClose }) => {
             </button>
 
             <button
-              onClick={handleShareSMS}
+              onClick={() => showShareChoicePopup('sms')}
               className="btn bg-success text-white hover:bg-green-600 flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,18 +395,114 @@ const BestieRequestModal = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Copy Button */}
-        <button
-          onClick={handleCopyText}
-          className="w-full btn btn-primary"
-        >
-          📋 Copy Message
-        </button>
+        {/* Quick Actions */}
+        <div className="flex gap-3">
+          <button
+            onClick={handleCopyText}
+            className="flex-1 btn btn-secondary"
+          >
+            📋 Copy Message
+          </button>
+          <button
+            onClick={downloadImage}
+            disabled={generatingImage}
+            className="flex-1 btn btn-primary"
+          >
+            {generatingImage ? '⏳ Generating...' : '📥 Download Card'}
+          </button>
+        </div>
 
         <p className="text-xs text-gray-500 text-center mt-4">
           Invite your friends to join your safety network!
         </p>
       </div>
+
+      {/* Share Choice Popup */}
+      {showShareChoice && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[60] p-4 animate-fade-in">
+          <div className="card max-w-md w-full p-6 animate-scale-up">
+            <div className="text-center mb-6">
+              <div className="text-6xl mb-4 animate-bounce-slow">🎨</div>
+              <h3 className="text-2xl font-display text-text-primary mb-2">
+                How do you want to share?
+              </h3>
+              <p className="text-sm text-text-secondary">
+                Choose between a beautiful card or a simple link
+              </p>
+            </div>
+
+            <div className="space-y-3 mb-4">
+              {/* Share with Card */}
+              <button
+                onClick={handleShareWithCard}
+                className="w-full p-4 border-2 border-primary bg-purple-50 rounded-xl hover:bg-purple-100 transition-all group"
+                disabled={generatingImage}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">🖼️</div>
+                  <div className="flex-1 text-left">
+                    <div className="font-display text-lg text-primary mb-1">
+                      Share Beautiful Card
+                    </div>
+                    <div className="text-xs text-text-secondary">
+                      Custom image with your message
+                    </div>
+                  </div>
+                  <div className="text-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </div>
+                </div>
+              </button>
+
+              {/* Share with Link */}
+              <button
+                onClick={handleShareWithLink}
+                className="w-full p-4 border-2 border-gray-300 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">🔗</div>
+                  <div className="flex-1 text-left">
+                    <div className="font-display text-lg text-gray-800 mb-1">
+                      Share Simple Link
+                    </div>
+                    <div className="text-xs text-text-secondary">
+                      Quick text message with link
+                    </div>
+                  </div>
+                  <div className="text-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowShareChoice(false)}
+              className="w-full btn btn-secondary"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* CSS for animations */}
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 2s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
