@@ -238,77 +238,6 @@ const AboutBestiesPage = () => {
             </div>
           </div>
 
-          {/* Style 3: Watercolor Dream */}
-          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-purple-200">
-            <h3 className="font-semibold text-lg text-purple-900 mb-3">Style 3: Watercolor Dream</h3>
-            <p className="text-xs text-gray-600 mb-4">Soft washes, blended colors, artistic and organic</p>
-            <div className="flex items-center justify-center gap-8">
-              {/* Watercolor heart splash */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <radialGradient id="watercolor1">
-                      <stop offset="0%" stopColor="#f9a8d4" opacity="0.8" />
-                      <stop offset="70%" stopColor="#f472b6" opacity="0.4" />
-                      <stop offset="100%" stopColor="#ec4899" opacity="0.1" />
-                    </radialGradient>
-                    <radialGradient id="watercolor2">
-                      <stop offset="0%" stopColor="#c4b5fd" opacity="0.6" />
-                      <stop offset="100%" stopColor="#a78bfa" opacity="0.1" />
-                    </radialGradient>
-                  </defs>
-
-                  {/* Background wash */}
-                  <circle cx="60" cy="60" r="40" fill="url(#watercolor2)" />
-
-                  {/* Heart shape with watercolor effect */}
-                  <path d="M60,80 C60,80 38,68 38,50 C38,42 43,37 49,37 C54,37 57,40 60,46 C63,40 66,37 71,37 C77,37 82,42 82,50 C82,68 60,80 60,80 Z"
-                        fill="url(#watercolor1)"
-                        className="animate-pulse"
-                        style={{animationDuration: '4s'}} />
-
-                  {/* Overlapping wash layers */}
-                  <ellipse cx="55" cy="52" rx="15" ry="12" fill="#fda4af" opacity="0.3" />
-                  <ellipse cx="65" cy="55" rx="12" ry="15" fill="#f9a8d4" opacity="0.2" />
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Painted Love</p>
-              </div>
-
-              {/* Watercolor figures holding hands */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <radialGradient id="person1wash">
-                      <stop offset="0%" stopColor="#fbbf24" opacity="0.7" />
-                      <stop offset="100%" stopColor="#fbbf24" opacity="0.1" />
-                    </radialGradient>
-                    <radialGradient id="person2wash">
-                      <stop offset="0%" stopColor="#c4b5fd" opacity="0.7" />
-                      <stop offset="100%" stopColor="#c4b5fd" opacity="0.1" />
-                    </radialGradient>
-                  </defs>
-
-                  {/* Two figures - watercolor style */}
-                  <g className="animate-pulse" style={{animationDuration: '3s'}}>
-                    <circle cx="40" cy="50" r="20" fill="url(#person1wash)" />
-                    <circle cx="40" cy="48" r="10" fill="#fbbf24" opacity="0.6" />
-                    <ellipse cx="40" cy="65" rx="12" ry="18" fill="#fbbf24" opacity="0.5" />
-                  </g>
-
-                  <g className="animate-pulse" style={{animationDuration: '3s', animationDelay: '0.5s'}}>
-                    <circle cx="80" cy="50" r="20" fill="url(#person2wash)" />
-                    <circle cx="80" cy="48" r="10" fill="#c4b5fd" opacity="0.6" />
-                    <ellipse cx="80" cy="65" rx="12" ry="18" fill="#c4b5fd" opacity="0.5" />
-                  </g>
-
-                  {/* Connection between them */}
-                  <ellipse cx="60" cy="65" rx="25" ry="8" fill="#f9a8d4" opacity="0.3" />
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Together Always</p>
-              </div>
-            </div>
-          </div>
-
           {/* Style 4: Minimal with Sparkle */}
           <div className="mb-8 p-6 bg-white rounded-xl border-2 border-fuchsia-200">
             <h3 className="font-semibold text-lg text-fuchsia-900 mb-3">Style 4: Minimal with Sparkle</h3>
@@ -473,86 +402,6 @@ const AboutBestiesPage = () => {
             </div>
           </div>
 
-          {/* Style 6: Bubbly & Round */}
-          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-rose-200">
-            <h3 className="font-semibold text-lg text-rose-900 mb-3">Style 6: Bubbly & Round</h3>
-            <p className="text-xs text-gray-600 mb-4">Rounded shapes, soft circles, friendly and approachable</p>
-            <div className="flex items-center justify-center gap-8">
-              {/* Bubble heart stack */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <linearGradient id="bubble2" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#fda4af" />
-                      <stop offset="100%" stopColor="#fb7185" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Bubble heart made of circles */}
-                  <g className="animate-pulse" style={{animationDuration: '2s'}}>
-                    <circle cx="48" cy="48" r="14" fill="url(#bubble2)" opacity="0.7" />
-                    <circle cx="72" cy="48" r="14" fill="url(#bubble2)" opacity="0.7" />
-                    <circle cx="60" cy="56" r="16" fill="url(#bubble2)" opacity="0.7" />
-                    <circle cx="60" cy="70" r="12" fill="url(#bubble2)" opacity="0.7" />
-                  </g>
-
-                  {/* Shine effects */}
-                  <circle cx="52" cy="44" r="4" fill="#fff" opacity="0.6" />
-                  <circle cx="68" cy="46" r="3" fill="#fff" opacity="0.6" />
-
-                  {/* Small floating bubbles */}
-                  <g className="animate-pulse" style={{animationDuration: '3s', animationDelay: '0.5s'}}>
-                    <circle cx="40" cy="70" r="4" fill="#fbbf24" opacity="0.5" />
-                    <circle cx="80" cy="75" r="5" fill="#f9a8d4" opacity="0.5" />
-                    <circle cx="60" cy="30" r="3" fill="#c4b5fd" opacity="0.5" />
-                  </g>
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Bubble Love</p>
-              </div>
-
-              {/* Bubbly people group */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <linearGradient id="bubblePerson1" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#fbbf24" />
-                      <stop offset="100%" stopColor="#f59e0b" />
-                    </linearGradient>
-                    <linearGradient id="bubblePerson2" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#f9a8d4" />
-                      <stop offset="100%" stopColor="#f472b6" />
-                    </linearGradient>
-                    <linearGradient id="bubblePerson3" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#c4b5fd" />
-                      <stop offset="100%" stopColor="#a78bfa" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Three round figures */}
-                  <g className="animate-pulse" style={{animationDuration: '2s'}}>
-                    <circle cx="35" cy="55" r="12" fill="url(#bubblePerson1)" />
-                    <circle cx="35" cy="73" r="14" fill="url(#bubblePerson1)" opacity="0.8" />
-                  </g>
-
-                  <g className="animate-pulse" style={{animationDuration: '2s', animationDelay: '0.3s'}}>
-                    <circle cx="60" cy="48" r="14" fill="url(#bubblePerson2)" />
-                    <circle cx="60" cy="68" r="16" fill="url(#bubblePerson2)" opacity="0.8" />
-                  </g>
-
-                  <g className="animate-pulse" style={{animationDuration: '2s', animationDelay: '0.6s'}}>
-                    <circle cx="85" cy="55" r="12" fill="url(#bubblePerson3)" />
-                    <circle cx="85" cy="73" r="14" fill="url(#bubblePerson3)" opacity="0.8" />
-                  </g>
-
-                  {/* Connecting bubbles */}
-                  <circle cx="47" cy="62" r="3" fill="#fff" opacity="0.5" />
-                  <circle cx="73" cy="62" r="3" fill="#fff" opacity="0.5" />
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Bubble Squad</p>
-              </div>
-            </div>
-          </div>
-
           {/* Style 7: Soft Geometry */}
           <div className="mb-8 p-6 bg-white rounded-xl border-2 border-purple-200">
             <h3 className="font-semibold text-lg text-purple-900 mb-3">Style 7: Soft Geometry</h3>
@@ -621,78 +470,6 @@ const AboutBestiesPage = () => {
                         className="animate-pulse" />
                 </svg>
                 <p className="text-xs text-gray-600 mt-2">Linked Up</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Style 8: Stardust Dreams */}
-          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-pink-200">
-            <h3 className="font-semibold text-lg text-pink-900 mb-3">Style 8: Stardust Dreams</h3>
-            <p className="text-xs text-gray-600 mb-4">Sparkles, twinkles, magical particles, whimsical feel</p>
-            <div className="flex items-center justify-center gap-8">
-              {/* Sparkle heart constellation */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  <defs>
-                    <radialGradient id="sparkle1">
-                      <stop offset="0%" stopColor="#fbbf24" />
-                      <stop offset="100%" stopColor="#fbbf24" opacity="0" />
-                    </radialGradient>
-                  </defs>
-
-                  {/* Heart made of sparkles */}
-                  <g className="animate-pulse" style={{animationDuration: '2s'}}>
-                    {/* Main sparkle stars forming heart shape */}
-                    <path d="M45,48 L46,51 L49,52 L46,53 L45,56 L44,53 L41,52 L44,51 Z" fill="#ec4899" />
-                    <path d="M75,48 L76,51 L79,52 L76,53 L75,56 L74,53 L71,52 L74,51 Z" fill="#ec4899" />
-                    <path d="M38,56 L39,59 L42,60 L39,61 L38,64 L37,61 L34,60 L37,59 Z" fill="#f472b6" />
-                    <path d="M82,56 L83,59 L86,60 L83,61 L82,64 L81,61 L78,60 L81,59 Z" fill="#f472b6" />
-                    <path d="M60,75 L61,78 L64,79 L61,80 L60,83 L59,80 L56,79 L59,78 Z" fill="#ec4899" />
-                    <path d="M35,68 L36,71 L39,72 L36,73 L35,76 L34,73 L31,72 L34,71 Z" fill="#f9a8d4" />
-                    <path d="M85,68 L86,71 L89,72 L86,73 L85,76 L84,73 L81,72 L84,71 Z" fill="#f9a8d4" />
-                  </g>
-
-                  {/* Tiny floating sparkles */}
-                  <g className="animate-pulse" style={{animationDuration: '3s', animationDelay: '0.5s'}}>
-                    <circle cx="50" cy="40" r="1.5" fill="#fbbf24" opacity="0.8" />
-                    <circle cx="70" cy="42" r="1" fill="#fbbf24" opacity="0.8" />
-                    <circle cx="60" cy="35" r="1.5" fill="#fbbf24" opacity="0.8" />
-                    <circle cx="45" cy="80" r="1" fill="#c4b5fd" opacity="0.8" />
-                    <circle cx="75" cy="82" r="1.5" fill="#c4b5fd" opacity="0.8" />
-                  </g>
-
-                  {/* Glow effect */}
-                  <circle cx="60" cy="60" r="30" fill="url(#sparkle1)" opacity="0.1" />
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Starry Heart</p>
-              </div>
-
-              {/* Magical protection circle */}
-              <div className="flex flex-col items-center">
-                <svg viewBox="0 0 120 120" className="w-32 h-32">
-                  {/* Circle of sparkles */}
-                  <g className="animate-pulse" style={{animationDuration: '3s'}}>
-                    <path d="M60,25 L61,28 L64,29 L61,30 L60,33 L59,30 L56,29 L59,28 Z" fill="#a78bfa" />
-                    <path d="M85,45 L86,48 L89,49 L86,50 L85,53 L84,50 L81,49 L84,48 Z" fill="#f9a8d4" />
-                    <path d="M90,70 L91,73 L94,74 L91,75 L90,78 L89,75 L86,74 L89,73 Z" fill="#fda4af" />
-                    <path d="M70,90 L71,93 L74,94 L71,95 L70,98 L69,95 L66,94 L69,93 Z" fill="#fbbf24" />
-                    <path d="M40,90 L41,93 L44,94 L41,95 L40,98 L39,95 L36,94 L39,93 Z" fill="#c4b5fd" />
-                    <path d="M25,70 L26,73 L29,74 L26,75 L25,78 L24,75 L21,74 L24,73 Z" fill="#f472b6" />
-                    <path d="M30,45 L31,48 L34,49 L31,50 L30,53 L29,50 L26,49 L29,48 Z" fill="#fbbf24" />
-                  </g>
-
-                  {/* Center protected person - simple shape */}
-                  <circle cx="60" cy="60" r="15" fill="#f9a8d4" opacity="0.3" />
-                  <circle cx="60" cy="58" r="8" fill="#f9a8d4" opacity="0.6" />
-
-                  {/* Subtle stardust particles */}
-                  <g className="animate-pulse" style={{animationDuration: '2s', animationDelay: '1s'}}>
-                    <circle cx="50" cy="50" r="1" fill="#fbbf24" opacity="0.6" />
-                    <circle cx="70" cy="55" r="1" fill="#c4b5fd" opacity="0.6" />
-                    <circle cx="55" cy="70" r="1" fill="#fda4af" opacity="0.6" />
-                  </g>
-                </svg>
-                <p className="text-xs text-gray-600 mt-2">Magic Shield</p>
               </div>
             </div>
           </div>
@@ -900,13 +677,176 @@ const AboutBestiesPage = () => {
           </div>
         </div>
 
-        {/* STYLE 9 - SAVED FOR REFERENCE - DO NOT DELETE UNTIL USER APPROVAL */}
+        {/* ARCHIVED STYLES + CUSTOM ICON DESIGNS - DO NOT DELETE UNTIL USER APPROVAL */}
         <div className="card p-6 mb-6 bg-gradient-to-br from-rose-50 to-pink-50 border-4 border-rose-300">
           <div className="bg-yellow-100 border-2 border-yellow-400 rounded-lg p-3 mb-4">
-            <p className="text-sm font-semibold text-yellow-900">⚠️ DO NOT DELETE - Saved for user review</p>
+            <p className="text-sm font-semibold text-yellow-900">⚠️ DO NOT DELETE - Archived styles & custom icon designs for user review</p>
           </div>
 
-          <h3 className="font-semibold text-xl text-rose-900 mb-3 text-center">Style 9: Sketchy & Sweet</h3>
+          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">Archived Styles</h2>
+
+          <h3 className="font-semibold text-xl text-purple-900 mb-3 text-center mt-8">Style 3: Watercolor Dream</h3>
+          <p className="text-sm text-gray-600 mb-4 text-center">Soft washes, blended colors, artistic and organic</p>
+          <div className="flex items-center justify-center gap-8 flex-wrap mb-8">
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <radialGradient id="watercolor1">
+                    <stop offset="0%" stopColor="#f9a8d4" opacity="0.8" />
+                    <stop offset="70%" stopColor="#f472b6" opacity="0.4" />
+                    <stop offset="100%" stopColor="#ec4899" opacity="0.1" />
+                  </radialGradient>
+                  <radialGradient id="watercolor2">
+                    <stop offset="0%" stopColor="#c4b5fd" opacity="0.6" />
+                    <stop offset="100%" stopColor="#a78bfa" opacity="0.1" />
+                  </radialGradient>
+                </defs>
+                <circle cx="60" cy="60" r="40" fill="url(#watercolor2)" />
+                <path d="M60,80 C60,80 38,68 38,50 C38,42 43,37 49,37 C54,37 57,40 60,46 C63,40 66,37 71,37 C77,37 82,42 82,50 C82,68 60,80 60,80 Z" fill="url(#watercolor1)" />
+                <ellipse cx="55" cy="52" rx="15" ry="12" fill="#fda4af" opacity="0.3" />
+                <ellipse cx="65" cy="55" rx="12" ry="15" fill="#f9a8d4" opacity="0.2" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Painted Love</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <radialGradient id="person1wash">
+                    <stop offset="0%" stopColor="#fbbf24" opacity="0.7" />
+                    <stop offset="100%" stopColor="#fbbf24" opacity="0.1" />
+                  </radialGradient>
+                  <radialGradient id="person2wash">
+                    <stop offset="0%" stopColor="#c4b5fd" opacity="0.7" />
+                    <stop offset="100%" stopColor="#c4b5fd" opacity="0.1" />
+                  </radialGradient>
+                </defs>
+                <g>
+                  <circle cx="40" cy="50" r="20" fill="url(#person1wash)" />
+                  <circle cx="40" cy="48" r="10" fill="#fbbf24" opacity="0.6" />
+                  <ellipse cx="40" cy="65" rx="12" ry="18" fill="#fbbf24" opacity="0.5" />
+                </g>
+                <g>
+                  <circle cx="80" cy="50" r="20" fill="url(#person2wash)" />
+                  <circle cx="80" cy="48" r="10" fill="#c4b5fd" opacity="0.6" />
+                  <ellipse cx="80" cy="65" rx="12" ry="18" fill="#c4b5fd" opacity="0.5" />
+                </g>
+                <ellipse cx="60" cy="65" rx="25" ry="8" fill="#f9a8d4" opacity="0.3" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Together Always</p>
+            </div>
+          </div>
+
+          <h3 className="font-semibold text-xl text-rose-900 mb-3 text-center mt-8">Style 6: Bubbly & Round</h3>
+          <p className="text-sm text-gray-600 mb-4 text-center">Rounded shapes, soft circles, friendly and approachable</p>
+          <div className="flex items-center justify-center gap-8 flex-wrap mb-8">
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <linearGradient id="bubble2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fda4af" />
+                    <stop offset="100%" stopColor="#fb7185" />
+                  </linearGradient>
+                </defs>
+                <g>
+                  <circle cx="48" cy="48" r="14" fill="url(#bubble2)" opacity="0.7" />
+                  <circle cx="72" cy="48" r="14" fill="url(#bubble2)" opacity="0.7" />
+                  <circle cx="60" cy="56" r="16" fill="url(#bubble2)" opacity="0.7" />
+                  <circle cx="60" cy="70" r="12" fill="url(#bubble2)" opacity="0.7" />
+                </g>
+                <circle cx="52" cy="44" r="4" fill="#fff" opacity="0.6" />
+                <circle cx="68" cy="46" r="3" fill="#fff" opacity="0.6" />
+                <circle cx="40" cy="70" r="4" fill="#fbbf24" opacity="0.5" />
+                <circle cx="80" cy="75" r="5" fill="#f9a8d4" opacity="0.5" />
+                <circle cx="60" cy="30" r="3" fill="#c4b5fd" opacity="0.5" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Bubble Love</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <linearGradient id="bubblePerson1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#fbbf24" />
+                    <stop offset="100%" stopColor="#f59e0b" />
+                  </linearGradient>
+                  <linearGradient id="bubblePerson2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#f9a8d4" />
+                    <stop offset="100%" stopColor="#f472b6" />
+                  </linearGradient>
+                  <linearGradient id="bubblePerson3" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#c4b5fd" />
+                    <stop offset="100%" stopColor="#a78bfa" />
+                  </linearGradient>
+                </defs>
+                <g>
+                  <circle cx="35" cy="55" r="12" fill="url(#bubblePerson1)" />
+                  <circle cx="35" cy="73" r="14" fill="url(#bubblePerson1)" opacity="0.8" />
+                </g>
+                <g>
+                  <circle cx="60" cy="48" r="14" fill="url(#bubblePerson2)" />
+                  <circle cx="60" cy="68" r="16" fill="url(#bubblePerson2)" opacity="0.8" />
+                </g>
+                <g>
+                  <circle cx="85" cy="55" r="12" fill="url(#bubblePerson3)" />
+                  <circle cx="85" cy="73" r="14" fill="url(#bubblePerson3)" opacity="0.8" />
+                </g>
+                <circle cx="47" cy="62" r="3" fill="#fff" opacity="0.5" />
+                <circle cx="73" cy="62" r="3" fill="#fff" opacity="0.5" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Bubble Squad</p>
+            </div>
+          </div>
+
+          <h3 className="font-semibold text-xl text-pink-900 mb-3 text-center mt-8">Style 8: Stardust Dreams</h3>
+          <p className="text-sm text-gray-600 mb-4 text-center">Sparkles, twinkles, magical particles, whimsical feel</p>
+          <div className="flex items-center justify-center gap-8 flex-wrap mb-8">
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <defs>
+                  <radialGradient id="sparkle1">
+                    <stop offset="0%" stopColor="#fbbf24" />
+                    <stop offset="100%" stopColor="#fbbf24" opacity="0" />
+                  </radialGradient>
+                </defs>
+                <g>
+                  <path d="M45,48 L46,51 L49,52 L46,53 L45,56 L44,53 L41,52 L44,51 Z" fill="#ec4899" />
+                  <path d="M75,48 L76,51 L79,52 L76,53 L75,56 L74,53 L71,52 L74,51 Z" fill="#ec4899" />
+                  <path d="M38,56 L39,59 L42,60 L39,61 L38,64 L37,61 L34,60 L37,59 Z" fill="#f472b6" />
+                  <path d="M82,56 L83,59 L86,60 L83,61 L82,64 L81,61 L78,60 L81,59 Z" fill="#f472b6" />
+                  <path d="M60,75 L61,78 L64,79 L61,80 L60,83 L59,80 L56,79 L59,78 Z" fill="#ec4899" />
+                  <path d="M35,68 L36,71 L39,72 L36,73 L35,76 L34,73 L31,72 L34,71 Z" fill="#f9a8d4" />
+                  <path d="M85,68 L86,71 L89,72 L86,73 L85,76 L84,73 L81,72 L84,71 Z" fill="#f9a8d4" />
+                </g>
+                <circle cx="50" cy="40" r="1.5" fill="#fbbf24" opacity="0.8" />
+                <circle cx="70" cy="42" r="1" fill="#fbbf24" opacity="0.8" />
+                <circle cx="60" cy="35" r="1.5" fill="#fbbf24" opacity="0.8" />
+                <circle cx="45" cy="80" r="1" fill="#c4b5fd" opacity="0.8" />
+                <circle cx="75" cy="82" r="1.5" fill="#c4b5fd" opacity="0.8" />
+                <circle cx="60" cy="60" r="30" fill="url(#sparkle1)" opacity="0.1" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Starry Heart</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <svg viewBox="0 0 120 120" className="w-32 h-32">
+                <g>
+                  <path d="M60,25 L61,28 L64,29 L61,30 L60,33 L59,30 L56,29 L59,28 Z" fill="#a78bfa" />
+                  <path d="M85,45 L86,48 L89,49 L86,50 L85,53 L84,50 L81,49 L84,48 Z" fill="#f9a8d4" />
+                  <path d="M90,70 L91,73 L94,74 L91,75 L90,78 L89,75 L86,74 L89,73 Z" fill="#fda4af" />
+                  <path d="M70,90 L71,93 L74,94 L71,95 L70,98 L69,95 L66,94 L69,93 Z" fill="#fbbf24" />
+                  <path d="M40,90 L41,93 L44,94 L41,95 L40,98 L39,95 L36,94 L39,93 Z" fill="#c4b5fd" />
+                  <path d="M25,70 L26,73 L29,74 L26,75 L25,78 L24,75 L21,74 L24,73 Z" fill="#f472b6" />
+                  <path d="M30,45 L31,48 L34,49 L31,50 L30,53 L29,50 L26,49 L29,48 Z" fill="#fbbf24" />
+                </g>
+                <circle cx="60" cy="60" r="15" fill="#f9a8d4" opacity="0.3" />
+                <circle cx="60" cy="58" r="8" fill="#f9a8d4" opacity="0.6" />
+                <circle cx="50" cy="50" r="1" fill="#fbbf24" opacity="0.6" />
+                <circle cx="70" cy="55" r="1" fill="#c4b5fd" opacity="0.6" />
+                <circle cx="55" cy="70" r="1" fill="#fda4af" opacity="0.6" />
+              </svg>
+              <p className="text-xs text-gray-600 mt-2">Magic Shield</p>
+            </div>
+          </div>
+
+          <h3 className="font-semibold text-xl text-rose-900 mb-3 text-center mt-8">Style 9: Sketchy & Sweet</h3>
           <p className="text-sm text-gray-600 mb-4 text-center">Hand-drawn lines, imperfect charm, personal touch</p>
 
           <div className="flex items-center justify-center gap-8 flex-wrap">
@@ -985,6 +925,477 @@ const AboutBestiesPage = () => {
               <p className="text-xs text-gray-600 mt-2">Hand in Hand</p>
             </div>
           </div>
+
+          <hr className="my-8 border-t-2 border-rose-300" />
+
+          <h2 className="text-2xl font-display text-text-primary mb-6 text-center mt-8">Custom Icon Designs</h2>
+
+          {/* OUR MISSION ICONS - Style 4 (Minimal with Sparkle) */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-fuchsia-900 mb-4 text-center">Our Mission Icons - Minimal with Sparkle Style</h3>
+
+            {/* Keep You Safe - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Keep You Safe (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="safe1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M24,8 L36,12 L36,24 C36,32 30,38 24,42 C18,38 12,32 12,24 L12,12 Z" fill="none" stroke="#e5e7eb" strokeWidth="2" />
+                    <path d="M24,12 L32,15 L32,23 C32,29 28,34 24,37 C20,34 16,29 16,23 L16,15 Z" fill="url(#safe1)" opacity="0.2" />
+                    <path d="M20,23 L22,26 L28,19" fill="none" stroke="url(#safe1)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <circle cx="30" cy="16" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Shield Check</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="safe2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="24" cy="24" r="14" fill="none" stroke="#e5e7eb" strokeWidth="2" />
+                    <circle cx="24" cy="24" r="10" fill="url(#safe2)" opacity="0.2" />
+                    <path d="M24,16 L24,24 L28,28" fill="none" stroke="url(#safe2)" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="32" cy="16" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Protection Circle</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="safe3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="16" y="20" width="16" height="16" rx="2" fill="none" stroke="#e5e7eb" strokeWidth="2" />
+                    <path d="M20,20 L20,16 C20,13 21.5,11 24,11 C26.5,11 28,13 28,16 L28,20" fill="none" stroke="url(#safe3)" strokeWidth="2" strokeLinecap="round"/>
+                    <rect x="19" y="23" width="10" height="9" rx="1" fill="url(#safe3)" opacity="0.2" />
+                    <circle cx="32" cy="14" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Secure Lock</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Build Community - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Build Community (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="comm1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#c4b5fd" />
+                        <stop offset="50%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#fda4af" />
+                      </linearGradient>
+                    </defs>
+                    <line x1="16" y1="18" x2="24" y2="24" stroke="url(#comm1)" strokeWidth="1.5" />
+                    <line x1="24" y1="24" x2="32" y2="18" stroke="url(#comm1)" strokeWidth="1.5" />
+                    <circle cx="16" cy="18" r="4" fill="#fff" stroke="#c4b5fd" strokeWidth="1.5" />
+                    <circle cx="16" cy="18" r="2" fill="#c4b5fd" />
+                    <circle cx="24" cy="24" r="5" fill="#fff" stroke="#f9a8d4" strokeWidth="1.5" />
+                    <circle cx="24" cy="24" r="2.5" fill="#f9a8d4" />
+                    <circle cx="32" cy="18" r="4" fill="#fff" stroke="#fda4af" strokeWidth="1.5" />
+                    <circle cx="32" cy="18" r="2" fill="#fda4af" />
+                    <circle cx="34" cy="12" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Connected Trio</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="comm2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="24" cy="24" r="12" fill="none" stroke="#e5e7eb" strokeWidth="1.5" strokeDasharray="2,2" />
+                    <circle cx="24" cy="16" r="3" fill="#c4b5fd" />
+                    <circle cx="30" cy="28" r="3" fill="#f9a8d4" />
+                    <circle cx="18" cy="28" r="3" fill="#fda4af" />
+                    <circle cx="24" cy="24" r="1.5" fill="url(#comm2)" />
+                    <circle cx="34" cy="14" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Circle of Friends</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="comm3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M14,26 C14,26 12,22 12,20 C12,18 13,17 14.5,17 C15.5,17 16,18 16,19 C16,18 16.5,17 17.5,17 C19,17 20,18 20,20 C20,22 18,26 18,26 L14,26 Z" fill="url(#comm3)" opacity="0.3" />
+                    <path d="M20,24 C20,24 18,20 18,18 C18,16 19,15 20.5,15 C21.5,15 22,16 22,17 C22,16 22.5,15 23.5,15 C25,15 26,16 26,18 C26,20 24,24 24,24 L20,24 Z" fill="url(#comm3)" opacity="0.5" />
+                    <path d="M26,22 C26,22 24,18 24,16 C24,14 25,13 26.5,13 C27.5,13 28,14 28,15 C28,14 28.5,13 29.5,13 C31,13 32,14 32,16 C32,18 30,22 30,22 L26,22 Z" fill="url(#comm3)" />
+                    <line x1="16" y1="26" x2="16" y2="32" stroke="url(#comm3)" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="22" y1="24" x2="22" y2="32" stroke="url(#comm3)" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="28" y1="22" x2="28" y2="32" stroke="url(#comm3)" strokeWidth="1.5" strokeLinecap="round" />
+                    <circle cx="34" cy="12" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Growing Together</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Stay Free - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Stay Free (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="free1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M24,34 L14,24 C12,22 12,19 14,17 C16,15 19,15 21,17 L24,20 L27,17 C29,15 32,15 34,17 C36,19 36,22 34,24 Z" fill="none" stroke="url(#free1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M20,24 L28,24" stroke="url(#free1)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+                    <circle cx="34" cy="14" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Open Heart</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="free2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M18,18 C18,18 18,16 18,14 C18,12 19,11 20.5,11 C21.5,11 22,12 22,13 C22,12 22.5,11 23.5,11 C25,11 26,12 26,14 C26,16 26,18 26,18" fill="none" stroke="url(#free2)" strokeWidth="2" strokeLinecap="round" />
+                    <ellipse cx="22" cy="22" rx="8" ry="6" fill="none" stroke="url(#free2)" strokeWidth="2" />
+                    <path d="M18,24 Q22,27 26,24" fill="none" stroke="url(#free2)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+                    <circle cx="34" cy="12" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Caring Hands</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <linearGradient id="free3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M12,24 C12,18 16,14 24,14 C32,14 36,18 36,24" fill="none" stroke="url(#free3)" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="24" cy="24" r="4" fill="none" stroke="url(#free3)" strokeWidth="2" />
+                    <line x1="20" y1="28" x2="28" y2="28" stroke="url(#free3)" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="34" cy="12" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Accessible</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* OTHER WAYS TO HELP ICONS - Style 5 (Soft Neon Glow) */}
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-pink-900 mb-4 text-center">Other Ways to Help Icons - Soft Neon Glow Style</h3>
+
+            {/* Spread the Word - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Spread the Word (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow1">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="spread1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M14,18 L20,18 L26,14 L26,34 L20,30 L14,30 Z" fill="url(#spread1)" filter="url(#glow1)" opacity="0.8" />
+                    <path d="M28,20 Q32,24 28,28" fill="none" stroke="url(#spread1)" strokeWidth="2" strokeLinecap="round" filter="url(#glow1)" />
+                    <path d="M32,18 Q38,24 32,30" fill="none" stroke="url(#spread1)" strokeWidth="1.5" strokeLinecap="round" filter="url(#glow1)" opacity="0.6" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Megaphone</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow2">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="spread2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <ellipse cx="24" cy="26" rx="10" ry="8" fill="url(#spread2)" filter="url(#glow2)" opacity="0.8" />
+                    <path d="M24,18 C24,18 22,16 22,14 C22,13 23,12 24,12 C25,12 26,13 26,14 C26,16 24,18 24,18 Z" fill="url(#spread2)" filter="url(#glow2)" opacity="0.8" />
+                    <path d="M18,22 L14,18" stroke="url(#spread2)" strokeWidth="2" strokeLinecap="round" filter="url(#glow2)" />
+                    <path d="M30,22 L34,18" stroke="url(#spread2)" strokeWidth="2" strokeLinecap="round" filter="url(#glow2)" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Speech Bubble</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow3">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="spread3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="20" cy="20" r="6" fill="url(#spread3)" filter="url(#glow3)" opacity="0.6" />
+                    <circle cx="28" cy="20" r="6" fill="url(#spread3)" filter="url(#glow3)" opacity="0.6" />
+                    <circle cx="34" cy="26" r="6" fill="url(#spread3)" filter="url(#glow3)" opacity="0.6" />
+                    <line x1="24" y1="20" x2="28" y2="20" stroke="url(#spread3)" strokeWidth="1.5" filter="url(#glow3)" />
+                    <line x1="30" y1="23" x2="32" y2="24" stroke="url(#spread3)" strokeWidth="1.5" filter="url(#glow3)" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Share Network</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Share Ideas - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Share Ideas (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow4">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="idea1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="100%" stopColor="#f59e0b" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="24" cy="20" r="8" fill="url(#idea1)" filter="url(#glow4)" opacity="0.8" />
+                    <path d="M20,28 L20,32 L28,32 L28,28" fill="url(#idea1)" opacity="0.4" />
+                    <line x1="20" y1="32" x2="28" y2="32" stroke="url(#idea1)" strokeWidth="2" strokeLinecap="round" filter="url(#glow4)" />
+                    <circle cx="24" cy="20" r="4" fill="#fff" opacity="0.4" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Light Bulb</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow5">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="idea2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="100%" stopColor="#f59e0b" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="24" cy="24" r="10" fill="url(#idea2)" filter="url(#glow5)" opacity="0.6" />
+                    <circle cx="20" cy="20" r="2" fill="#fbbf24" filter="url(#glow5)" />
+                    <circle cx="28" cy="20" r="2" fill="#fbbf24" filter="url(#glow5)" />
+                    <circle cx="24" cy="28" r="2" fill="#fbbf24" filter="url(#glow5)" />
+                    <circle cx="30" cy="26" r="2" fill="#fbbf24" filter="url(#glow5)" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Brainstorm</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow6">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="idea3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="100%" stopColor="#f59e0b" />
+                      </linearGradient>
+                    </defs>
+                    <ellipse cx="24" cy="22" rx="8" ry="10" fill="url(#idea3)" filter="url(#glow6)" opacity="0.8" />
+                    <path d="M18,26 L18,30 L30,30 L30,26" fill="url(#idea3)" opacity="0.4" />
+                    <path d="M24,16 L24,12 M18,18 L15,15 M30,18 L33,15" stroke="url(#idea3)" strokeWidth="1.5" strokeLinecap="round" filter="url(#glow6)" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Bright Idea</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Leave a Review - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Leave a Review (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow7">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="review1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M24,14 L26,20 L32,21 L28,26 L29,32 L24,29 L19,32 L20,26 L16,21 L22,20 Z" fill="url(#review1)" filter="url(#glow7)" opacity="0.8" />
+                    <path d="M24,18 L25,22 L28,22 L26,24 L27,28 L24,26 L21,28 L22,24 L20,22 L23,22 Z" fill="#fff" opacity="0.4" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Single Star</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow8">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="review2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,18 L17,21 L20,21 L18,23 L19,26 L16,24 L13,26 L14,23 L12,21 L15,21 Z" fill="url(#review2)" filter="url(#glow8)" opacity="0.8" />
+                    <path d="M24,14 L25,18 L29,18 L26,21 L27,25 L24,23 L21,25 L22,21 L19,18 L23,18 Z" fill="url(#review2)" filter="url(#glow8)" opacity="0.8" />
+                    <path d="M32,18 L33,21 L36,21 L34,23 L35,26 L32,24 L29,26 L30,23 L28,21 L31,21 Z" fill="url(#review2)" filter="url(#glow8)" opacity="0.8" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: Triple Stars</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow9">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="review3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="24" cy="24" r="12" fill="url(#review3)" filter="url(#glow9)" opacity="0.3" />
+                    <path d="M24,16 L25,20 L29,20 L26,23 L27,27 L24,25 L21,27 L22,23 L19,20 L23,20 Z" fill="url(#review3)" filter="url(#glow9)" opacity="0.8" />
+                    <circle cx="18" cy="30" r="1.5" fill="#a78bfa" filter="url(#glow9)" />
+                    <circle cx="30" cy="30" r="1.5" fill="#a78bfa" filter="url(#glow9)" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Star Badge</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Use the App - 3 designs */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-sm text-gray-800 mb-3">Use the App (3 variations)</h4>
+              <div className="flex gap-4 flex-wrap justify-center">
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow10">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="app1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="16" y="12" width="16" height="24" rx="2" fill="url(#app1)" filter="url(#glow10)" opacity="0.8" />
+                    <rect x="18" y="14" width="12" height="18" rx="1" fill="#fff" opacity="0.3" />
+                    <path d="M20,24 L22,27 L28,20" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="22" y1="34" x2="26" y2="34" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V1: Phone Check</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow11">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="app2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="16" y="12" width="16" height="24" rx="2" fill="url(#app2)" filter="url(#glow11)" opacity="0.8" />
+                    <rect x="18" y="14" width="12" height="18" rx="1" fill="#fff" opacity="0.3" />
+                    <path d="M24,22 C24,22 22,20 22,18 C22,17 23,16 24,16 C25,16 26,17 26,18 C26,20 24,22 24,22 Z" fill="#fff" />
+                    <line x1="22" y1="34" x2="26" y2="34" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V2: App Love</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <svg viewBox="0 0 48 48" className="w-16 h-16">
+                    <defs>
+                      <filter id="glow12">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="app3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="16" y="12" width="16" height="24" rx="2" fill="url(#app3)" filter="url(#glow12)" opacity="0.8" />
+                    <rect x="18" y="14" width="12" height="18" rx="1" fill="#fff" opacity="0.3" />
+                    <circle cx="24" cy="24" r="4" fill="url(#app3)" filter="url(#glow12)" />
+                    <circle cx="24" cy="24" r="2" fill="#fff" opacity="0.6" />
+                    <line x1="22" y1="34" x2="26" y2="34" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <p className="text-xs text-gray-600 mt-1">V3: Active App</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Our Mission */}
