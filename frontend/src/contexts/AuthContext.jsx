@@ -176,12 +176,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
+      console.group('🔐 Auth State Changed');
+      console.log('User:', user);
+      console.log('User UID:', user?.uid);
+      console.groupEnd();
+
       setCurrentUser(user);
 
       if (user) {
         errorTracker.setUser(user.uid);
         const userRef = doc(db, 'users', user.uid);
+        console.log('📄 Fetching user document at path:', `users/${user.uid}`);
         const userSnap = await getDoc(userRef);
+        console.log('📄 User document exists:', userSnap.exists());
 
         const isNewUser = !userSnap.exists();
 
@@ -257,8 +264,24 @@ export const AuthProvider = ({ children }) => {
         }
 
         // Listen for real-time updates to user document
+        console.log('📡 AuthContext: Setting up Firestore listener for user:', user.uid);
         userUnsubscribeRef.current = onSnapshot(userRef, (doc) => {
-          if (doc.exists()) setUserData({ id: doc.id, ...doc.data() });
+          console.group('📡 Firestore Listener Callback');
+          console.log('Document exists:', doc.exists());
+          if (doc.exists()) {
+            const data = { id: doc.id, ...doc.data() };
+            console.log('User data loaded:', data);
+            console.log('isAdmin field:', data.isAdmin);
+            setUserData(data);
+          } else {
+            console.error('❌ User document does not exist at path:', `users/${user.uid}`);
+          }
+          console.groupEnd();
+          setLoading(false);
+        }, (error) => {
+          console.error('❌ Firestore listener error:', error);
+          console.error('Error code:', error.code);
+          console.error('Error message:', error.message);
           setLoading(false);
         });
       } else {
