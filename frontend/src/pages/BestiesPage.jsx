@@ -124,8 +124,8 @@ const BestiesPage = () => {
       const missed = [];
       const attentionRequests = [];
 
-      // Get bestie user IDs
-      const bestieIds = besties.map(b => b.userId);
+      // Get bestie user IDs (deduplicated to avoid showing duplicates for mutual besties)
+      const bestieIds = [...new Set(besties.map(b => b.userId))];
 
       // Load recent check-ins (last 48 hours)
       const twoDaysAgo = new Date();
