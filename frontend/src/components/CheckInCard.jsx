@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { db, storage } from '../services/firebase';
 import { doc, updateDoc, getDoc, collection, addDoc, Timestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import apiService from '../services/api';
 import toast from 'react-hot-toast';
-import CelebrationScreen from './CelebrationScreen';
 import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 import { useAuth } from '../contexts/AuthContext';
 
 const CheckInCard = ({ checkIn }) => {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState(0);
-  const [showCelebration, setShowCelebration] = useState(false);
   const [loading, setLoading] = useState(false);
   const [extendingButton, setExtendingButton] = useState(null); // Track which extend button is loading
   const [editingNotes, setEditingNotes] = useState(false);
@@ -102,50 +102,48 @@ const CheckInCard = ({ checkIn }) => {
   };
 
   const completeCheckIn = async () => {
-    // Use optimistic update - show celebration immediately
-    await executeOptimistic({
-      optimisticUpdate: () => {
-        // Show celebration screen instantly
-        setShowCelebration(true);
-        setTimeout(() => setShowCelebration(false), 3000);
-      },
-      serverUpdate: async () => {
-        setLoading(true);
-        try {
-          const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
+    // Navigate home immediately, complete check-in in background
+    navigate('/');
 
-          if (!result.data?.success) {
-            throw new Error(result.error?.message || 'Failed to complete check-in');
-          }
-
-          // Verify the status changed by checking Firestore
-          const checkInRef = doc(db, 'checkins', checkIn.id);
-          const checkInSnap = await getDoc(checkInRef);
-
-          if (!checkInSnap.exists() || checkInSnap.data().status !== 'completed') {
-            throw new Error('Check-in status verification failed');
-          }
-
-          return result;
-        } finally {
-          setLoading(false);
-        }
-      },
-      rollback: () => {
-        // Hide celebration if backend fails
-        setShowCelebration(false);
-      },
-      successMessage: 'You\'re safe! 💜',
-      errorMessage: 'Failed to complete check-in. Please try again.',
-      skipSuccessToast: false
+    // Show success message as popup
+    toast.success('You\'re safe! Welcome home 💜', {
+      duration: 4000,
+      icon: '✅',
     });
+
+    // Complete check-in in background
+    try {
+      setLoading(true);
+      const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
+
+      if (!result.data?.success) {
+        throw new Error(result.error?.message || 'Failed to complete check-in');
+      }
+
+      // Verify the status changed by checking Firestore
+      const checkInRef = doc(db, 'checkins', checkIn.id);
+      const checkInSnap = await getDoc(checkInRef);
+
+      if (!checkInSnap.exists() || checkInSnap.data().status !== 'completed') {
+        throw new Error('Check-in status verification failed');
+      }
+    } catch (error) {
+      console.error('Error completing check-in:', error);
+      toast.error('Failed to complete check-in. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDuressCode = async () => {
+    // Navigate home immediately to look normal
+    navigate('/');
+
     // Show fake success message
-    setShowCelebration(true);
-    toast.success('You\'re safe! 💜');
-    setTimeout(() => setShowCelebration(false), 3000);
+    toast.success('You\'re safe! Welcome home 💜', {
+      duration: 4000,
+      icon: '✅',
+    });
 
     // Secretly trigger emergency alert to all besties in circle
     try {
@@ -337,10 +335,6 @@ const CheckInCard = ({ checkIn }) => {
 
   const isAlerted = checkIn.status === 'alerted';
 
-  if (showCelebration) {
-    return <CelebrationScreen />;
-  }
-
   return (
     <div className={`card p-6 ${isAlerted ? 'border-2 border-danger' : ''}`}>
       {/* Timer - Bigger and at top */}
@@ -364,31 +358,22 @@ const CheckInCard = ({ checkIn }) => {
             <button
               onClick={() => handleExtend(15)}
               disabled={extendingButton !== null}
-              className="btn btn-secondary text-sm py-2 flex items-center justify-center gap-1"
+              className="btn btn-secondary text-sm py-2 active:scale-95"
             >
-              {extendingButton === 15 && (
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              )}
               +15m
             </button>
             <button
               onClick={() => handleExtend(30)}
               disabled={extendingButton !== null}
-              className="btn btn-secondary text-sm py-2 flex items-center justify-center gap-1"
+              className="btn btn-secondary text-sm py-2 active:scale-95"
             >
-              {extendingButton === 30 && (
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              )}
               +30m
             </button>
             <button
               onClick={() => handleExtend(60)}
               disabled={extendingButton !== null}
-              className="btn btn-secondary text-sm py-2 flex items-center justify-center gap-1"
+              className="btn btn-secondary text-sm py-2 active:scale-95"
             >
-              {extendingButton === 60 && (
-                <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              )}
               +1h
             </button>
           </div>
