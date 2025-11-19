@@ -44,7 +44,6 @@ const CreateCheckInPage = () => {
 
   useEffect(() => {
     errorTracker.trackFunnelStep('checkin', 'view_create_page');
-    loadBesties();
 
     // Load from quick button or template
     if (location.state?.quickMinutes) {
@@ -62,6 +61,13 @@ const CreateCheckInPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
+
+  // Load besties when currentUser is available
+  useEffect(() => {
+    if (currentUser && !authLoading) {
+      loadBesties();
+    }
+  }, [currentUser, authLoading]);
 
   // Load Google Places API
   useEffect(() => {
@@ -195,7 +201,7 @@ const CreateCheckInPage = () => {
       ]);
 
       const bestiesList = [];
-      
+
       requesterQuery.forEach((doc) => {
         const data = doc.data();
         bestiesList.push({
@@ -215,6 +221,11 @@ const CreateCheckInPage = () => {
       });
 
       setBesties(bestiesList);
+
+      // Auto-select all besties when they load (only if not loading from template)
+      if (!location.state?.template && bestiesList.length > 0) {
+        setSelectedBesties(bestiesList.map(b => b.id));
+      }
     } catch (error) {
       console.error('Error loading besties:', error);
       toast.error('Failed to load besties');
