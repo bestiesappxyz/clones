@@ -2082,6 +2082,474 @@ const AboutBestiesPage = () => {
           </div>
         </div>
 
+        {/* SECTION REDESIGNS - WHAT'S COMING NEXT */}
+        <div className="card p-6 mb-6 bg-gradient-to-br from-blue-50 to-purple-50 border-4 border-blue-300">
+          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">What's Coming Next - 4 Style Variations</h2>
+
+          {/* Style 4: Minimal with Sparkle */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-fuchsia-200">
+            <h3 className="font-semibold text-lg text-fuchsia-900 mb-4">Style 4: Minimal with Sparkle</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next4-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="16" y="8" width="16" height="28" rx="3" fill="none" stroke="url(#next4-1)" strokeWidth="2" />
+                  <rect x="18" y="10" width="12" height="22" rx="1.5" fill="url(#next4-1)" opacity="0.1" />
+                  <circle cx="24" cy="34" r="1.5" fill="url(#next4-1)" />
+                  <line x1="22" y1="12" x2="26" y2="12" stroke="url(#next4-1)" strokeWidth="1.5" strokeLinecap="round" opacity="0.4" />
+                  <circle cx="36" cy="10" r="1.5" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Native Mobile Apps</h4>
+                  <p className="text-xs text-gray-600">iOS & Android with push notifications</p>
+                </div>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">In Dev</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next4-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M32,10 L16,10 C14,10 12,11 12,13 L12,26 C12,28 14,29 16,29 L20,29 L24,34 L28,29 L32,29 C34,29 36,28 36,26 L36,13 C36,11 34,10 32,10 Z" fill="none" stroke="url(#next4-2)" strokeWidth="2" strokeLinejoin="round"/>
+                  <circle cx="20" cy="18" r="1.5" fill="url(#next4-2)" />
+                  <circle cx="24" cy="18" r="1.5" fill="url(#next4-2)" />
+                  <circle cx="28" cy="18" r="1.5" fill="url(#next4-2)" />
+                  <circle cx="36" cy="10" r="1.5" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">WhatsApp & Facebook</h4>
+                  <p className="text-xs text-gray-600">Free alerts via messaging apps</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">Q1 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next4-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#d946ef" />
+                      <stop offset="100%" stopColor="#c026d3" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M24,12 C20,12 16,15 16,19 C16,25 24,34 24,34 C24,34 32,25 32,19 C32,15 28,12 24,12 Z" fill="none" stroke="url(#next4-3)" strokeWidth="2" strokeLinejoin="round"/>
+                  <circle cx="24" cy="19" r="3" fill="url(#next4-3)" opacity="0.3" />
+                  <circle cx="36" cy="10" r="1.5" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Live Location Sharing</h4>
+                  <p className="text-xs text-gray-600">Real-time location during check-ins</p>
+                </div>
+                <span className="text-xs bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded-full font-semibold">Q2 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg border border-rose-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next4-4" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f43f5e" />
+                      <stop offset="100%" stopColor="#e11d48" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="24" cy="24" r="12" fill="none" stroke="url(#next4-4)" strokeWidth="2"/>
+                  <path d="M24,16 L24,24" stroke="url(#next4-4)" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="24" cy="28" r="1.5" fill="url(#next4-4)"/>
+                  <circle cx="36" cy="10" r="1.5" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Quick SOS Button</h4>
+                  <p className="text-xs text-gray-600">One-tap emergency alerts</p>
+                </div>
+                <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded-full font-semibold">Planning</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next4-5" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="24" cy="24" r="12" fill="none" stroke="url(#next4-5)" strokeWidth="2"/>
+                  <ellipse cx="24" cy="24" rx="6" ry="12" fill="none" stroke="url(#next4-5)" strokeWidth="1.5" opacity="0.6"/>
+                  <path d="M12,24 L36,24" stroke="url(#next4-5)" strokeWidth="1.5" opacity="0.6"/>
+                  <circle cx="36" cy="10" r="1.5" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Global Safety Network</h4>
+                  <p className="text-xs text-gray-600">Verified safety resources</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">2025</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 5: Soft Neon Glow */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-pink-200">
+            <h3 className="font-semibold text-lg text-pink-900 mb-4">Style 5: Soft Neon Glow</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <filter id="next5-glow1">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="next5-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="16" y="8" width="16" height="28" rx="3" fill="url(#next5-1)" filter="url(#next5-glow1)" opacity="0.8" />
+                  <rect x="18" y="10" width="12" height="22" rx="1.5" fill="#fff" opacity="0.3" />
+                  <circle cx="24" cy="34" r="2" fill="#fff" opacity="0.6" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Native Mobile Apps</h4>
+                  <p className="text-xs text-gray-600">iOS & Android with push notifications</p>
+                </div>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">In Dev</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <filter id="next5-glow2">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="next5-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <ellipse cx="24" cy="20" rx="12" ry="10" fill="url(#next5-2)" filter="url(#next5-glow2)" opacity="0.8" />
+                  <path d="M24,30 L24,30 L20,34 L24,34 L28,34" fill="url(#next5-2)" filter="url(#next5-glow2)" opacity="0.8" />
+                  <circle cx="20" cy="18" r="1.5" fill="#fff" />
+                  <circle cx="24" cy="18" r="1.5" fill="#fff" />
+                  <circle cx="28" cy="18" r="1.5" fill="#fff" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">WhatsApp & Facebook</h4>
+                  <p className="text-xs text-gray-600">Free alerts via messaging apps</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">Q1 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <filter id="next5-glow3">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="next5-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#d946ef" />
+                      <stop offset="100%" stopColor="#c026d3" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M24,12 C20,12 16,15 16,19 C16,25 24,34 24,34 C24,34 32,25 32,19 C32,15 28,12 24,12 Z" fill="url(#next5-3)" filter="url(#next5-glow3)" opacity="0.8" />
+                  <circle cx="24" cy="19" r="4" fill="#fff" opacity="0.5" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Live Location Sharing</h4>
+                  <p className="text-xs text-gray-600">Real-time location during check-ins</p>
+                </div>
+                <span className="text-xs bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded-full font-semibold">Q2 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg border border-rose-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <filter id="next5-glow4">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="next5-4" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f43f5e" />
+                      <stop offset="100%" stopColor="#e11d48" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="24" cy="24" r="12" fill="url(#next5-4)" filter="url(#next5-glow4)" opacity="0.8" />
+                  <path d="M24,16 L24,24" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="24" cy="28" r="2" fill="#fff"/>
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Quick SOS Button</h4>
+                  <p className="text-xs text-gray-600">One-tap emergency alerts</p>
+                </div>
+                <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded-full font-semibold">Planning</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <filter id="next5-glow5">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="next5-5" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="24" cy="24" r="12" fill="url(#next5-5)" filter="url(#next5-glow5)" opacity="0.8" />
+                  <ellipse cx="24" cy="24" rx="6" ry="12" fill="none" stroke="#fff" strokeWidth="1.5"/>
+                  <path d="M12,24 L36,24" stroke="#fff" strokeWidth="1.5"/>
+                  <circle cx="24" cy="24" r="3" fill="#fff" opacity="0.6" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Global Safety Network</h4>
+                  <p className="text-xs text-gray-600">Verified safety resources</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">2025</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 7: Soft Geometry */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-purple-200">
+            <h3 className="font-semibold text-lg text-purple-900 mb-4">Style 7: Soft Geometry</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next7-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="16" y="8" width="16" height="28" rx="4" fill="none" stroke="url(#next7-1)" strokeWidth="2" />
+                  <rect x="18" y="10" width="12" height="22" rx="2" fill="url(#next7-1)" opacity="0.2" />
+                  <rect x="22" y="33" width="4" height="2" rx="1" fill="url(#next7-1)" />
+                  <rect x="36" y="8" width="4" height="4" rx="1" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Native Mobile Apps</h4>
+                  <p className="text-xs text-gray-600">iOS & Android with push notifications</p>
+                </div>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">In Dev</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next7-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="12" y="14" width="24" height="16" rx="3" fill="none" stroke="url(#next7-2)" strokeWidth="2" />
+                  <rect x="16" y="18" width="16" height="8" rx="2" fill="url(#next7-2)" opacity="0.2" />
+                  <path d="M24,30 L20,34 L28,34 Z" fill="url(#next7-2)" opacity="0.5" />
+                  <rect x="36" y="8" width="4" height="4" rx="1" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">WhatsApp & Facebook</h4>
+                  <p className="text-xs text-gray-600">Free alerts via messaging apps</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">Q1 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next7-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#d946ef" />
+                      <stop offset="100%" stopColor="#c026d3" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M24,14 L18,18 L18,24 C18,28 20,31 24,32 C28,31 30,28 30,24 L30,18 Z" fill="none" stroke="url(#next7-3)" strokeWidth="2" strokeLinejoin="round" />
+                  <rect x="21" y="20" width="6" height="6" rx="1.5" fill="url(#next7-3)" opacity="0.3" />
+                  <rect x="36" y="8" width="4" height="4" rx="1" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Live Location Sharing</h4>
+                  <p className="text-xs text-gray-600">Real-time location during check-ins</p>
+                </div>
+                <span className="text-xs bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded-full font-semibold">Q2 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg border border-rose-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next7-4" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f43f5e" />
+                      <stop offset="100%" stopColor="#e11d48" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="14" y="14" width="20" height="20" rx="10" fill="none" stroke="url(#next7-4)" strokeWidth="2"/>
+                  <rect x="22" y="18" width="4" height="8" rx="1" fill="url(#next7-4)"/>
+                  <rect x="22" y="28" width="4" height="4" rx="1" fill="url(#next7-4)"/>
+                  <rect x="36" y="8" width="4" height="4" rx="1" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Quick SOS Button</h4>
+                  <p className="text-xs text-gray-600">One-tap emergency alerts</p>
+                </div>
+                <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded-full font-semibold">Planning</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next7-5" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f9a8d4" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="14" y="14" width="20" height="20" rx="10" fill="none" stroke="url(#next7-5)" strokeWidth="2"/>
+                  <rect x="22" y="16" width="4" height="16" rx="1" fill="url(#next7-5)" opacity="0.3"/>
+                  <rect x="16" y="22" width="16" height="4" rx="1" fill="url(#next7-5)" opacity="0.3"/>
+                  <rect x="36" y="8" width="4" height="4" rx="1" fill="#fbbf24" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Global Safety Network</h4>
+                  <p className="text-xs text-gray-600">Verified safety resources</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">2025</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 9: Sketchy & Sweet */}
+          <div className="p-6 bg-white rounded-xl border-2 border-rose-200">
+            <h3 className="font-semibold text-lg text-rose-900 mb-4">Style 9: Sketchy & Sweet</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next9-fill1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#e9d5ff" />
+                      <stop offset="100%" stopColor="#d8b4fe" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="16" y="8" width="16" height="28" rx="3" fill="url(#next9-fill1)" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+                  <g stroke="#a855f7" strokeWidth="1.5" opacity="0.4">
+                    <line x1="20" y1="14" x2="28" y2="14" strokeLinecap="round" />
+                    <line x1="20" y1="18" x2="28" y2="18" strokeLinecap="round" />
+                    <line x1="20" y1="22" x2="28" y2="22" strokeLinecap="round" />
+                  </g>
+                  <circle cx="24" cy="34" r="2" fill="#a855f7" />
+                  <line x1="34" y1="10" x2="36" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="36" y1="10" x2="34" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Native Mobile Apps</h4>
+                  <p className="text-xs text-gray-600">iOS & Android with push notifications</p>
+                </div>
+                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">In Dev</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next9-fill2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#fce7f3" />
+                      <stop offset="100%" stopColor="#fbcfe8" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M32,14 L16,14 C14,14 12,15 12,17 L12,28 C12,30 14,31 16,31 L20,31 L24,35 L28,31 L32,31 C34,31 36,30 36,28 L36,17 C36,15 34,14 32,14 Z" fill="url(#next9-fill2)" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+                  <g stroke="#f472b6" strokeWidth="1.5" opacity="0.5">
+                    <circle cx="20" cy="22" r="1.5" />
+                    <circle cx="24" cy="22" r="1.5" />
+                    <circle cx="28" cy="22" r="1.5" />
+                  </g>
+                  <line x1="34" y1="10" x2="36" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="36" y1="10" x2="34" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">WhatsApp & Facebook</h4>
+                  <p className="text-xs text-gray-600">Free alerts via messaging apps</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">Q1 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-fuchsia-50 to-purple-50 rounded-lg border border-fuchsia-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <defs>
+                    <linearGradient id="next9-fill3" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#fae8ff" />
+                      <stop offset="100%" stopColor="#f5d0fe" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M24,14 C20,14 16,17 16,21 C16,27 24,35 24,35 C24,35 32,27 32,21 C32,17 28,14 24,14 Z" fill="url(#next9-fill3)" stroke="#d946ef" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+                  <circle cx="24" cy="21" r="3" fill="none" stroke="#d946ef" strokeWidth="2" />
+                  <line x1="34" y1="10" x2="36" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="36" y1="10" x2="34" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Live Location Sharing</h4>
+                  <p className="text-xs text-gray-600">Real-time location during check-ins</p>
+                </div>
+                <span className="text-xs bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded-full font-semibold">Q2 2025</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg border border-rose-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <circle cx="24" cy="24" r="12" fill="none" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+                  <path d="M24,16 L24,24" stroke="#f43f5e" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="24" cy="28" r="2" fill="#f43f5e"/>
+                  <g stroke="#f43f5e" strokeWidth="1.5" opacity="0.3">
+                    <line x1="18" y1="20" x2="16" y2="18" strokeLinecap="round" />
+                    <line x1="30" y1="20" x2="32" y2="18" strokeLinecap="round" />
+                  </g>
+                  <line x1="34" y1="10" x2="36" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="36" y1="10" x2="34" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Quick SOS Button</h4>
+                  <p className="text-xs text-gray-600">One-tap emergency alerts</p>
+                </div>
+                <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded-full font-semibold">Planning</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border border-pink-100">
+                <svg viewBox="0 0 48 48" className="w-12 h-12">
+                  <circle cx="24" cy="24" r="12" fill="none" stroke="#ec4899" strokeWidth="2.5" strokeLinecap="round" />
+                  <ellipse cx="24" cy="24" rx="6" ry="12" fill="none" stroke="#ec4899" strokeWidth="2" opacity="0.6"/>
+                  <path d="M12,24 L36,24" stroke="#ec4899" strokeWidth="2" opacity="0.6"/>
+                  <g stroke="#ec4899" strokeWidth="1.5" opacity="0.4">
+                    <line x1="18" y1="18" x2="16" y2="16" strokeLinecap="round" />
+                    <line x1="30" y1="18" x2="32" y2="16" strokeLinecap="round" />
+                  </g>
+                  <line x1="34" y1="10" x2="36" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="36" y1="10" x2="34" y2="12" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm">Global Safety Network</h4>
+                  <p className="text-xs text-gray-600">Verified safety resources</p>
+                </div>
+                <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold">2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Our Mission */}
         <div className="card p-8 mb-6 bg-gradient-to-br from-pink-50 to-purple-50">
           <h2 className="text-2xl font-display text-text-primary mb-4">Our Mission 🎯</h2>
