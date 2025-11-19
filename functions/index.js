@@ -107,13 +107,7 @@ exports.completeCheckIn = functions.https.onCall(async (data, context) => {
   return { success: true };
 });
 
-// Firestore trigger: When a check-in is created, increment totalCheckIns
-exports.onCheckInCreated = functions.firestore
-  .document('checkins/{checkInId}')
-  .onCreate(async (snap, context) => {
-    const checkIn = snap.data();
-    await updateUserStats(checkIn.userId, 'checkInCreated');
-  });
+// REMOVED: Duplicate definition - see line 314 for the active trigger
 
 // Send alerts to besties
 async function sendAlertToBesties(checkInId, checkIn) {
@@ -315,10 +309,19 @@ exports.onCheckInCreated = functions.firestore
   .document('checkins/{checkInId}')
   .onCreate(async (snap, context) => {
     const checkIn = snap.data();
-    // Increment total check-in count
+
+    // Increment total check-in count in user stats
     await db.collection('users').doc(checkIn.userId).update({
       'stats.totalCheckIns': admin.firestore.FieldValue.increment(1)
     });
+
+    // Update analytics cache (real-time global stats)
+    const cacheRef = db.collection('analytics_cache').doc('realtime');
+    await cacheRef.set({
+      totalCheckIns: admin.firestore.FieldValue.increment(1),
+      activeCheckIns: admin.firestore.FieldValue.increment(1),
+      lastUpdated: admin.firestore.Timestamp.now(),
+    }, { merge: true });
   });
 
 // Track when check-ins status changes (completed/alerted)
@@ -328,6 +331,7 @@ exports.onCheckInCountUpdate = functions.firestore
     const newData = change.after.data();
     const oldData = change.before.data();
     const userRef = db.collection('users').doc(newData.userId);
+    const cacheRef = db.collection('analytics_cache').doc('realtime');
 
     // Update stats when status changes to 'completed'
     if (newData.status === 'completed' && oldData.status !== 'completed') {
@@ -335,6 +339,13 @@ exports.onCheckInCountUpdate = functions.firestore
       await userRef.update({
         'stats.completedCheckIns': admin.firestore.FieldValue.increment(1)
       });
+
+      // Update analytics cache
+      await cacheRef.set({
+        completedCheckIns: admin.firestore.FieldValue.increment(1),
+        activeCheckIns: admin.firestore.FieldValue.increment(-1),
+        lastUpdated: admin.firestore.Timestamp.now(),
+      }, { merge: true });
 
       const count = await db.collection('checkins')
         .where('userId', '==', newData.userId)
@@ -363,7 +374,29 @@ exports.onCheckInCountUpdate = functions.firestore
       await userRef.update({
         'stats.alertedCheckIns': admin.firestore.FieldValue.increment(1)
       });
+
+      // Update analytics cache
+      await cacheRef.set({
+        alertedCheckIns: admin.firestore.FieldValue.increment(1),
+        activeCheckIns: admin.firestore.FieldValue.increment(-1),
+        lastUpdated: admin.firestore.Timestamp.now(),
+      }, { merge: true });
     }
+  });
+
+// Track when new bestie requests are created
+exports.onBestieCreated = functions.firestore
+  .document('besties/{bestieId}')
+  .onCreate(async (snap, context) => {
+    const bestie = snap.data();
+
+    // Update analytics cache
+    const cacheRef = db.collection('analytics_cache').doc('realtime');
+    await cacheRef.set({
+      totalBesties: admin.firestore.FieldValue.increment(1),
+      pendingBesties: bestie.status === 'pending' ? admin.firestore.FieldValue.increment(1) : admin.firestore.FieldValue.increment(0),
+      lastUpdated: admin.firestore.Timestamp.now(),
+    }, { merge: true });
   });
 
 exports.onBestieCountUpdate = functions.firestore
@@ -371,6 +404,7 @@ exports.onBestieCountUpdate = functions.firestore
   .onUpdate(async (change, context) => {
     const newData = change.after.data();
     const oldData = change.before.data();
+    const cacheRef = db.collection('analytics_cache').doc('realtime');
 
     if (newData.status === 'accepted' && oldData.status !== 'accepted') {
       // Increment totalBesties for both users
@@ -381,8 +415,25 @@ exports.onBestieCountUpdate = functions.firestore
         'stats.totalBesties': admin.firestore.FieldValue.increment(1)
       });
 
+      // Update analytics cache: pending → accepted
+      await cacheRef.set({
+        acceptedBesties: admin.firestore.FieldValue.increment(1),
+        pendingBesties: admin.firestore.FieldValue.increment(-1),
+        lastUpdated: admin.firestore.Timestamp.now(),
+      }, { merge: true });
+
       await awardBestieBadge(newData.requesterId);
       await awardBestieBadge(newData.recipientId);
+    }
+
+    // Handle declined/cancelled besties
+    if ((newData.status === 'declined' || newData.status === 'cancelled') &&
+        oldData.status === 'pending') {
+      await cacheRef.set({
+        pendingBesties: admin.firestore.FieldValue.increment(-1),
+        totalBesties: admin.firestore.FieldValue.increment(-1),
+        lastUpdated: admin.firestore.Timestamp.now(),
+      }, { merge: true });
     }
   });
 
@@ -392,28 +443,106 @@ async function awardBestieBadge(userId) {
     .where('status', '==', 'accepted')
     .count()
     .get();
-  
+
   const count2 = await db.collection('besties')
     .where('recipientId', '==', userId)
     .where('status', '==', 'accepted')
     .count()
     .get();
-  
+
   const total = count1.data().count + count2.data().count;
   const badgesRef = db.collection('badges').doc(userId);
   const badgesDoc = await badgesRef.get();
   const badges = badgesDoc.exists ? badgesDoc.data().badges || [] : [];
-  
+
   if (total >= 3 && !badges.includes('friend_squad')) badges.push('friend_squad');
   if (total >= 5 && !badges.includes('safety_circle')) badges.push('safety_circle');
   if (total >= 10 && !badges.includes('safety_network')) badges.push('safety_network');
-  
+
   if (badgesDoc.exists) {
     await badgesRef.update({ badges });
   } else {
     await badgesRef.set({ userId, badges, createdAt: admin.firestore.Timestamp.now() });
   }
 }
+
+// Track when new users sign up (Firebase Auth trigger)
+exports.onUserCreated = functions.auth.user().onCreate(async (user) => {
+  // Update analytics cache
+  const cacheRef = db.collection('analytics_cache').doc('realtime');
+  await cacheRef.set({
+    totalUsers: admin.firestore.FieldValue.increment(1),
+    lastUpdated: admin.firestore.Timestamp.now(),
+  }, { merge: true });
+
+  // Initialize user document (moved from core/auth/onUserCreated.js)
+  await db.collection('users').doc(user.uid).set({
+    uid: user.uid,
+    email: user.email,
+    displayName: user.displayName || user.email?.split('@')[0] || 'User',
+    photoURL: user.photoURL || null,
+    phoneNumber: user.phoneNumber || null,
+
+    notificationPreferences: {
+      whatsapp: false,
+      sms: false,
+      facebook: false,
+      email: true
+    },
+
+    settings: {
+      defaultBesties: [],
+      dataRetention: 24,
+      holdData: false
+    },
+
+    smsSubscription: {
+      active: false,
+      plan: null,
+      startedAt: null
+    },
+
+    donationStats: {
+      isActive: false,
+      totalDonated: 0,
+      monthlyAmount: 0,
+      startedAt: null
+    },
+
+    stats: {
+      totalCheckIns: 0,
+      completedCheckIns: 0,
+      alertedCheckIns: 0,
+      totalBesties: 0,
+      joinedAt: admin.firestore.Timestamp.now()
+    },
+
+    profile: {
+      featuredBadges: [],
+      bio: null
+    },
+
+    createdAt: admin.firestore.Timestamp.now(),
+    updatedAt: admin.firestore.Timestamp.now(),
+    onboardingCompleted: false,
+    featuredCircle: []
+  });
+
+  // Initialize badges document
+  await db.collection('badges').doc(user.uid).set({
+    userId: user.uid,
+    badges: [],
+    stats: {
+      guardianCount: 0,
+      bestiesCount: 0,
+      donationTotal: 0,
+      checkinCount: 0
+    },
+    createdAt: admin.firestore.Timestamp.now()
+  });
+
+  console.log('User created successfully:', user.uid);
+});
 
 // ========================================
 // EMERGENCY SOS
@@ -547,6 +676,112 @@ exports.dailyAnalyticsAggregation = functions.pubsub
 
     return null;
   });
+
+/**
+ * Rebuild Analytics Cache - Admin Only
+ * Recalculates all analytics from raw data if cache gets out of sync
+ * Call this to initialize the cache or fix discrepancies
+ */
+exports.rebuildAnalyticsCache = functions.https.onCall(async (data, context) => {
+  // Check authentication
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'Must be logged in');
+  }
+
+  // Check admin status
+  const userDoc = await db.collection('users').doc(context.auth.uid).get();
+  if (!userDoc.exists || !userDoc.data().isAdmin) {
+    throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+  }
+
+  console.log('🔄 Rebuilding analytics cache from raw data...');
+
+  try {
+    // Count total users
+    const usersCount = await db.collection('users').count().get();
+    const totalUsers = usersCount.data().count;
+
+    // Count check-ins by status
+    const [totalCheckInsCount, activeCheckInsCount, completedCheckInsCount, alertedCheckInsCount] = await Promise.all([
+      db.collection('checkins').count().get(),
+      db.collection('checkins').where('status', '==', 'active').count().get(),
+      db.collection('checkins').where('status', '==', 'completed').count().get(),
+      db.collection('checkins').where('status', '==', 'alerted').count().get(),
+    ]);
+
+    // Count besties by status
+    const [totalBestiesCount, pendingBestiesCount, acceptedBestiesCount] = await Promise.all([
+      db.collection('besties').count().get(),
+      db.collection('besties').where('status', '==', 'pending').count().get(),
+      db.collection('besties').where('status', '==', 'accepted').count().get(),
+    ]);
+
+    // Calculate revenue stats (need to scan users for this)
+    const usersSnapshot = await db.collection('users').get();
+    let smsSubscribers = 0;
+    let donorsActive = 0;
+    let totalDonations = 0;
+
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.smsSubscription?.active) smsSubscribers++;
+      if (data.donationStats?.isActive) donorsActive++;
+      if (data.donationStats?.totalDonated) totalDonations += data.donationStats.totalDonated;
+    });
+
+    // Count templates and badges
+    const [templatesCount, badgesCount] = await Promise.all([
+      db.collection('templates').count().get(),
+      db.collection('badges').count().get(),
+    ]);
+
+    // Build the cache document
+    const cacheData = {
+      // User stats
+      totalUsers,
+
+      // Check-in stats
+      totalCheckIns: totalCheckInsCount.data().count,
+      activeCheckIns: activeCheckInsCount.data().count,
+      completedCheckIns: completedCheckInsCount.data().count,
+      alertedCheckIns: alertedCheckInsCount.data().count,
+
+      // Bestie stats
+      totalBesties: totalBestiesCount.data().count,
+      pendingBesties: pendingBestiesCount.data().count,
+      acceptedBesties: acceptedBestiesCount.data().count,
+
+      // Revenue stats
+      smsSubscribers,
+      donorsActive,
+      totalDonations,
+
+      // Engagement stats
+      totalTemplates: templatesCount.data().count,
+      totalBadges: badgesCount.data().count,
+
+      // Metadata
+      lastUpdated: admin.firestore.Timestamp.now(),
+      lastRebuild: admin.firestore.Timestamp.now(),
+      rebuiltBy: context.auth.uid,
+    };
+
+    // Write to analytics_cache
+    await db.collection('analytics_cache').doc('realtime').set(cacheData);
+
+    console.log('✅ Analytics cache rebuilt successfully');
+    console.log('Cache data:', cacheData);
+
+    return {
+      success: true,
+      cache: cacheData,
+      message: 'Analytics cache rebuilt successfully',
+    };
+  } catch (error) {
+    console.error('❌ Error rebuilding analytics cache:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to rebuild cache: ' + error.message);
+  }
+});
 
 // ========================================
 // STRIPE PAYMENT FUNCTIONS

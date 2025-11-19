@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { db } from '../services/firebase';
@@ -11,12 +11,41 @@ import TemplateSelector from '../components/TemplateSelector';
 import EmergencySOSButton from '../components/EmergencySOSButton';
 import BestieCelebrationModal from '../components/BestieCelebrationModal';
 
+// Dynamic supportive messages for girls 💜
+const SUPPORTIVE_MESSAGES = [
+  "Stay safe out there, queen! 👑",
+  "Your besties have your back! 💜",
+  "Looking out for you, babe! ✨",
+  "Let's keep you safe, hun! 🛡️",
+  "Ready to slay safely? 💅",
+  "Your safety squad is here! 🌟",
+  "Go live your life, we got you! 💕",
+  "Be bold, be safe, be you! ⚡",
+  "Adventure awaits safely! 🌸",
+  "Your crew is watching out! 👯‍♀️",
+  "Stay fierce, stay safe! 🔥",
+  "We're here if you need us! 🤗",
+  "Go make memories safely! 📸",
+  "Your safety, your way! 💖",
+  "Protected and empowered! ⭐",
+  "Living your best life safely! 🦋",
+  "Your peace of mind matters! 🌺",
+  "Safe vibes only! ✌️",
+  "Let's keep you covered, sis! 💪",
+  "Confidence + Safety = You! 💎"
+];
+
 const HomePage = () => {
   const { currentUser, userData, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [activeCheckIns, setActiveCheckIns] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Random supportive message (changes on each page load)
+  const welcomeMessage = useMemo(() => {
+    return SUPPORTIVE_MESSAGES[Math.floor(Math.random() * SUPPORTIVE_MESSAGES.length)];
+  }, []); // Empty deps = only runs once on mount
 
   // Auto-redirect to onboarding if user hasn't completed it
   useEffect(() => {
@@ -125,7 +154,7 @@ const HomePage = () => {
           <p className="text-text-secondary">
             {activeCheckIns.length > 0
               ? `You have ${activeCheckIns.length} active check-in${activeCheckIns.length > 1 ? 's' : ''}`
-              : 'Ready to check in?'}
+              : welcomeMessage}
           </p>
         </div>
 
