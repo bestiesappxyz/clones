@@ -903,7 +903,7 @@ const SettingsPage = () => {
               Support Besties 💜
             </h2>
             <p className="text-text-secondary mb-4">
-              Help us keep Besties free for everyone
+              Help us keep Besties free and accessible for everyone
             </p>
             <div className="grid grid-cols-3 gap-3 mb-3">
               <button

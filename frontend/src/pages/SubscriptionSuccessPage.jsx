@@ -35,7 +35,7 @@ const SubscriptionSuccessPage = () => {
             </p>
             <p className="text-sm text-text-secondary">
               Your {userData?.smsSubscription?.active ? 'SMS alerts' : 'support'} subscription
-              helps us provide this safety service to users who can't afford it.
+              helps us keep Besties accessible to everyone who needs it.
               Together, we're making the world a safer place.
             </p>
           </div>
