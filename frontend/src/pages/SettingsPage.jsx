@@ -903,7 +903,7 @@ const SettingsPage = () => {
               Support Besties 💜
             </h2>
             <p className="text-text-secondary mb-4">
-              Help us keep Besties free for everyone
+              Your support helps us build a safer community for everyone
             </p>
             <div className="grid grid-cols-3 gap-3 mb-3">
               <button
@@ -994,7 +994,7 @@ const SettingsPage = () => {
         {userData?.donationStats?.isActive && (
           <div className="card p-6 mb-6 bg-gradient-primary text-white">
             <h2 className="text-xl font-display mb-2">Thank You! 💜</h2>
-            <p className="mb-2">You're helping keep Besties free</p>
+            <p className="mb-2">You're supporting our safety mission</p>
             <div className="text-2xl font-display">
               ${userData.donationStats.monthlyAmount}/month
             </div>

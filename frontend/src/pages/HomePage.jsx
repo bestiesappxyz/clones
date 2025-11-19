@@ -393,8 +393,7 @@ const HomePage = () => {
                 </h3>
                 <p className="text-text-secondary leading-relaxed mb-4">
                   Love Besties? Invite your friends! The more people who join,
-                  the stronger our safety network becomes. Plus, spreading the word
-                  helps us keep the app free for everyone. Share the love! 💖
+                  the stronger our safety network becomes. Share the love! 💖
                 </p>
                 <button
                   onClick={() => navigate('/besties')}

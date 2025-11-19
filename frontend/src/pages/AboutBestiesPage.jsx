@@ -89,148 +89,130 @@ const AboutBestiesPage = () => {
         </div>
 
         {/* What Makes Us Different */}
-        <div className="card p-8 mb-6 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
-          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">
+        <div className="card p-6 mb-6 bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+          <h2 className="text-xl font-display text-text-primary mb-4 text-center">
             What Makes Us Different ✨
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="group hover:scale-105 transition-transform duration-300">
-              <div className="bg-gradient-to-br from-pink-100 to-purple-100 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-2 border-pink-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
-                    💖
-                  </div>
-                  <h3 className="font-display text-lg text-pink-900">Good Over Profit</h3>
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="bg-gradient-to-br from-pink-100 to-purple-100 p-4 rounded-xl border border-pink-200">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white text-sm shadow-sm">
+                  💖
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  We're not here to make millions. We're here to keep people safe. Every decision we make puts your safety and privacy first, not our profit margins.
-                </p>
+                <h3 className="font-semibold text-sm text-pink-900">Good Over Profit</h3>
               </div>
+              <p className="text-xs text-gray-700 leading-snug">
+                We're here to keep people safe. Every decision puts your safety first, not our profit margins.
+              </p>
             </div>
 
-            <div className="group hover:scale-105 transition-transform duration-300">
-              <div className="bg-gradient-to-br from-purple-100 to-fuchsia-100 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-2 border-purple-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
-                    🔐
-                  </div>
-                  <h3 className="font-display text-lg text-purple-900">Privacy First</h3>
+            <div className="bg-gradient-to-br from-purple-100 to-fuchsia-100 p-4 rounded-xl border border-purple-200">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-sm shadow-sm">
+                  🔐
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask us to. Simple as that.
-                </p>
+                <h3 className="font-semibold text-sm text-purple-900">Privacy First</h3>
               </div>
+              <p className="text-xs text-gray-700 leading-snug">
+                Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask.
+              </p>
             </div>
 
-            <div className="group hover:scale-105 transition-transform duration-300">
-              <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-2 border-fuchsia-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
-                    ✨
-                  </div>
-                  <h3 className="font-display text-lg text-fuchsia-900">Transparent Pricing</h3>
+            <div className="bg-gradient-to-br from-fuchsia-100 to-pink-100 p-4 rounded-xl border border-fuchsia-200">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-full flex items-center justify-center text-white text-sm shadow-sm">
+                  ✨
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  No hidden fees, no surprise charges. Most features are free forever. Premium features cost what they cost to run - nothing more.
-                </p>
+                <h3 className="font-semibold text-sm text-fuchsia-900">Transparent Pricing</h3>
               </div>
+              <p className="text-xs text-gray-700 leading-snug">
+                No hidden fees, no surprises. Most features free forever. Premium costs what it costs to run.
+              </p>
             </div>
 
-            <div className="group hover:scale-105 transition-transform duration-300">
-              <div className="bg-gradient-to-br from-rose-100 to-pink-100 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border-2 border-rose-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-rose-600 rounded-full flex items-center justify-center text-white text-xl shadow-md">
-                    👑
-                  </div>
-                  <h3 className="font-display text-lg text-rose-900">Community Driven</h3>
+            <div className="bg-gradient-to-br from-rose-100 to-pink-100 p-4 rounded-xl border border-rose-200">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-rose-400 to-rose-600 rounded-full flex items-center justify-center text-white text-sm shadow-sm">
+                  👑
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  You're not just a user - you're part of the Besties family. We listen, we adapt, and we build features you actually want.
-                </p>
+                <h3 className="font-semibold text-sm text-rose-900">Community Driven</h3>
               </div>
+              <p className="text-xs text-gray-700 leading-snug">
+                You're part of the Besties family. We listen, adapt, and build features you actually want.
+              </p>
             </div>
           </div>
         </div>
 
         {/* Future Plans */}
-        <div className="card p-8 mb-6 bg-gradient-to-br from-purple-50 to-pink-50">
-          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">
+        <div className="card p-6 mb-6 bg-gradient-to-br from-purple-50 to-pink-50">
+          <h2 className="text-xl font-display text-text-primary mb-4 text-center">
             What's Coming Next 🚀
           </h2>
-          <div className="space-y-4">
-            <div className="group hover:translate-x-1 transition-transform duration-300">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-2 border-purple-100">
-                <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
-                  📱
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-base text-gray-900 mb-1">Native Mobile Apps</h3>
-                  <p className="text-xs text-gray-600">iOS and Android apps with reliable push notifications</p>
-                </div>
-                <span className="text-xs bg-gradient-to-r from-purple-100 to-fuchsia-100 text-purple-700 px-3 py-1.5 rounded-full font-semibold border border-purple-200 flex-shrink-0">
-                  In Development
-                </span>
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-purple-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center text-white text-lg shadow-sm flex-shrink-0">
+                📱
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">Native Mobile Apps</h3>
+                <p className="text-xs text-gray-600">iOS & Android with push notifications</p>
+              </div>
+              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold flex-shrink-0">
+                In Dev
+              </span>
             </div>
 
-            <div className="group hover:translate-x-1 transition-transform duration-300">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-2 border-pink-100">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
-                  💬
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-base text-gray-900 mb-1">WhatsApp & Facebook Integration</h3>
-                  <p className="text-xs text-gray-600">Free unlimited alerts through your favorite messaging apps</p>
-                </div>
-                <span className="text-xs bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 px-3 py-1.5 rounded-full font-semibold border border-pink-200 flex-shrink-0">
-                  Q1 2025
-                </span>
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-pink-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-500 rounded-lg flex items-center justify-center text-white text-lg shadow-sm flex-shrink-0">
+                💬
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">WhatsApp & Facebook</h3>
+                <p className="text-xs text-gray-600">Free alerts via messaging apps</p>
+              </div>
+              <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold flex-shrink-0">
+                Q1 2025
+              </span>
             </div>
 
-            <div className="group hover:translate-x-1 transition-transform duration-300">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-2 border-fuchsia-100">
-                <div className="w-14 h-14 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
-                  📍
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-base text-gray-900 mb-1">Live Location Sharing</h3>
-                  <p className="text-xs text-gray-600">Share your real-time location with besties during check-ins</p>
-                </div>
-                <span className="text-xs bg-gradient-to-r from-fuchsia-100 to-purple-100 text-fuchsia-700 px-3 py-1.5 rounded-full font-semibold border border-fuchsia-200 flex-shrink-0">
-                  Q2 2025
-                </span>
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-fuchsia-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-lg flex items-center justify-center text-white text-lg shadow-sm flex-shrink-0">
+                📍
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">Live Location Sharing</h3>
+                <p className="text-xs text-gray-600">Real-time location during check-ins</p>
+              </div>
+              <span className="text-xs bg-fuchsia-100 text-fuchsia-700 px-2 py-1 rounded-full font-semibold flex-shrink-0">
+                Q2 2025
+              </span>
             </div>
 
-            <div className="group hover:translate-x-1 transition-transform duration-300">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-2 border-rose-100">
-                <div className="w-14 h-14 bg-gradient-to-br from-rose-400 to-rose-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
-                  🆘
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-base text-gray-900 mb-1">Quick SOS Button</h3>
-                  <p className="text-xs text-gray-600">Instantly alert all besties with one tap in emergencies</p>
-                </div>
-                <span className="text-xs bg-gradient-to-r from-rose-100 to-pink-100 text-rose-700 px-3 py-1.5 rounded-full font-semibold border border-rose-200 flex-shrink-0">
-                  Planning
-                </span>
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-rose-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-rose-600 rounded-lg flex items-center justify-center text-white text-lg shadow-sm flex-shrink-0">
+                🆘
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">Quick SOS Button</h3>
+                <p className="text-xs text-gray-600">One-tap emergency alerts</p>
+              </div>
+              <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded-full font-semibold flex-shrink-0">
+                Planning
+              </span>
             </div>
 
-            <div className="group hover:translate-x-1 transition-transform duration-300">
-              <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-2 border-pink-100">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md flex-shrink-0">
-                  🌍
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-base text-gray-900 mb-1">Global Safety Network</h3>
-                  <p className="text-xs text-gray-600">Connect with verified safety resources in your area</p>
-                </div>
-                <span className="text-xs bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-3 py-1.5 rounded-full font-semibold border border-pink-200 flex-shrink-0">
-                  2025
-                </span>
+            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-pink-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg flex items-center justify-center text-white text-lg shadow-sm flex-shrink-0">
+                🌍
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm text-gray-900">Global Safety Network</h3>
+                <p className="text-xs text-gray-600">Verified safety resources</p>
+              </div>
+              <span className="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-full font-semibold flex-shrink-0">
+                2025
+              </span>
             </div>
           </div>
         </div>
@@ -248,7 +230,7 @@ const AboutBestiesPage = () => {
               Servers cost money. SMS messages cost money. Development takes time. But we knew that going in, and we still chose to make Besties <span className="font-semibold">free for everyone</span>.
             </p>
             <p>
-              <span className="font-semibold text-primary">If you can afford to donate</span>, it helps us keep the lights on and build cool new features faster. Every dollar goes directly into making Besties better and keeping it running.
+              <span className="font-semibold text-primary">If you can afford to donate</span>, it helps us keep the lights on and build cool new features faster. Every dollar goes directly into making Besties better.
             </p>
             <p className="text-lg font-semibold text-orange-900">
               But if you can't? That's totally okay. 💜
@@ -269,7 +251,7 @@ const AboutBestiesPage = () => {
               Want to Help Out? 💜
             </h2>
             <p className="text-text-secondary text-center mb-6">
-              Choose an amount that works for you - every bit helps keep Besties free for everyone
+              Choose an amount that works for you - every bit helps us build a safer community
             </p>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <button
