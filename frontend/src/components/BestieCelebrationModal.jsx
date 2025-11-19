@@ -178,17 +178,17 @@ const BestieCelebrationModal = () => {
     <div className="fixed inset-0 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center z-[9999] p-4">
       <div className="max-w-md w-full">
         {/* Celebration Card (for screenshot) */}
-        <div ref={celebrationCardRef} className="bg-gradient-to-br from-purple-500 to-pink-500 p-8 rounded-3xl">
+        <div ref={celebrationCardRef} className="bg-gradient-to-br from-purple-500 to-pink-500 p-4 sm:p-6 md:p-8 rounded-3xl">
           <div className="text-center">
-            <div className="text-8xl mb-6 animate-bounce">🎉</div>
-            <h1 className="text-4xl font-display text-white mb-4">
+            <div className="text-5xl sm:text-6xl md:text-8xl mb-4 sm:mb-6 animate-bounce">🎉</div>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-display text-white mb-3 sm:mb-4 px-2">
               You and {currentCelebration.bestieName || 'your friend'} are besties!
             </h1>
-            <p className="text-xl text-white/90 mb-2">
+            <p className="text-base sm:text-lg md:text-xl text-white/90 mb-2 px-2">
               You can now add each other as emergency contacts
             </p>
-            <div className="flex justify-center items-center gap-4 my-8">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl overflow-hidden">
+            <div className="flex justify-center items-center gap-3 sm:gap-4 my-6 sm:my-8">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-xl overflow-hidden flex-shrink-0">
                 {currentCelebration.bestiePhotoURL ? (
                   <img
                     src={currentCelebration.bestiePhotoURL}
@@ -196,13 +196,13 @@ const BestieCelebrationModal = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-3xl text-purple-600">
+                  <div className="text-2xl sm:text-3xl text-purple-600">
                     {currentCelebration.bestieName?.[0] || '?'}
                   </div>
                 )}
               </div>
-              <div className="text-4xl animate-pulse">💜</div>
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl overflow-hidden">
+              <div className="text-3xl sm:text-4xl animate-pulse flex-shrink-0">💜</div>
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center shadow-xl overflow-hidden flex-shrink-0">
                 {userData?.photoURL ? (
                   <img
                     src={userData.photoURL}
@@ -210,11 +210,11 @@ const BestieCelebrationModal = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-2xl font-bold text-purple-600">YOU</div>
+                  <div className="text-xl sm:text-2xl font-bold text-purple-600">YOU</div>
                 )}
               </div>
             </div>
-            <p className="text-white/80 mb-6">
+            <p className="text-sm sm:text-base text-white/80 mb-4 sm:mb-6 px-2">
               {currentCelebration.bestieName} will be notified if you don't check in on time
             </p>
           </div>
@@ -230,41 +230,41 @@ const BestieCelebrationModal = () => {
         )}
 
         {/* Social Share Buttons */}
-        <div className="mt-6 flex justify-center gap-4">
+        <div className="mt-4 sm:mt-6 flex justify-center gap-3 sm:gap-4">
           <button
             onClick={() => handleShare('twitter')}
-            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-3 transition-all"
+            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 sm:p-3 transition-all"
             title="Share on Twitter"
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
             </svg>
           </button>
           <button
             onClick={() => handleShare('facebook')}
-            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-3 transition-all"
+            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 sm:p-3 transition-all"
             title="Share on Facebook"
           >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
             </svg>
           </button>
           <button
             onClick={() => handleShare('download')}
-            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-3 transition-all"
+            className="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 sm:p-3 transition-all"
             title="Download image"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
           </button>
         </div>
 
         {/* Continue Button (centered) */}
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-4 sm:mt-6">
           <button
             onClick={handleContinue}
-            className="btn bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-4 font-bold"
+            className="btn bg-white text-purple-600 hover:bg-white/90 text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 font-bold"
           >
             Continue →
           </button>
