@@ -247,7 +247,7 @@ const TermsOfServicePage = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-display text-text-primary mb-4">18. Governing Law and Disputes</h2>
             <p className="text-text-secondary mb-4">
-              These Terms are governed by the laws of [Your Jurisdiction]. Any disputes will be resolved through binding arbitration, except where prohibited by law.
+              These Terms are governed by the laws of Australia. Any disputes will be resolved through binding arbitration, except where prohibited by law.
             </p>
           </section>
 

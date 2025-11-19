@@ -318,7 +318,7 @@ const AboutBestiesPage = () => {
                 Tell your friends! Every person who joins makes our community stronger and safer.
               </p>
               <button
-                onClick={() => navigate('/invite')}
+                onClick={() => navigate('/besties')}
                 className="text-sm font-semibold text-blue-700 hover:underline"
               >
                 Invite Friends →
