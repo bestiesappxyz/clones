@@ -25,8 +25,10 @@ const CreateCheckInPage = () => {
   const [loading, setLoading] = useState(false);
   const [autocompleteLoaded, setAutocompleteLoaded] = useState(false);
   const [gpsCoords, setGpsCoords] = useState(null); // Store GPS coordinates for map display
-  const [mapCenter, setMapCenter] = useState({ lat: 37.7749, lng: -122.4194 }); // Default: San Francisco
   const [mapInitialized, setMapInitialized] = useState(false);
+
+  // Map default center (San Francisco)
+  const mapCenter = { lat: 37.7749, lng: -122.4194 };
 
   const locationInputRef = useRef(null);
   const autocompleteRef = useRef(null);
@@ -70,6 +72,7 @@ const CreateCheckInPage = () => {
     if (currentUser && !authLoading) {
       loadBesties();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading]);
 
   // Load Google Places API
@@ -134,7 +137,9 @@ const CreateCheckInPage = () => {
     } catch (error) {
       console.error('Error initializing map:', error);
     }
-  }, [autocompleteLoaded, mapCenter, mapInitialized]);
+    // mapCenter is a constant, not state
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autocompleteLoaded, mapInitialized]);
 
   // Initialize Autocomplete when API is loaded
   useEffect(() => {

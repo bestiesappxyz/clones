@@ -10,7 +10,6 @@ const BestieCelebrationModal = () => {
   const [currentCelebration, setCurrentCelebration] = useState(null);
   const [currentCelebrationId, setCurrentCelebrationId] = useState(null);
   const [show, setShow] = useState(false);
-  const [showShareMenu, setShowShareMenu] = useState(false);
   const celebrationCardRef = useRef(null);
 
   // Confetti effect
@@ -165,8 +164,6 @@ const BestieCelebrationModal = () => {
         default:
           break;
       }
-
-      setShowShareMenu(false);
     } catch (error) {
       console.error('Error sharing:', error);
     }
