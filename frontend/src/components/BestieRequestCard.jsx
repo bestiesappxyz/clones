@@ -3,11 +3,14 @@ import { db } from '../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import apiService from '../services/api';
 import toast from 'react-hot-toast';
+import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 
-const BestieRequestCard = ({ request }) => {
+const BestieRequestCard = ({ request, onRequestHandled }) => {
   const [loading, setLoading] = useState(false);
   const [userPhoto, setUserPhoto] = useState(null);
   const [photoLoading, setPhotoLoading] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
+  const { executeOptimistic } = useOptimisticUpdate();
 
   // Fetch requester's profile photo
   useEffect(() => {
@@ -34,20 +37,69 @@ const BestieRequestCard = ({ request }) => {
   }, [request?.requesterId]);
 
   const handleAccept = async () => {
-    setLoading(true);
-    const result = await apiService.acceptBestieRequest(request.id);
-    setLoading(false);
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Hide card immediately
+        setIsHidden(true);
+        // Notify parent to remove from list
+        if (onRequestHandled) {
+          onRequestHandled(request.id);
+        }
+      },
+      serverUpdate: async () => {
+        setLoading(true);
+        try {
+          const result = await apiService.acceptBestieRequest(request.id);
 
-    if (result.success) {
-      toast.success(`You're now besties with ${request.requesterName}! 💜`);
-    } else {
-      toast.error('Failed to accept request');
-    }
+          if (!result.success) {
+            throw new Error('Failed to accept request');
+          }
+
+          return result;
+        } finally {
+          setLoading(false);
+        }
+      },
+      rollback: () => {
+        // Show card again on error
+        setIsHidden(false);
+      },
+      successMessage: `You're now besties with ${request.requesterName}! 💜`,
+      errorMessage: 'Failed to accept request'
+    });
   };
 
   const handleDecline = async () => {
-    // TODO: Implement decline functionality
-    toast('Decline feature coming soon');
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Hide card immediately
+        setIsHidden(true);
+        // Notify parent to remove from list
+        if (onRequestHandled) {
+          onRequestHandled(request.id);
+        }
+      },
+      serverUpdate: async () => {
+        setLoading(true);
+        try {
+          const result = await apiService.declineBestieRequest(request.id);
+
+          if (!result.success) {
+            throw new Error('Failed to decline request');
+          }
+
+          return result;
+        } finally {
+          setLoading(false);
+        }
+      },
+      rollback: () => {
+        // Show card again on error
+        setIsHidden(false);
+      },
+      successMessage: 'Request declined',
+      errorMessage: 'Failed to decline request'
+    });
   };
 
   const getInitial = () => {
@@ -56,6 +108,11 @@ const BestieRequestCard = ({ request }) => {
     }
     return '?';
   };
+
+  // Don't render if hidden optimistically
+  if (isHidden) {
+    return null;
+  }
 
   return (
     <div className="card p-4 border-2 border-primary/20 animate-fade-in">

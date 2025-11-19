@@ -6,6 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import apiService from '../services/api';
 import toast from 'react-hot-toast';
 import CelebrationScreen from './CelebrationScreen';
+import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 
 const CheckInCard = ({ checkIn }) => {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -17,6 +18,7 @@ const CheckInCard = ({ checkIn }) => {
   const [photoURLs, setPhotoURLs] = useState(checkIn.photoURLs || checkIn.photoURL ? [checkIn.photoURL] : []);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [optimisticAlertTime, setOptimisticAlertTime] = useState(null); // For optimistic updates
+  const { executeOptimistic, isProcessing } = useOptimisticUpdate();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -51,37 +53,43 @@ const CheckInCard = ({ checkIn }) => {
   };
 
   const handleComplete = async () => {
-    setLoading(true);
-    const loadingToast = toast.loading('Marking you safe...');
+    // Use optimistic update - show celebration immediately
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Show celebration screen instantly
+        setShowCelebration(true);
+        setTimeout(() => setShowCelebration(false), 3000);
+      },
+      serverUpdate: async () => {
+        setLoading(true);
+        try {
+          const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
 
-    try {
-      const result = await apiService.completeCheckIn({ checkInId: checkIn.id });
+          if (!result.data?.success) {
+            throw new Error(result.error?.message || 'Failed to complete check-in');
+          }
 
-      if (result.data?.success) {
-        // Verify the status changed by checking Firestore
-        const checkInRef = doc(db, 'checkins', checkIn.id);
-        const checkInSnap = await getDoc(checkInRef);
+          // Verify the status changed by checking Firestore
+          const checkInRef = doc(db, 'checkins', checkIn.id);
+          const checkInSnap = await getDoc(checkInRef);
 
-        if (checkInSnap.exists() && checkInSnap.data().status === 'completed') {
-          toast.success('You\'re safe! 💜', { id: loadingToast });
-          setShowCelebration(true);
-          setTimeout(() => setShowCelebration(false), 3000);
-        } else {
-          throw new Error('Check-in status verification failed');
+          if (!checkInSnap.exists() || checkInSnap.data().status !== 'completed') {
+            throw new Error('Check-in status verification failed');
+          }
+
+          return result;
+        } finally {
+          setLoading(false);
         }
-      } else {
-        throw new Error(result.error?.message || 'Failed to complete check-in');
-      }
-    } catch (error) {
-      console.error('Error completing check-in:', error);
-      if (error.code === 'unavailable') {
-        toast.error('Cannot reach server. Please check your internet connection.', { id: loadingToast });
-      } else {
-        toast.error(error.message || 'Failed to complete check-in. Please try again.', { id: loadingToast });
-      }
-    } finally {
-      setLoading(false);
-    }
+      },
+      rollback: () => {
+        // Hide celebration if backend fails
+        setShowCelebration(false);
+      },
+      successMessage: 'You\'re safe! 💜',
+      errorMessage: 'Failed to complete check-in. Please try again.',
+      skipSuccessToast: false
+    });
   };
 
   const handleExtend = async (minutes) => {
@@ -128,16 +136,26 @@ const CheckInCard = ({ checkIn }) => {
   };
 
   const handleSaveNotes = async () => {
-    try {
-      await updateDoc(doc(db, 'checkins', checkIn.id), {
-        notes: notes,
-      });
-      setEditingNotes(false);
-      toast.success('Notes updated!');
-    } catch (error) {
-      console.error('Error saving notes:', error);
-      toast.error('Failed to save notes');
-    }
+    const previousNotes = checkIn.notes || '';
+
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Close editing mode immediately
+        setEditingNotes(false);
+      },
+      serverUpdate: async () => {
+        await updateDoc(doc(db, 'checkins', checkIn.id), {
+          notes: notes,
+        });
+      },
+      rollback: () => {
+        // Reopen editing mode with previous notes
+        setNotes(previousNotes);
+        setEditingNotes(true);
+      },
+      successMessage: 'Notes updated!',
+      errorMessage: 'Failed to save notes'
+    });
   };
 
   const handlePhotoUpload = async (e) => {
@@ -160,48 +178,79 @@ const CheckInCard = ({ checkIn }) => {
 
     setUploadingPhoto(true);
 
-    try {
-      const newPhotoURLs = [];
+    // Create optimistic preview URLs for instant display
+    const optimisticURLs = files.map(file => URL.createObjectURL(file));
+    const previousPhotoURLs = [...photoURLs];
 
-      // Upload each file
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${i}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        const downloadURL = await getDownloadURL(storageRef);
-        newPhotoURLs.push(downloadURL);
-      }
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Show photos immediately with blob URLs
+        setPhotoURLs([...photoURLs, ...optimisticURLs]);
+      },
+      serverUpdate: async () => {
+        try {
+          const newPhotoURLs = [];
 
-      const updatedPhotoURLs = [...photoURLs, ...newPhotoURLs];
+          // Upload each file
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const storageRef = ref(storage, `checkins/${checkIn.id}/${Date.now()}_${i}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(storageRef);
+            newPhotoURLs.push(downloadURL);
+          }
 
-      // Update Firestore
-      await updateDoc(doc(db, 'checkins', checkIn.id), {
-        photoURLs: updatedPhotoURLs,
-      });
+          const updatedPhotoURLs = [...previousPhotoURLs, ...newPhotoURLs];
 
-      setPhotoURLs(updatedPhotoURLs);
-      toast.success(`${newPhotoURLs.length} photo${newPhotoURLs.length > 1 ? 's' : ''} uploaded!`);
-    } catch (error) {
-      console.error('Error uploading photos:', error);
-      toast.error('Failed to upload photos');
-    } finally {
-      setUploadingPhoto(false);
-    }
+          // Update Firestore
+          await updateDoc(doc(db, 'checkins', checkIn.id), {
+            photoURLs: updatedPhotoURLs,
+          });
+
+          // Replace blob URLs with real URLs
+          setPhotoURLs(updatedPhotoURLs);
+
+          // Clean up blob URLs
+          optimisticURLs.forEach(url => URL.revokeObjectURL(url));
+
+          return updatedPhotoURLs;
+        } finally {
+          setUploadingPhoto(false);
+        }
+      },
+      rollback: () => {
+        // Revert to previous photos on error
+        setPhotoURLs(previousPhotoURLs);
+        // Clean up blob URLs
+        optimisticURLs.forEach(url => URL.revokeObjectURL(url));
+        setUploadingPhoto(false);
+      },
+      successMessage: `${files.length} photo${files.length > 1 ? 's' : ''} uploaded!`,
+      errorMessage: 'Failed to upload photos'
+    });
   };
 
   const removePhoto = async (index) => {
+    const previousPhotoURLs = [...photoURLs];
     const updatedPhotoURLs = photoURLs.filter((_, i) => i !== index);
 
-    try {
-      await updateDoc(doc(db, 'checkins', checkIn.id), {
-        photoURLs: updatedPhotoURLs,
-      });
-      setPhotoURLs(updatedPhotoURLs);
-      toast.success('Photo removed');
-    } catch (error) {
-      console.error('Error removing photo:', error);
-      toast.error('Failed to remove photo');
-    }
+    await executeOptimistic({
+      optimisticUpdate: () => {
+        // Remove photo immediately from UI
+        setPhotoURLs(updatedPhotoURLs);
+      },
+      serverUpdate: async () => {
+        await updateDoc(doc(db, 'checkins', checkIn.id), {
+          photoURLs: updatedPhotoURLs,
+        });
+      },
+      rollback: () => {
+        // Restore photo on error
+        setPhotoURLs(previousPhotoURLs);
+      },
+      successMessage: 'Photo removed',
+      errorMessage: 'Failed to remove photo'
+    });
   };
 
   const isAlerted = checkIn.status === 'alerted';
