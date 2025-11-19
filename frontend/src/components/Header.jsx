@@ -42,7 +42,7 @@ const Header = () => {
   return (
     <>
       {/* Desktop Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      <header className={`${isDark ? 'bg-gray-900' : 'bg-white'} shadow-sm sticky top-0 z-40 transition-colors`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -55,7 +55,7 @@ const Header = () => {
               <Link
                 to="/"
                 className={`font-semibold transition-colors ${
-                  isActive('/') ? 'text-primary' : 'text-text-secondary hover:text-primary'
+                  isActive('/') ? 'text-primary' : (isDark ? 'text-gray-300 hover:text-primary' : 'text-text-secondary hover:text-primary')
                 }`}
               >
                 Home
@@ -63,7 +63,7 @@ const Header = () => {
               <Link
                 to="/besties"
                 className={`font-semibold transition-colors ${
-                  isActive('/besties') ? 'text-primary' : 'text-text-secondary hover:text-primary'
+                  isActive('/besties') ? 'text-primary' : (isDark ? 'text-gray-300 hover:text-primary' : 'text-text-secondary hover:text-primary')
                 }`}
               >
                 Besties
@@ -71,7 +71,7 @@ const Header = () => {
               <Link
                 to="/profile"
                 className={`font-semibold transition-colors ${
-                  isActive('/profile') ? 'text-primary' : 'text-text-secondary hover:text-primary'
+                  isActive('/profile') ? 'text-primary' : (isDark ? 'text-gray-300 hover:text-primary' : 'text-text-secondary hover:text-primary')
                 }`}
               >
                 Profile
@@ -97,12 +97,12 @@ const Header = () => {
 
               {/* Dropdown Menu */}
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden animate-scale-up">
-                  <div className="px-4 py-3 border-b border-gray-200">
-                    <div className="font-semibold text-text-primary truncate">
+                <div className={`absolute right-0 mt-2 w-48 ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-lg shadow-lg border overflow-hidden animate-scale-up transition-colors`}>
+                  <div className={`px-4 py-3 ${isDark ? 'border-gray-700' : 'border-gray-200'} border-b`}>
+                    <div className={`font-semibold ${isDark ? 'text-gray-100' : 'text-text-primary'} truncate`}>
                       {userData?.displayName || 'User'}
                     </div>
-                    <div className="text-xs text-text-secondary truncate">
+                    <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-text-secondary'} truncate`}>
                       {userData?.email}
                     </div>
                   </div>
@@ -112,7 +112,7 @@ const Header = () => {
                       setShowProfileMenu(false);
                       navigate('/profile');
                     }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-text-primary"
+                    className={`w-full px-4 py-2 text-left ${isDark ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-50 text-text-primary'} transition-colors flex items-center gap-2`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -125,7 +125,7 @@ const Header = () => {
                       setShowProfileMenu(false);
                       navigate('/settings');
                     }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-text-primary"
+                    className={`w-full px-4 py-2 text-left ${isDark ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-50 text-text-primary'} transition-colors flex items-center gap-2`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -139,7 +139,7 @@ const Header = () => {
                       setShowProfileMenu(false);
                       navigate('/history');
                     }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-text-primary"
+                    className={`w-full px-4 py-2 text-left ${isDark ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-50 text-text-primary'} transition-colors flex items-center gap-2`}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -147,13 +147,13 @@ const Header = () => {
                     History
                   </button>
 
-                  <div className="border-t border-gray-200">
+                  <div className={`${isDark ? 'border-gray-700' : 'border-gray-200'} border-t`}>
                     <button
                       onClick={() => {
                         toggleDarkMode();
                         toast.success(`${isDark ? 'Light' : 'Dark'} mode enabled`);
                       }}
-                      className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center justify-between text-text-primary"
+                      className={`w-full px-4 py-2 text-left ${isDark ? 'hover:bg-gray-700 text-gray-100' : 'hover:bg-gray-50 text-text-primary'} transition-colors flex items-center justify-between`}
                     >
                       <div className="flex items-center gap-2">
                         {isDark ? (
@@ -167,14 +167,14 @@ const Header = () => {
                         )}
                         <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
                       </div>
-                      <span className="text-xs text-text-secondary">{isDark ? '☀️' : '🌙'}</span>
+                      <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-text-secondary'}`}>{isDark ? '☀️' : '🌙'}</span>
                     </button>
                   </div>
 
-                  <div className="border-t border-gray-200">
+                  <div className={`${isDark ? 'border-gray-700' : 'border-gray-200'} border-t`}>
                     <button
                       onClick={handleSignOut}
-                      className="w-full px-4 py-2 text-left hover:bg-red-50 transition-colors flex items-center gap-2 text-red-600"
+                      className={`w-full px-4 py-2 text-left ${isDark ? 'hover:bg-red-900/30' : 'hover:bg-red-50'} transition-colors flex items-center gap-2 text-red-600`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -190,12 +190,12 @@ const Header = () => {
       </header>
 
       {/* Mobile Navigation - Fixed Bottom Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+      <nav className={`md:hidden fixed bottom-0 left-0 right-0 ${isDark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg z-50 transition-colors`}>
         <div className="flex items-center justify-around py-3 safe-area-inset-bottom">
           <Link
             to="/"
             className={`flex flex-col items-center gap-1 transition-colors ${
-              isActive('/') ? 'text-primary' : 'text-text-secondary'
+              isActive('/') ? 'text-primary' : (isDark ? 'text-gray-300' : 'text-text-secondary')
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +207,7 @@ const Header = () => {
           <Link
             to="/besties"
             className={`flex flex-col items-center gap-1 transition-colors ${
-              isActive('/besties') ? 'text-primary' : 'text-text-secondary'
+              isActive('/besties') ? 'text-primary' : (isDark ? 'text-gray-300' : 'text-text-secondary')
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ const Header = () => {
           <Link
             to="/profile"
             className={`flex flex-col items-center gap-1 transition-colors ${
-              isActive('/profile') ? 'text-primary' : 'text-text-secondary'
+              isActive('/profile') ? 'text-primary' : (isDark ? 'text-gray-300' : 'text-text-secondary')
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
