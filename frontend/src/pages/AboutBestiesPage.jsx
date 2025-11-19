@@ -1714,6 +1714,374 @@ const AboutBestiesPage = () => {
           </div>
         </div>
 
+        {/* SECTION REDESIGNS - WHAT MAKES US DIFFERENT */}
+        <div className="card p-6 mb-6 bg-gradient-to-br from-purple-50 to-pink-50 border-4 border-purple-300">
+          <h2 className="text-2xl font-display text-text-primary mb-6 text-center">What Makes Us Different - 4 Style Variations</h2>
+
+          {/* Style 4: Minimal with Sparkle */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-fuchsia-200">
+            <h3 className="font-semibold text-lg text-fuchsia-900 mb-4">Style 4: Minimal with Sparkle</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff4-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,26 L6,16 C4,14 4,10 6,8 C8,6 12,6 14,8 L16,10 L18,8 C20,6 24,6 26,8 C28,10 28,14 26,16 Z" fill="none" stroke="url(#diff4-1)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M12,14 L20,14" stroke="url(#diff4-1)" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+                    <circle cx="24" cy="6" r="1.5" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Good Over Profit</h4>
+                </div>
+                <p className="text-xs text-gray-700">We're here to keep people safe. Every decision puts your safety first, not our profit margins.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff4-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a855f7" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="11" y="15" width="10" height="10" rx="1.5" fill="none" stroke="url(#diff4-2)" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M13,15 L13,11 C13,8.8 14.3,7 16,7 C17.7,7 19,8.8 19,11 L19,15" fill="none" stroke="url(#diff4-2)" strokeWidth="2" strokeLinecap="round"/>
+                    <circle cx="16" cy="20" r="1.5" fill="#a855f7"/>
+                    <circle cx="8" cy="8" r="1" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Privacy First</h4>
+                </div>
+                <p className="text-xs text-gray-700">Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-fuchsia-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff4-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#d946ef" />
+                        <stop offset="100%" stopColor="#c026d3" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,6 L16,26" stroke="url(#diff4-3)" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M12,10 L18,10 C20,10 21,11 21,13 C21,15 20,16 18,16 L14,16 C12,16 11,17 11,19 C11,21 12,22 14,22 L20,22" fill="none" stroke="url(#diff4-3)" strokeWidth="2" strokeLinecap="round" />
+                    <circle cx="24" cy="12" r="1" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Transparent Pricing</h4>
+                </div>
+                <p className="text-xs text-gray-700">No hidden fees, no surprises. Most features free forever. Premium costs what it costs to run.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff4-4" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#c4b5fd" />
+                        <stop offset="50%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#fda4af" />
+                      </linearGradient>
+                    </defs>
+                    <line x1="16" y1="16" x2="16" y2="8" stroke="url(#diff4-4)" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="24" y2="12" stroke="url(#diff4-4)" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="24" y2="20" stroke="url(#diff4-4)" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="8" y2="12" stroke="url(#diff4-4)" strokeWidth="1.5" opacity="0.4" />
+                    <line x1="16" y1="16" x2="8" y2="20" stroke="url(#diff4-4)" strokeWidth="1.5" opacity="0.4" />
+                    <circle cx="16" cy="16" r="3" fill="none" stroke="#f43f5e" strokeWidth="2" />
+                    <circle cx="16" cy="8" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="24" cy="12" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="24" cy="20" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="8" cy="12" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="8" cy="20" r="2" fill="none" stroke="#f43f5e" strokeWidth="1.5" />
+                    <circle cx="26" cy="26" r="1" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Community Driven</h4>
+                </div>
+                <p className="text-xs text-gray-700">You're part of the Besties family. We listen, adapt, and build features you actually want.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 5: Soft Neon Glow */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-pink-200">
+            <h3 className="font-semibold text-lg text-pink-900 mb-4">Style 5: Soft Neon Glow</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <filter id="diff5-glow1">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="diff5-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,26 C16,26 6,20 6,12 C6,8 9,5 12,5 C14,5 15,6 16,8 C17,6 18,5 20,5 C23,5 26,8 26,12 C26,20 16,26 16,26 Z" fill="url(#diff5-1)" filter="url(#diff5-glow1)" opacity="0.8" />
+                    <path d="M16,22 C16,22 11,18 11,12 C11,10 12,9 14,9 C15,9 16,10 16,11 C16,10 17,9 18,9 C20,9 21,10 21,12 C21,18 16,22 16,22 Z" fill="#fff" opacity="0.3" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Good Over Profit</h4>
+                </div>
+                <p className="text-xs text-gray-700">We're here to keep people safe. Every decision puts your safety first, not our profit margins.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <filter id="diff5-glow2">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="diff5-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a855f7" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="11" y="15" width="10" height="10" rx="2" fill="url(#diff5-2)" filter="url(#diff5-glow2)" opacity="0.8" />
+                    <path d="M13,15 L13,11 C13,8.8 14.3,7 16,7 C17.7,7 19,8.8 19,11 L19,15" fill="none" stroke="url(#diff5-2)" strokeWidth="2" filter="url(#diff5-glow2)" strokeLinecap="round"/>
+                    <circle cx="16" cy="20" r="2" fill="#fff" opacity="0.6" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Privacy First</h4>
+                </div>
+                <p className="text-xs text-gray-700">Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-fuchsia-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <filter id="diff5-glow3">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="diff5-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#d946ef" />
+                        <stop offset="100%" stopColor="#c026d3" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="10" fill="url(#diff5-3)" filter="url(#diff5-glow3)" opacity="0.7" />
+                    <path d="M16,10 L16,22" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M12,13 L18,13 C19,13 20,14 20,15 C20,16 19,17 18,17 L14,17 C13,17 12,18 12,19 C12,20 13,21 14,21 L20,21" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Transparent Pricing</h4>
+                </div>
+                <p className="text-xs text-gray-700">No hidden fees, no surprises. Most features free forever. Premium costs what it costs to run.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <filter id="diff5-glow4">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="diff5-4" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f43f5e" />
+                        <stop offset="100%" stopColor="#e11d48" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="10" fill="url(#diff5-4)" filter="url(#diff5-glow4)" opacity="0.6" />
+                    <circle cx="12" cy="13" r="2" fill="#f9a8d4" filter="url(#diff5-glow4)" />
+                    <circle cx="20" cy="13" r="2" fill="#f9a8d4" filter="url(#diff5-glow4)" />
+                    <circle cx="16" cy="19" r="2" fill="#f9a8d4" filter="url(#diff5-glow4)" />
+                    <circle cx="16" cy="16" r="1.5" fill="#fff" opacity="0.6" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Community Driven</h4>
+                </div>
+                <p className="text-xs text-gray-700">You're part of the Besties family. We listen, adapt, and build features you actually want.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 7: Soft Geometry */}
+          <div className="mb-8 p-6 bg-white rounded-xl border-2 border-purple-200">
+            <h3 className="font-semibold text-lg text-purple-900 mb-4">Style 7: Soft Geometry</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff7-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f9a8d4" />
+                        <stop offset="100%" stopColor="#ec4899" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,8 L8,16 L8,22 C8,25 11,27 16,28 C21,27 24,25 24,22 L24,16 Z" fill="none" stroke="url(#diff7-1)" strokeWidth="2" strokeLinejoin="round" />
+                    <rect x="12" y="15" width="8" height="8" rx="2" fill="url(#diff7-1)" opacity="0.2" />
+                    <rect x="28" y="4" width="3" height="3" rx="0.8" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Good Over Profit</h4>
+                </div>
+                <p className="text-xs text-gray-700">We're here to keep people safe. Every decision puts your safety first, not our profit margins.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff7-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#a855f7" />
+                        <stop offset="100%" stopColor="#7c3aed" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="8" y="12" width="16" height="16" rx="3" fill="none" stroke="url(#diff7-2)" strokeWidth="2" />
+                    <rect x="12" y="8" width="8" height="8" rx="2" fill="url(#diff7-2)" opacity="0.3" />
+                    <circle cx="16" cy="20" r="2" fill="url(#diff7-2)" />
+                    <rect x="28" y="4" width="3" height="3" rx="0.8" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Privacy First</h4>
+                </div>
+                <p className="text-xs text-gray-700">Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-fuchsia-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff7-3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#d946ef" />
+                        <stop offset="100%" stopColor="#c026d3" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="10" y="10" width="12" height="12" rx="2" fill="none" stroke="url(#diff7-3)" strokeWidth="2" />
+                    <rect x="14" y="14" width="4" height="4" rx="1" fill="url(#diff7-3)" opacity="0.4" />
+                    <line x1="16" y1="10" x2="16" y2="22" stroke="url(#diff7-3)" strokeWidth="1.5" opacity="0.6" />
+                    <rect x="28" y="4" width="3" height="3" rx="0.8" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Transparent Pricing</h4>
+                </div>
+                <p className="text-xs text-gray-700">No hidden fees, no surprises. Most features free forever. Premium costs what it costs to run.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff7-4" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#f43f5e" />
+                        <stop offset="100%" stopColor="#e11d48" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="10" y="10" width="6" height="6" rx="1.5" fill="url(#diff7-4)" opacity="0.5" />
+                    <rect x="13" y="13" width="8" height="8" rx="1.5" fill="url(#diff7-4)" opacity="0.7" />
+                    <rect x="16" y="10" width="6" height="6" rx="1.5" fill="url(#diff7-4)" opacity="0.5" />
+                    <rect x="28" y="4" width="3" height="3" rx="0.8" fill="#fbbf24" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Community Driven</h4>
+                </div>
+                <p className="text-xs text-gray-700">You're part of the Besties family. We listen, adapt, and build features you actually want.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Style 9: Sketchy & Sweet */}
+          <div className="p-6 bg-white rounded-xl border-2 border-rose-200">
+            <h3 className="font-semibold text-lg text-rose-900 mb-4">Style 9: Sketchy & Sweet</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-3 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff9-fill1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fce7f3" />
+                        <stop offset="100%" stopColor="#fbcfe8" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M16,26 C16,26 6,20 6,12 C6,8 9,5 12,5 C14,5 15,6 16,8 C17,6 18,5 20,5 C23,5 26,8 26,12 C26,20 16,26 16,26 Z" fill="url(#diff9-fill1)" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+                    <g stroke="#f472b6" strokeWidth="1.5" opacity="0.3">
+                      <line x1="11" y1="12" x2="15" y2="12" strokeLinecap="round" />
+                      <line x1="17" y1="12" x2="21" y2="12" strokeLinecap="round" />
+                      <line x1="13" y1="16" x2="19" y2="16" strokeLinecap="round" />
+                    </g>
+                    <line x1="24" y1="6" x2="26" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="26" y1="6" x2="24" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Good Over Profit</h4>
+                </div>
+                <p className="text-xs text-gray-700">We're here to keep people safe. Every decision puts your safety first, not our profit margins.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-purple-50 to-fuchsia-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <defs>
+                      <linearGradient id="diff9-fill2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#e9d5ff" />
+                        <stop offset="100%" stopColor="#d8b4fe" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="11" y="15" width="10" height="10" rx="2" fill="url(#diff9-fill2)" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+                    <path d="M13,15 L13,11 C13,8.8 14.3,7 16,7 C17.7,7 19,8.8 19,11 L19,15" fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round"/>
+                    <g stroke="#a855f7" strokeWidth="1.5" opacity="0.4">
+                      <line x1="14" y1="19" x2="18" y2="19" strokeLinecap="round" />
+                      <line x1="14" y1="21" x2="18" y2="21" strokeLinecap="round" />
+                    </g>
+                    <line x1="24" y1="6" x2="26" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="26" y1="6" x2="24" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Privacy First</h4>
+                </div>
+                <p className="text-xs text-gray-700">Your data is yours. We don't sell it, we don't mine it, and we delete it when you ask.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-fuchsia-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <circle cx="16" cy="16" r="12" fill="none" stroke="#d946ef" strokeWidth="2.5" strokeLinecap="round" opacity="0.3" />
+                    <path d="M16,10 L16,22" stroke="#d946ef" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M12,13 L18,13 C19,13 20,14 20,15 C20,16 19,17 18,17 L14,17 C13,17 12,18 12,19 C12,20 13,21 14,21 L20,21" fill="none" stroke="#d946ef" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="24" y1="6" x2="26" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="26" y1="6" x2="24" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Transparent Pricing</h4>
+                </div>
+                <p className="text-xs text-gray-700">No hidden fees, no surprises. Most features free forever. Premium costs what it costs to run.</p>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-rose-50 to-pink-50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg viewBox="0 0 32 32" className="w-10 h-10">
+                    <g stroke="#f43f5e" strokeWidth="2.5" fill="none" strokeLinecap="round">
+                      <circle cx="12" cy="14" r="5" opacity="0.7" />
+                      <line x1="12" y1="19" x2="12" y2="24" />
+                      <circle cx="20" cy="14" r="5" opacity="0.7" />
+                      <line x1="20" y1="19" x2="20" y2="24" />
+                      <circle cx="16" cy="18" r="5" opacity="0.7" />
+                      <line x1="16" y1="23" x2="16" y2="26" />
+                    </g>
+                    <path d="M12,23 Q16,21 20,23" fill="none" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="24" y1="6" x2="26" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                    <line x1="26" y1="6" x2="24" y2="8" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+                  </svg>
+                  <h4 className="font-semibold text-sm">Community Driven</h4>
+                </div>
+                <p className="text-xs text-gray-700">You're part of the Besties family. We listen, adapt, and build features you actually want.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Our Mission */}
         <div className="card p-8 mb-6 bg-gradient-to-br from-pink-50 to-purple-50">
           <h2 className="text-2xl font-display text-text-primary mb-4">Our Mission 🎯</h2>
