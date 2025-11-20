@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { ParticleSystem, FlyingIcon, transitionEffects } from '../../utils/magicalAnimations';
+import { ParticleSystem, transitionEffects } from '../../utils/magicalAnimations';
 import { XPBar } from './SVGGraphics';
 
 // Import individual slides
@@ -305,9 +305,6 @@ const MagicalOnboarding = () => {
       console.error('Error completing onboarding:', error);
     }
   };
-
-  // Render current slide
-  const CurrentSlideComponent = slides[currentSlide].component;
 
   return (
     <div className="magical-onboarding">

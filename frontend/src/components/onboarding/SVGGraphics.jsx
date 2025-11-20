@@ -629,7 +629,7 @@ export const XPBar = ({ progress = 0, level = 1, className = '' }) => {
   );
 };
 
-export default {
+const SVGGraphics = {
   AnimatedHeart,
   SafetyShield,
   FriendsCircle,
@@ -641,3 +641,5 @@ export default {
   SuccessCelebration,
   XPBar
 };
+
+export default SVGGraphics;
