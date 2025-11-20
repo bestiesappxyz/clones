@@ -520,9 +520,13 @@ export const confettiEffects = {
 export const textAnimations = {
   // Typewriter effect
   async typewriter(element, text, speed = 50) {
+    if (!element) return;
+
     element.textContent = '';
 
     for (let i = 0; i < text.length; i++) {
+      // Check element still exists on each iteration (in case component unmounted)
+      if (!element) return;
       element.textContent += text[i];
       await new Promise(resolve => setTimeout(resolve, speed));
     }

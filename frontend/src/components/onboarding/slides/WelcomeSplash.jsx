@@ -11,30 +11,45 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
   useEffect(() => {
     if (isActive && titleRef.current && subtitleRef.current && messageRef.current) {
       // Typewriter effect for title
-      setTimeout(() => {
-        textAnimations.typewriter(titleRef.current, 'Hey bestie! 💕', 80);
+      const titleTimer = setTimeout(() => {
+        if (titleRef.current) {
+          textAnimations.typewriter(titleRef.current, 'Hey bestie! 💕', 80);
+        }
       }, 500);
 
       // Fade in subtitle
-      setTimeout(() => {
-        subtitleRef.current.style.opacity = '1';
+      const subtitleTimer = setTimeout(() => {
+        if (subtitleRef.current) {
+          subtitleRef.current.style.opacity = '1';
+        }
       }, 2500);
 
       // Fade in message
-      setTimeout(() => {
-        messageRef.current.style.opacity = '1';
+      const messageTimer = setTimeout(() => {
+        if (messageRef.current) {
+          messageRef.current.style.opacity = '1';
+        }
       }, 4000);
 
       // Create heart particles
+      let heartInterval;
       if (particleSystem) {
-        const interval = setInterval(() => {
+        heartInterval = setInterval(() => {
           const x = Math.random() * window.innerWidth;
           particleSystem.burst(x, window.innerHeight, 2, 'heart');
           particleSystem.start();
         }, 400);
-
-        return () => clearInterval(interval);
       }
+
+      // Cleanup function to clear all timers and intervals
+      return () => {
+        clearTimeout(titleTimer);
+        clearTimeout(subtitleTimer);
+        clearTimeout(messageTimer);
+        if (heartInterval) {
+          clearInterval(heartInterval);
+        }
+      };
     }
   }, [isActive, particleSystem]);
 
