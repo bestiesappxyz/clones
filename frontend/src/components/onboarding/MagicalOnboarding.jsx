@@ -23,10 +23,22 @@ import {
 /**
  * Magical Onboarding Experience
  * A fully interactive, animated journey through the app
+ * Works in demo mode without Firebase!
  */
 const MagicalOnboarding = () => {
-  const { currentUser } = useAuth();
+  // Safe auth access - handles cases where Firebase isn't configured
+  let currentUser = null;
+  try {
+    const auth = useAuth();
+    currentUser = auth?.currentUser;
+  } catch (error) {
+    console.log('Running in demo mode - Firebase not configured');
+  }
+
   const navigate = useNavigate();
+
+  // Demo mode detection - runs demo if no Firebase or no user
+  const isDemoMode = !currentUser || !db;
 
   // State management
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -264,18 +276,30 @@ const MagicalOnboarding = () => {
   // Complete onboarding
   const completeOnboarding = async () => {
     try {
-      // Save onboarding data to Firestore
-      const userRef = doc(db, 'users', currentUser.uid);
-      await updateDoc(userRef, {
-        onboardingCompleted: true,
-        displayName: userData.displayName || currentUser.displayName,
-        photoURL: userData.photoURL || currentUser.photoURL,
-        selectedScenarios: userData.selectedScenarios,
-        onboardingXP: xp,
-        onboardingLevel: level,
-        achievements: achievements,
-        onboardingCompletedAt: new Date()
-      });
+      // Save onboarding data to Firestore (skip in demo mode)
+      if (!isDemoMode && currentUser) {
+        const userRef = doc(db, 'users', currentUser.uid);
+        await updateDoc(userRef, {
+          onboardingCompleted: true,
+          displayName: userData.displayName || currentUser.displayName,
+          photoURL: userData.photoURL || currentUser.photoURL,
+          selectedScenarios: userData.selectedScenarios,
+          onboardingXP: xp,
+          onboardingLevel: level,
+          achievements: achievements,
+          onboardingCompletedAt: new Date()
+        });
+      } else {
+        // Demo mode - just log the data
+        console.log('🎉 Demo Mode - Onboarding completed with data:', {
+          displayName: userData.displayName,
+          photoURL: userData.photoURL,
+          selectedScenarios: userData.selectedScenarios,
+          xp,
+          level,
+          achievements
+        });
+      }
 
       // Final celebration!
       if (particleSystemRef.current) {
@@ -298,7 +322,12 @@ const MagicalOnboarding = () => {
 
       // Navigate to home after celebration
       setTimeout(() => {
-        navigate('/');
+        if (isDemoMode) {
+          // In demo mode, show a message instead of navigating
+          alert('🎉 Onboarding Complete!\n\nThis was a demo. In production, you would now be logged in and ready to use the app!');
+        } else {
+          navigate('/');
+        }
       }, 5000);
 
     } catch (error) {
@@ -323,8 +352,28 @@ const MagicalOnboarding = () => {
         }}
       />
 
+      {/* Demo Mode Banner */}
+      {isDemoMode && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          background: 'linear-gradient(135deg, #FFD93D, #FFA500)',
+          color: 'white',
+          padding: '8px 20px',
+          textAlign: 'center',
+          fontFamily: 'Fredoka One, cursive',
+          fontSize: '14px',
+          zIndex: 10000,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+        }}>
+          🎮 DEMO MODE - Experience the magic! (No account needed)
+        </div>
+      )}
+
       {/* Progress Tracker */}
-      <div className="onboarding-progress-header">
+      <div className="onboarding-progress-header" style={{ top: isDemoMode ? '40px' : '0' }}>
         <div className="progress-bar-container">
           <div className="progress-bar-bg">
             <div
@@ -476,7 +525,7 @@ const MagicalOnboarding = () => {
           width: 100%;
           height: 100%;
           position: relative;
-          padding-top: 140px;
+          padding-top: ${isDemoMode ? '180px' : '140px'};
         }
 
         .slide {
