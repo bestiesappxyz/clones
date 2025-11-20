@@ -334,7 +334,7 @@ export const morphAnimations = {
 
   // Pulse animation
   pulse(element, options = {}) {
-    const { scale = 1.1, duration = 600, iterations = 3 } = options;
+    const { duration = 600, iterations = 3 } = options;
 
     element.style.animation = `pulse ${duration}ms ease-in-out ${iterations}`;
 
