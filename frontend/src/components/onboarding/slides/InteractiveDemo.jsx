@@ -11,7 +11,7 @@ const InteractiveDemo = ({ onNext }) => {
   useEffect(() => {
     // Small delay for transition, then navigate to real check-in page in demo mode
     const timer = setTimeout(() => {
-      navigate('/create?demo=true&onboarding=true');
+      navigate('/create?demo=true');
     }, 800);
 
     return () => clearTimeout(timer);

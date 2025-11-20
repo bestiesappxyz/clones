@@ -18,7 +18,6 @@ const CreateCheckInPage = () => {
   // Check if in demo mode from URL params
   const searchParams = new URLSearchParams(location.search);
   const isDemoMode = searchParams.get('demo') === 'true';
-  const isOnboarding = searchParams.get('onboarding') === 'true';
 
   const [locationInput, setLocationInput] = useState('');
   const [duration, setDuration] = useState(30);
