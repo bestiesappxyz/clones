@@ -77,7 +77,14 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Listen for auth state changes
+    // Listen for auth state changes (skip in demo mode)
+    if (!auth) {
+      // Demo mode - no auth available
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
       setLoading(false);

@@ -200,6 +200,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // Demo mode - skip Firebase auth
+    if (!auth || !db) {
+      console.log('🎮 AuthContext: Running in demo mode');
+      setCurrentUser(null);
+      setUserData(null);
+      setLoading(false);
+      return;
+    }
+
     const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
       console.group('🔐 Auth State Changed');
       console.log('User:', user);
