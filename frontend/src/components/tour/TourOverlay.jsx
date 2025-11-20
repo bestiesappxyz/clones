@@ -78,14 +78,14 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
   useEffect(() => {
     if (currentStepData && currentStepData.path) {
       navigate(currentStepData.path);
-      // Wait for navigation to complete
+      // Wait for navigation and page render to complete
       setTimeout(() => {
         // Scroll element into view
         const element = document.querySelector(currentStepData.element);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 100);
+      }, 500); // Increased from 100ms to 500ms to ensure DOM is ready
     }
   }, [currentStep, currentStepData, navigate]);
 

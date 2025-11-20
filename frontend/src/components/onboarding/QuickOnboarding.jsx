@@ -48,11 +48,11 @@ const QuickOnboarding = () => {
         resetTour();
         navigate('/');
 
-        // Start tour after a short delay to let home page load
+        // Start tour after page has loaded and rendered (increased delay for demo mode)
         setTimeout(() => {
           startTour();
           console.log('🎯 Interactive tour started - showing REAL app!');
-        }, 800);
+        }, 1500); // Increased from 800ms to 1500ms to ensure DOM is ready
       } catch (error) {
         console.error('Error completing onboarding:', error);
         // Still navigate to home even if there's an error
