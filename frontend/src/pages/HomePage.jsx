@@ -58,10 +58,16 @@ const HomePage = () => {
     // Wait for auth to finish loading before checking
     if (authLoading) return;
 
-    if (userData && userData.onboardingCompleted === false) {
+    // Check if onboarding is completed (either in userData or localStorage for demo mode)
+    const demoOnboardingCompleted = localStorage.getItem('demo_onboarding_completed') === 'true';
+
+    if (userData && userData.onboardingCompleted === false && !demoOnboardingCompleted) {
+      navigate('/onboarding');
+    } else if (!currentUser && !demoOnboardingCompleted) {
+      // Demo mode: no user, check localStorage
       navigate('/onboarding');
     }
-  }, [userData, authLoading, navigate]);
+  }, [userData, authLoading, navigate, currentUser]);
 
   // Redirect to login if there's a pending invite and user is not logged in
   useEffect(() => {

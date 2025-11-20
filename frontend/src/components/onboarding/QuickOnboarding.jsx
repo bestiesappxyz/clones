@@ -40,6 +40,8 @@ const QuickOnboarding = () => {
           console.log('✅ Onboarding marked as complete');
         } else {
           console.log('🎮 Demo mode - skipping Firebase update');
+          // Store in localStorage for demo mode
+          localStorage.setItem('demo_onboarding_completed', 'true');
         }
 
         // Navigate to home and start the interactive tour
