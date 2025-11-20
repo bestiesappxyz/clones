@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTour } from '../contexts/TourContext';
 import { db } from '../services/firebase';
 import { collection, query, where, onSnapshot, doc, updateDoc, Timestamp, getDocs } from 'firebase/firestore';
 import Header from '../components/Header';
@@ -39,6 +40,7 @@ const SUPPORTIVE_MESSAGES = [
 
 const HomePage = () => {
   const { currentUser, userData, loading: authLoading } = useAuth();
+  const { isTourActive } = useTour();
   const navigate = useNavigate();
   const [activeCheckIns, setActiveCheckIns] = useState([]);
   const [templates, setTemplates] = useState([]);
@@ -58,16 +60,39 @@ const HomePage = () => {
     // Wait for auth to finish loading before checking
     if (authLoading) return;
 
-    // Check if onboarding is completed (either in userData or localStorage for demo mode)
-    const demoOnboardingCompleted = localStorage.getItem('demo_onboarding_completed') === 'true';
+    // CRITICAL: Add small delay to ensure localStorage is read after QuickOnboarding sets it
+    const checkOnboarding = () => {
+      const demoOnboardingCompleted = localStorage.getItem('demo_onboarding_completed') === 'true';
+      console.log('🏠 HomePage checking onboarding status:', {
+        currentUser: !!currentUser,
+        demoOnboardingCompleted,
+        userDataOnboarding: userData?.onboardingCompleted,
+        isTourActive
+      });
 
-    if (userData && userData.onboardingCompleted === false && !demoOnboardingCompleted) {
-      navigate('/onboarding');
-    } else if (!currentUser && !demoOnboardingCompleted) {
-      // Demo mode: no user, check localStorage
-      navigate('/onboarding');
-    }
-  }, [userData, authLoading, navigate, currentUser]);
+      // NEVER redirect if tour is active or about to start
+      if (isTourActive) {
+        console.log('✅ Tour is active, not redirecting');
+        return;
+      }
+
+      // Only redirect if BOTH conditions are false
+      if (userData && userData.onboardingCompleted === false && !demoOnboardingCompleted) {
+        console.log('🔄 Redirecting to onboarding (user not completed)');
+        navigate('/onboarding');
+      } else if (!currentUser && !demoOnboardingCompleted) {
+        // Demo mode: no user, check localStorage
+        console.log('🔄 Redirecting to onboarding (demo mode, not completed)');
+        navigate('/onboarding');
+      } else {
+        console.log('✅ Onboarding complete, staying on home page');
+      }
+    };
+
+    // Small delay to ensure localStorage is properly set from QuickOnboarding
+    const timer = setTimeout(checkOnboarding, 100);
+    return () => clearTimeout(timer);
+  }, [userData, authLoading, navigate, currentUser, isTourActive]);
 
   // Redirect to login if there's a pending invite and user is not logged in
   useEffect(() => {
