@@ -6,7 +6,7 @@ import { auth } from './services/firebase';
 // Pages
 import LoginPage from './pages/LoginPage';
 import OnboardingPage from './pages/OnboardingPage';
-import MagicalOnboarding from './components/onboarding/MagicalOnboarding';
+import QuickOnboarding from './components/onboarding/QuickOnboarding';
 import HomePage from './pages/HomePage';
 import CreateCheckInPage from './pages/CreateCheckInPage';
 import ProfilePage from './pages/ProfilePage';
@@ -171,9 +171,9 @@ function App() {
             <Route
               path="/onboarding"
               element={
-                // Demo mode: allow access without user
-                !auth ? <MagicalOnboarding /> :
-                <ProtectedRoute user={user}><MagicalOnboarding /></ProtectedRoute>
+                // Demo mode: allow access without user - redirects to home and starts tour
+                !auth ? <QuickOnboarding /> :
+                <ProtectedRoute user={user}><QuickOnboarding /></ProtectedRoute>
               }
             />
             <Route

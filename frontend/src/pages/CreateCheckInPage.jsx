@@ -526,13 +526,9 @@ const CreateCheckInPage = () => {
 
       setLoading(false);
 
-      // Navigate back to onboarding after showing success
+      // Navigate to home after showing success (onboarding now auto-redirects to home with tour)
       setTimeout(() => {
-        if (isOnboarding) {
-          navigate('/onboarding');
-        } else {
-          navigate('/');
-        }
+        navigate('/');
       }, 2000);
       return;
     }
