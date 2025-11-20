@@ -29,6 +29,7 @@ import AlertViewPage from './pages/AlertViewPage';
 import SubscriptionSuccessPage from './pages/SubscriptionSuccessPage';
 import SubscriptionCancelPage from './pages/SubscriptionCancelPage';
 import AboutBestiesPage from './pages/AboutBestiesPage';
+import PageDesignVariations from './pages/PageDesignVariations';
 
 // Context
 import { AuthProvider } from './contexts/AuthContext';
@@ -197,6 +198,10 @@ function App() {
             <Route
               path="/about"
               element={user ? <AboutBestiesPage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/design-variations"
+              element={user ? <PageDesignVariations /> : <Navigate to="/login" />}
             />
 
             {/* Admin-only routes */}
