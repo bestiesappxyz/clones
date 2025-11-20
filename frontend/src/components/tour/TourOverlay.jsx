@@ -19,6 +19,10 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
   useEffect(() => {
     if (!currentStepData || !isVisible) return;
 
+    let retryCount = 0;
+    const maxRetries = 20; // Max 2 seconds of retrying (20 * 100ms)
+    let retryTimeout;
+
     const updateHighlight = () => {
       const element = document.querySelector(currentStepData.element);
       if (element) {
@@ -32,9 +36,17 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
 
         // Calculate tooltip position
         calculateTooltipPosition(rect);
+        retryCount = 0; // Reset retry count on success
       } else {
-        // Element not found, wait a bit and try again
-        setTimeout(updateHighlight, 100);
+        // Element not found - clear old highlight and retry
+        setHighlightRect(null);
+
+        if (retryCount < maxRetries) {
+          retryCount++;
+          retryTimeout = setTimeout(updateHighlight, 100);
+        } else {
+          console.warn(`Tour element not found after ${maxRetries} retries:`, currentStepData.element);
+        }
       }
     };
 
@@ -55,6 +67,9 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
       window.removeEventListener('scroll', updateHighlight);
       if (observerRef.current) {
         observerRef.current.disconnect();
+      }
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
       }
     };
   }, [currentStep, currentStepData, isVisible]);
