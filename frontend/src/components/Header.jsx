@@ -47,12 +47,12 @@ const Header = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2" data-tour="header-logo">
               <span className="font-display text-2xl text-gradient">Besties</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-6" data-tour="header-nav">
               <Link
                 to="/"
                 className={`font-semibold transition-colors ${
@@ -82,7 +82,7 @@ const Header = () => {
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
               {/* Notification Bell */}
-              <NotificationBell />
+              <NotificationBell data-tour="notification-bell" />
 
               {/* Profile Menu */}
               <div className="relative" ref={menuRef}>

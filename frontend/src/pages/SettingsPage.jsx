@@ -314,7 +314,7 @@ const SettingsPage = () => {
         </div>
 
         {/* Notification Preferences */}
-        <div className="card p-6 mb-6">
+        <div className="card p-6 mb-6" data-tour="notification-settings">
           <h2 className="text-xl font-display text-text-primary mb-4">Notifications</h2>
 
           <div className="space-y-4">
@@ -434,7 +434,7 @@ const SettingsPage = () => {
               </div>
             )}
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between" data-tour="sms-settings">
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-text-primary">SMS Alerts</span>
@@ -719,7 +719,7 @@ const SettingsPage = () => {
         </div>
 
         {/* Security - Passcodes */}
-        <div className="card p-6 mb-6">
+        <div className="card p-6 mb-6" data-tour="passcode-section">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xl font-display text-text-primary">Security Passcodes</h2>
             <button

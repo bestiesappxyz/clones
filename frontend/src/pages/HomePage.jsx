@@ -167,7 +167,7 @@ const HomePage = () => {
         {/* Quick Check-In Buttons */}
         {activeCheckIns.length === 0 && (
           <>
-            <QuickButtons onQuickCheckIn={handleQuickCheckIn} />
+            <QuickButtons onQuickCheckIn={handleQuickCheckIn} data-tour="quick-buttons" />
 
             {/* Create Custom Check-In Button - Moved here! */}
             <button
@@ -291,7 +291,7 @@ const HomePage = () => {
 
         {/* Active Check-Ins */}
         {activeCheckIns.length > 0 && (
-          <div className="mb-6 space-y-4">
+          <div className="mb-6 space-y-4" data-tour="active-checkins">
             <h2 className="text-xl font-display text-text-primary">Active Check-Ins</h2>
             {activeCheckIns.map((checkIn) => (
               <CheckInCard key={checkIn.id} checkIn={checkIn} />
@@ -413,7 +413,7 @@ const HomePage = () => {
       </div>
 
       {/* Emergency SOS Button */}
-      <EmergencySOSButton />
+      <EmergencySOSButton data-tour="emergency-sos" />
 
       {/* Bestie Celebration Modal */}
       <BestieCelebrationModal />

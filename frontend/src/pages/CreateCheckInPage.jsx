@@ -629,7 +629,7 @@ const CreateCheckInPage = () => {
           <p className="text-text-secondary">{getSupportiveMessage()}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" data-tour="create-form">
           {/* Location with Map */}
           <div className="card p-0 overflow-hidden">
             <label className="block text-lg font-display text-text-primary p-6 pb-3">
@@ -656,6 +656,7 @@ const CreateCheckInPage = () => {
                   placeholder="Search for a place..."
                   required
                   autoComplete="off"
+                  data-tour="location-input"
                 />
               </div>
 
@@ -723,7 +724,7 @@ const CreateCheckInPage = () => {
                 How long? ⏰
               </label>
 
-              <div className="grid grid-cols-4 gap-3 mb-4">
+              <div className="grid grid-cols-4 gap-3 mb-4" data-tour="duration-buttons">
                 {[15, 30, 60, 120].map((mins) => (
                   <button
                     key={mins}
@@ -765,7 +766,7 @@ const CreateCheckInPage = () => {
           </div>
 
           {/* Select Besties */}
-          <div className="card p-6">
+          <div className="card p-6" data-tour="bestie-selector">
             <label className="block text-lg font-display text-text-primary mb-3">
               Who should we alert? 💜 (1-5)
             </label>
@@ -834,11 +835,12 @@ const CreateCheckInPage = () => {
               onChange={(e) => setNotes(e.target.value)}
               className="input min-h-[100px] resize-none"
               placeholder="Any additional info for your besties..."
+              data-tour="notes-input"
             />
           </div>
 
           {/* Photos */}
-          <div className="card p-6">
+          <div className="card p-6" data-tour="photo-upload">
             <label className="block text-lg font-display text-text-primary mb-3">
               Add Photos (Optional) 📸 ({photoFiles.length}/5)
             </label>
@@ -895,6 +897,7 @@ const CreateCheckInPage = () => {
             type="submit"
             disabled={loading || selectedBesties.length === 0}
             className="w-full btn btn-primary text-lg py-4"
+            data-tour="create-submit"
           >
             {loading ? 'Creating...' : '🛡️ Start Check-In'}
           </button>

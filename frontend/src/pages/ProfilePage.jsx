@@ -465,7 +465,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Photo */}
-          <div className="relative inline-block photo-menu-container">
+          <div className="relative inline-block photo-menu-container" data-tour="profile-avatar">
             <button
               onClick={() => setShowPhotoMenu(!showPhotoMenu)}
               className="w-32 h-32 bg-gradient-primary rounded-full flex items-center justify-center text-white text-5xl font-display overflow-hidden hover:opacity-90 transition-opacity border-4 border-white shadow-xl"
@@ -742,7 +742,7 @@ const ProfilePage = () => {
         )}
 
         {/* Featured Badges with Sticky View All */}
-        <div className="mb-6 relative">
+        <div className="mb-6 relative" data-tour="badges-section">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-display text-text-primary">Featured Badges</h2>
             <button
@@ -789,7 +789,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Enhanced Your Impact - Modern Luxury Design */}
-        <div className="card p-8 mb-6 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+        <div className="card p-8 mb-6 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50" data-tour="profile-stats">
           <h2 className="text-3xl font-display text-gradient mb-6 text-center">Your Impact ✨</h2>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

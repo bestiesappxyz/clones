@@ -508,7 +508,7 @@ const BestiesPage = () => {
             </div>
 
             {/* Activity Feed */}
-            <div>
+            <div data-tour="activity-feed">
               <h2 className="text-lg md:text-xl font-display text-text-primary mb-3">
                 📰 Activity Feed
               </h2>
@@ -720,7 +720,7 @@ const BestiesPage = () => {
             </div>
 
             {/* Besties Grid */}
-            <div>
+            <div data-tour="besties-list">
               <h2 className="text-lg md:text-xl font-display text-text-primary mb-3 md:mb-4">
                 {activeFilter === 'circle' && '💜 Bestie Circle'}
                 {activeFilter === 'all' && 'All Besties'}
@@ -782,6 +782,7 @@ const BestiesPage = () => {
             <button
               onClick={() => setShowAddModal(true)}
               className="btn btn-primary"
+              data-tour="add-bestie-button"
             >
               Add Your First Bestie
             </button>
