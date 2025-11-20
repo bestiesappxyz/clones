@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
@@ -12,6 +12,7 @@ import { useTour } from '../../contexts/TourContext';
 const QuickOnboarding = () => {
   const navigate = useNavigate();
   const { startTour, resetTour } = useTour();
+  const hasRun = useRef(false);
 
   // Safe auth access - handles cases where Firebase isn't configured
   let currentUser = null;
@@ -23,6 +24,10 @@ const QuickOnboarding = () => {
   }
 
   useEffect(() => {
+    // Prevent running multiple times
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     const completeOnboarding = async () => {
       try {
         // Mark onboarding as complete in Firebase (skip in demo mode)
@@ -54,7 +59,8 @@ const QuickOnboarding = () => {
     };
 
     completeOnboarding();
-  }, [currentUser, navigate, startTour, resetTour]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
 
   return (
     <div className="quick-onboarding">

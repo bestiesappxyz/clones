@@ -183,8 +183,9 @@ function App() {
             <Route
               path="/"
               element={
-                // Demo mode: redirect to onboarding
-                !auth ? <Navigate to="/onboarding" /> :
+                // Demo mode: allow access to home page (onboarding redirects here)
+                // Production: require authentication
+                !auth ? <HomePage /> :
                 <ProtectedRoute user={user}><HomePage /></ProtectedRoute>
               }
             />
