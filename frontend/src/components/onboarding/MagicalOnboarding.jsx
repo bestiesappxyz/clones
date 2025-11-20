@@ -11,13 +11,10 @@ import { XPBar } from './SVGGraphics';
 import {
   WelcomeSplash,
   ScenarioSelection,
-  HowItWorks,
-  SafetyNetwork,
   NotificationPermission,
   ProfileSetup,
   AddFirstBestie,
   InteractiveDemo,
-  BadgesIntro,
   FinalCelebration
 } from './slides';
 
@@ -61,17 +58,14 @@ const MagicalOnboarding = () => {
   const particleSystemRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Define all slides
+  // Define all slides - streamlined to show REAL app, not fake explanatory slides
   const slides = [
     { component: WelcomeSplash, name: 'welcome', xpReward: 10 },
     { component: ScenarioSelection, name: 'scenarios', xpReward: 20 },
-    { component: HowItWorks, name: 'how-it-works', xpReward: 15 },
-    { component: SafetyNetwork, name: 'safety-network', xpReward: 15 },
     { component: NotificationPermission, name: 'notifications', xpReward: 25 },
     { component: ProfileSetup, name: 'profile', xpReward: 30 },
     { component: AddFirstBestie, name: 'first-bestie', xpReward: 50 },
     { component: InteractiveDemo, name: 'demo', xpReward: 40 },
-    { component: BadgesIntro, name: 'badges', xpReward: 20 },
     { component: FinalCelebration, name: 'celebration', xpReward: 100 }
   ];
 
@@ -202,9 +196,9 @@ const MagicalOnboarding = () => {
     // Check for milestone achievements
     if (currentSlide === 0) {
       unlockAchievement('first_step', 'First Step', 'Started your safety journey!');
-    } else if (currentSlide === 4) {
+    } else if (currentSlide === 3) {
       unlockAchievement('halfway', 'Halfway There', 'You\'re doing great!');
-    } else if (currentSlide === 6 && userData.firstBestieAdded) {
+    } else if (currentSlide === 4 && userData.firstBestieAdded) {
       unlockAchievement('connected', 'Connected', 'Added your first bestie!');
     }
 
