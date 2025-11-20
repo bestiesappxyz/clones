@@ -15,6 +15,11 @@ const CreateCheckInPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Check if in demo mode from URL params
+  const searchParams = new URLSearchParams(location.search);
+  const isDemoMode = searchParams.get('demo') === 'true';
+  const isOnboarding = searchParams.get('onboarding') === 'true';
+
   const [locationInput, setLocationInput] = useState('');
   const [duration, setDuration] = useState(30);
   const [selectedBesties, setSelectedBesties] = useState([]);
@@ -55,14 +60,25 @@ const CreateCheckInPage = () => {
     return messages[hour % messages.length];
   };
 
-  // Auto-redirect to onboarding if user hasn't completed it
+  // Pre-fill form in demo mode
   useEffect(() => {
-    if (authLoading) return;
+    if (isDemoMode) {
+      setLocationInput('Starbucks on Main Street');
+      setDuration(30);
+      setNotes('First date with Alex from Hinge - meeting for coffee');
+      // Add a demo bestie if needed
+      setSelectedBesties(['demo-bestie-1']);
+    }
+  }, [isDemoMode]);
+
+  // Auto-redirect to onboarding if user hasn't completed it (skip in demo mode)
+  useEffect(() => {
+    if (authLoading || isDemoMode) return;
 
     if (userData && userData.onboardingCompleted === false) {
       navigate('/onboarding');
     }
-  }, [userData, authLoading, navigate]);
+  }, [userData, authLoading, navigate, isDemoMode]);
 
 
   useEffect(() => {
@@ -87,6 +103,16 @@ const CreateCheckInPage = () => {
 
   // Load besties when currentUser is available
   useEffect(() => {
+    // In demo mode, add demo besties
+    if (isDemoMode) {
+      setBesties([
+        { id: 'demo-bestie-1', name: 'Sarah (Demo)', phone: '+1234567890', photoURL: null },
+        { id: 'demo-bestie-2', name: 'Emma (Demo)', phone: '+1234567891', photoURL: null },
+        { id: 'demo-bestie-3', name: 'Olivia (Demo)', phone: '+1234567892', photoURL: null }
+      ]);
+      return;
+    }
+
     if (!currentUser || authLoading) return;
 
     console.group('🔍 Setting up Bestie Circle Listener');
@@ -488,6 +514,29 @@ const CreateCheckInPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // DEMO MODE: Skip validation and show success
+    if (isDemoMode) {
+      setLoading(true);
+
+      // Simulate processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Show success toast
+      toast.success('🎉 Perfect! This is how easy it is to create a check-in!', { duration: 4000 });
+
+      setLoading(false);
+
+      // Navigate back to onboarding after showing success
+      setTimeout(() => {
+        if (isOnboarding) {
+          navigate('/onboarding');
+        } else {
+          navigate('/');
+        }
+      }, 2000);
+      return;
+    }
+
     if (selectedBesties.length === 0) {
       errorTracker.trackFunnelStep('checkin', 'error_no_besties');
       toast.error('Please select at least one bestie from your circle to notify', { duration: 4000 });
@@ -623,10 +672,27 @@ const CreateCheckInPage = () => {
     <div className="min-h-screen bg-pattern">
       <Header />
 
+      {/* Demo Mode Banner */}
+      {isDemoMode && (
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-4 text-center sticky top-16 z-30 shadow-lg">
+          <div className="max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <span className="text-2xl">🎮</span>
+              <h3 className="font-display text-xl">Interactive Demo - Try It Out!</h3>
+            </div>
+            <p className="text-sm opacity-90">
+              This is your REAL check-in page! We've pre-filled it for you. Just explore and click "Start Check-In" when ready!
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-2xl mx-auto p-4 pb-20">
         <div className="mb-6">
           <h1 className="text-3xl font-display text-text-primary mb-2">Create Check-In</h1>
-          <p className="text-text-secondary">{getSupportiveMessage()}</p>
+          <p className="text-text-secondary">
+            {isDemoMode ? "👉 This is exactly what you'll see when creating a real check-in!" : getSupportiveMessage()}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6" data-tour="create-form">
