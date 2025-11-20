@@ -6,6 +6,7 @@ import { auth } from './services/firebase';
 // Pages
 import LoginPage from './pages/LoginPage';
 import OnboardingPage from './pages/OnboardingPage';
+import MagicalOnboarding from './components/onboarding/MagicalOnboarding';
 import HomePage from './pages/HomePage';
 import CreateCheckInPage from './pages/CreateCheckInPage';
 import ProfilePage from './pages/ProfilePage';
@@ -135,6 +136,10 @@ function App() {
             {/* Protected routes */}
             <Route
               path="/onboarding"
+              element={<ProtectedRoute user={user}><MagicalOnboarding /></ProtectedRoute>}
+            />
+            <Route
+              path="/onboarding-old"
               element={<ProtectedRoute user={user}><OnboardingPage /></ProtectedRoute>}
             />
             <Route
