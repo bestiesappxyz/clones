@@ -30,6 +30,12 @@ const QuickOnboarding = () => {
 
     const completeOnboarding = async () => {
       try {
+        console.log('🚀 Starting QuickOnboarding completion...');
+
+        // CRITICAL: Set localStorage FIRST before any async operations
+        localStorage.setItem('demo_onboarding_completed', 'true');
+        console.log('✅ localStorage set: demo_onboarding_completed = true');
+
         // Mark onboarding as complete in Firebase (skip in demo mode)
         if (currentUser && db) {
           const userRef = doc(db, 'users', currentUser.uid);
@@ -37,26 +43,29 @@ const QuickOnboarding = () => {
             onboardingCompleted: true,
             onboardingCompletedAt: new Date()
           });
-          console.log('✅ Onboarding marked as complete');
+          console.log('✅ Onboarding marked as complete in Firebase');
         } else {
           console.log('🎮 Demo mode - skipping Firebase update');
-          // Store in localStorage for demo mode
-          localStorage.setItem('demo_onboarding_completed', 'true');
         }
 
-        // Navigate to home and start the interactive tour
+        // Reset tour state before navigation
         resetTour();
-        navigate('/');
+        console.log('🔄 Tour reset');
 
-        // Start tour after page has loaded and rendered (increased delay for demo mode)
+        // Navigate to home immediately
+        console.log('🏠 Navigating to home page...');
+        navigate('/', { replace: true });
+
+        // Start tour after page has loaded and rendered
         setTimeout(() => {
+          console.log('🎯 Starting interactive tour...');
           startTour();
-          console.log('🎯 Interactive tour started - showing REAL app!');
-        }, 2000); // Increased from 1500ms to 2000ms to ensure DOM is fully ready
+        }, 2000);
       } catch (error) {
-        console.error('Error completing onboarding:', error);
-        // Still navigate to home even if there's an error
-        navigate('/');
+        console.error('❌ Error completing onboarding:', error);
+        // CRITICAL: Still set localStorage and navigate even if there's an error
+        localStorage.setItem('demo_onboarding_completed', 'true');
+        navigate('/', { replace: true });
       }
     };
 
