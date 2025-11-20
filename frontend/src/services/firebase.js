@@ -6,17 +6,46 @@ import { getFunctions } from 'firebase/functions';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import firebaseConfig from '../config/firebase';
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase with error handling for demo mode
+let app = null;
+let auth = null;
+let db = null;
+let storage = null;
+let functions = null;
+let messaging = null;
+let googleProvider = null;
 
-// Initialize services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-export const functions = getFunctions(app);
-export const messaging = getMessaging(app);
-// Auth providers
-export const googleProvider = new GoogleAuthProvider();
+try {
+  // Check if we have valid Firebase config
+  const hasValidConfig = firebaseConfig.apiKey &&
+                         firebaseConfig.projectId &&
+                         firebaseConfig.apiKey !== 'undefined';
+
+  if (hasValidConfig) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+    functions = getFunctions(app);
+
+    // Messaging might not be available in all environments
+    try {
+      messaging = getMessaging(app);
+    } catch (e) {
+      console.log('Firebase Messaging not available');
+    }
+
+    googleProvider = new GoogleAuthProvider();
+    console.log('✅ Firebase initialized successfully');
+  } else {
+    console.log('🎮 Running in DEMO MODE - Firebase not configured');
+  }
+} catch (error) {
+  console.log('🎮 Running in DEMO MODE - Firebase initialization skipped:', error.message);
+}
+
+// Export services (will be null in demo mode)
+export { auth, db, storage, functions, messaging, googleProvider };
 
 // Helper function to parse Firebase auth errors into user-friendly messages
 const getAuthErrorMessage = (error) => {
