@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
@@ -13,6 +13,7 @@ const QuickOnboarding = () => {
   const navigate = useNavigate();
   const { startTour, resetTour } = useTour();
   const hasRun = useRef(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Safe auth access - handles cases where Firebase isn't configured
   let currentUser = null;
@@ -24,9 +25,13 @@ const QuickOnboarding = () => {
   }
 
   useEffect(() => {
-    // Prevent running multiple times
-    if (hasRun.current) return;
+    // CRITICAL: Prevent running multiple times with both ref AND state
+    if (hasRun.current || isProcessing) {
+      console.log('⚠️ QuickOnboarding already running, skipping...');
+      return;
+    }
     hasRun.current = true;
+    setIsProcessing(true);
 
     const completeOnboarding = async () => {
       try {
@@ -56,11 +61,19 @@ const QuickOnboarding = () => {
         console.log('🏠 Navigating to home page...');
         navigate('/', { replace: true });
 
-        // Start tour after page has loaded and rendered
+        // Wait for page to fully load, then start tour
+        // Increased delay to ensure ALL components are rendered
         setTimeout(() => {
-          console.log('🎯 Starting interactive tour...');
-          startTour();
-        }, 2000);
+          console.log('⏰ Waiting for page to be fully interactive...');
+
+          // Additional check: wait for next animation frame to ensure DOM is fully painted
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              console.log('🎯 Starting interactive tour...');
+              startTour();
+            });
+          });
+        }, 3000); // Increased from 2000ms to 3000ms
       } catch (error) {
         console.error('❌ Error completing onboarding:', error);
         // CRITICAL: Still set localStorage and navigate even if there's an error

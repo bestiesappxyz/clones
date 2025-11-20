@@ -23,7 +23,31 @@ export const TourProvider = ({ children }) => {
   }, []);
 
   const startTour = () => {
-    setIsTourActive(true);
+    console.log('🎬 Tour requested to start, checking if page is ready...');
+
+    // Wait for the first tour element to be available before starting
+    const firstElement = '[data-tour="header-logo"]';
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max (50 * 100ms)
+
+    const checkAndStart = () => {
+      const element = document.querySelector(firstElement);
+
+      if (element) {
+        console.log('✅ First tour element found, starting tour!');
+        setIsTourActive(true);
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        console.log(`⏳ Waiting for page to be ready... (attempt ${attempts}/${maxAttempts})`);
+        setTimeout(checkAndStart, 100);
+      } else {
+        console.error('❌ Tour could not start: first element not found after 5 seconds');
+        // Start anyway to show the user something
+        setIsTourActive(true);
+      }
+    };
+
+    checkAndStart();
   };
 
   const completeTour = () => {
