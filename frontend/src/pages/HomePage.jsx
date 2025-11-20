@@ -106,7 +106,14 @@ const HomePage = () => {
   }, [currentUser, authLoading, navigate]);
 
   useEffect(() => {
-    if (!currentUser) return;
+    // CRITICAL: In demo mode (no user), set loading to false immediately
+    if (!currentUser) {
+      console.log('🎮 Demo mode: No user, setting loading to false');
+      setLoading(false);
+      setActiveCheckIns([]);
+      setTemplates([]);
+      return;
+    }
 
     // Listen to active check-ins
     const checkInsQuery = query(
@@ -116,7 +123,7 @@ const HomePage = () => {
     );
 
     const unsubscribeCheckIns = onSnapshot(
-      checkInsQuery, 
+      checkInsQuery,
       (snapshot) => {
         const checkIns = [];
         snapshot.forEach((doc) => {
@@ -139,7 +146,7 @@ const HomePage = () => {
     );
 
     const unsubscribeTemplates = onSnapshot(
-      templatesQuery, 
+      templatesQuery,
       (snapshot) => {
         const temps = [];
         snapshot.forEach((doc) => {
