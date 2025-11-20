@@ -5,7 +5,7 @@ import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import useOptimisticUpdate from '../hooks/useOptimisticUpdate';
 
-const EmergencySOSButton = () => {
+const EmergencySOSButton = (props) => {
   const { currentUser, userData } = useAuth();
   const [activating, setActivating] = useState(false);
   const [countdown, setCountdown] = useState(null);
@@ -219,6 +219,7 @@ const EmergencySOSButton = () => {
       onClick={handleSOSPress}
       className="fixed bottom-24 right-6 w-20 h-20 bg-danger text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-110 active:scale-95 flex flex-col items-center justify-center transition-all duration-200 z-40 animate-pulse"
       title="Emergency SOS - Hold for 5 seconds"
+      {...props}
     >
       <span className="text-3xl">🆘</span>
       <span className="text-xs font-bold">SOS</span>

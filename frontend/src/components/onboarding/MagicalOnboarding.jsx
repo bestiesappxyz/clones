@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTour } from '../../contexts/TourContext';
 import { ParticleSystem, transitionEffects } from '../../utils/magicalAnimations';
 import { XPBar } from './SVGGraphics';
 
@@ -10,13 +11,10 @@ import { XPBar } from './SVGGraphics';
 import {
   WelcomeSplash,
   ScenarioSelection,
-  HowItWorks,
-  SafetyNetwork,
   NotificationPermission,
   ProfileSetup,
   AddFirstBestie,
   InteractiveDemo,
-  BadgesIntro,
   FinalCelebration
 } from './slides';
 
@@ -36,6 +34,7 @@ const MagicalOnboarding = () => {
   }
 
   const navigate = useNavigate();
+  const { startTour, resetTour } = useTour();
 
   // Demo mode detection - runs demo if no Firebase or no user
   const isDemoMode = !currentUser || !db;
@@ -59,17 +58,14 @@ const MagicalOnboarding = () => {
   const particleSystemRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Define all slides
+  // Define all slides - streamlined to show REAL app, not fake explanatory slides
   const slides = [
     { component: WelcomeSplash, name: 'welcome', xpReward: 10 },
     { component: ScenarioSelection, name: 'scenarios', xpReward: 20 },
-    { component: HowItWorks, name: 'how-it-works', xpReward: 15 },
-    { component: SafetyNetwork, name: 'safety-network', xpReward: 15 },
     { component: NotificationPermission, name: 'notifications', xpReward: 25 },
     { component: ProfileSetup, name: 'profile', xpReward: 30 },
     { component: AddFirstBestie, name: 'first-bestie', xpReward: 50 },
     { component: InteractiveDemo, name: 'demo', xpReward: 40 },
-    { component: BadgesIntro, name: 'badges', xpReward: 20 },
     { component: FinalCelebration, name: 'celebration', xpReward: 100 }
   ];
 
@@ -200,9 +196,9 @@ const MagicalOnboarding = () => {
     // Check for milestone achievements
     if (currentSlide === 0) {
       unlockAchievement('first_step', 'First Step', 'Started your safety journey!');
-    } else if (currentSlide === 4) {
+    } else if (currentSlide === 3) {
       unlockAchievement('halfway', 'Halfway There', 'You\'re doing great!');
-    } else if (currentSlide === 6 && userData.firstBestieAdded) {
+    } else if (currentSlide === 4 && userData.firstBestieAdded) {
       unlockAchievement('connected', 'Connected', 'Added your first bestie!');
     }
 
@@ -320,19 +316,27 @@ const MagicalOnboarding = () => {
       // Award final achievement
       unlockAchievement('onboarding_master', 'Onboarding Master', 'Completed the magical journey!');
 
-      // Navigate to home after celebration
+      // Start the interactive tour after a short delay to show the real app!
       setTimeout(() => {
-        if (isDemoMode) {
-          // In demo mode, show a message instead of navigating
-          alert('🎉 Onboarding Complete!\n\nThis was a demo. In production, you would now be logged in and ready to use the app!');
-        } else {
-          navigate('/');
-        }
-      }, 5000);
+        resetTour(); // Reset tour state
+        navigate('/'); // Navigate to home
+        setTimeout(() => {
+          startTour(); // Start the interactive tour showing the REAL app
+        }, 500);
+      }, 1500);
 
     } catch (error) {
       console.error('Error completing onboarding:', error);
     }
+  };
+
+  // Skip onboarding and go straight to tour
+  const skipToApp = () => {
+    resetTour();
+    navigate('/');
+    setTimeout(() => {
+      startTour(); // Start the interactive tour
+    }, 500);
   };
 
   return (
@@ -450,6 +454,15 @@ const MagicalOnboarding = () => {
           ← Back
         </button>
       )}
+
+      {/* Skip to App Button - Always visible */}
+      <button
+        className="onboarding-skip-btn"
+        onClick={skipToApp}
+        disabled={isTransitioning}
+      >
+        Skip to App →
+      </button>
 
       <style jsx>{`
         .magical-onboarding {
@@ -609,6 +622,33 @@ const MagicalOnboarding = () => {
         }
 
         .onboarding-back-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .onboarding-skip-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          background: white;
+          border: 2px solid #FF69B4;
+          color: #FF69B4;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-weight: 600;
+          font-family: 'Quicksand', sans-serif;
+          cursor: pointer;
+          transition: all 300ms;
+          z-index: 1000;
+        }
+
+        .onboarding-skip-btn:hover {
+          background: #FF69B4;
+          color: white;
+          transform: translateX(5px);
+        }
+
+        .onboarding-skip-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
         }

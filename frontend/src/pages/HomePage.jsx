@@ -58,10 +58,16 @@ const HomePage = () => {
     // Wait for auth to finish loading before checking
     if (authLoading) return;
 
-    if (userData && userData.onboardingCompleted === false) {
+    // Check if onboarding is completed (either in userData or localStorage for demo mode)
+    const demoOnboardingCompleted = localStorage.getItem('demo_onboarding_completed') === 'true';
+
+    if (userData && userData.onboardingCompleted === false && !demoOnboardingCompleted) {
+      navigate('/onboarding');
+    } else if (!currentUser && !demoOnboardingCompleted) {
+      // Demo mode: no user, check localStorage
       navigate('/onboarding');
     }
-  }, [userData, authLoading, navigate]);
+  }, [userData, authLoading, navigate, currentUser]);
 
   // Redirect to login if there's a pending invite and user is not logged in
   useEffect(() => {
@@ -167,7 +173,7 @@ const HomePage = () => {
         {/* Quick Check-In Buttons */}
         {activeCheckIns.length === 0 && (
           <>
-            <QuickButtons onQuickCheckIn={handleQuickCheckIn} />
+            <QuickButtons onQuickCheckIn={handleQuickCheckIn} data-tour="quick-buttons" />
 
             {/* Create Custom Check-In Button - Moved here! */}
             <button
@@ -291,7 +297,7 @@ const HomePage = () => {
 
         {/* Active Check-Ins */}
         {activeCheckIns.length > 0 && (
-          <div className="mb-6 space-y-4">
+          <div className="mb-6 space-y-4" data-tour="active-checkins">
             <h2 className="text-xl font-display text-text-primary">Active Check-Ins</h2>
             {activeCheckIns.map((checkIn) => (
               <CheckInCard key={checkIn.id} checkIn={checkIn} />
@@ -413,7 +419,7 @@ const HomePage = () => {
       </div>
 
       {/* Emergency SOS Button */}
-      <EmergencySOSButton />
+      <EmergencySOSButton data-tour="emergency-sos" />
 
       {/* Bestie Celebration Modal */}
       <BestieCelebrationModal />

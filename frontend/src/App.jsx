@@ -6,7 +6,7 @@ import { auth } from './services/firebase';
 // Pages
 import LoginPage from './pages/LoginPage';
 import OnboardingPage from './pages/OnboardingPage';
-import MagicalOnboarding from './components/onboarding/MagicalOnboarding';
+import QuickOnboarding from './components/onboarding/QuickOnboarding';
 import HomePage from './pages/HomePage';
 import CreateCheckInPage from './pages/CreateCheckInPage';
 import ProfilePage from './pages/ProfilePage';
@@ -34,14 +34,19 @@ import PageDesignVariations from './pages/PageDesignVariations';
 // Context
 import { AuthProvider } from './contexts/AuthContext';
 import { DarkModeProvider } from './contexts/DarkModeContext';
+import { TourProvider, useTour } from './contexts/TourContext';
 
 // Components
 import ErrorBoundary from './components/ErrorBoundary';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
+import TourOverlay from './components/tour/TourOverlay';
 
 // Services
 import errorTracker from './services/errorTracking';
+
+// Tour configuration
+import { tourSteps } from './components/tour/tourSteps';
 
 // Route tracker component
 function RouteTracker() {
@@ -52,6 +57,21 @@ function RouteTracker() {
   }, [location]);
 
   return null;
+}
+
+// Tour manager component - handles showing the tour overlay
+function TourManager() {
+  const { isTourActive, completeTour, skipTour } = useTour();
+
+  if (!isTourActive) return null;
+
+  return (
+    <TourOverlay
+      steps={tourSteps}
+      onComplete={completeTour}
+      onSkip={skipTour}
+    />
+  );
 }
 
 // Custom redirect component that preserves invite parameter
@@ -110,15 +130,22 @@ function App() {
     <ErrorBoundary>
       <DarkModeProvider>
         <AuthProvider>
-          <Router>
-            <RouteTracker />
-            <ScrollToTop />
-            <div className="App">
-              <Routes>
+          <TourProvider>
+            <Router>
+              <RouteTracker />
+              <ScrollToTop />
+              <TourManager />
+              <div className="App">
+                <Routes>
             {/* Public routes */}
             <Route
               path="/login"
-              element={user ? <Navigate to="/" /> : <LoginPage />}
+              element={
+                // Demo mode: redirect to onboarding instead of login
+                !auth ? <Navigate to="/onboarding" /> :
+                user ? <Navigate to="/" /> :
+                <LoginPage />
+              }
             />
             <Route
               path="/privacy"
@@ -144,7 +171,11 @@ function App() {
             {/* Protected routes */}
             <Route
               path="/onboarding"
-              element={<ProtectedRoute user={user}><MagicalOnboarding /></ProtectedRoute>}
+              element={
+                // Demo mode: allow access without user - redirects to home and starts tour
+                !auth ? <QuickOnboarding /> :
+                <ProtectedRoute user={user}><QuickOnboarding /></ProtectedRoute>
+              }
             />
             <Route
               path="/onboarding-old"
@@ -152,7 +183,12 @@ function App() {
             />
             <Route
               path="/"
-              element={<ProtectedRoute user={user}><HomePage /></ProtectedRoute>}
+              element={
+                // Demo mode: allow access to home page (onboarding redirects here)
+                // Production: require authentication
+                !auth ? <HomePage /> :
+                <ProtectedRoute user={user}><HomePage /></ProtectedRoute>
+              }
             />
             <Route 
               path="/create" 
@@ -256,6 +292,7 @@ function App() {
           />
         </div>
       </Router>
+    </TourProvider>
     </AuthProvider>
     </DarkModeProvider>
     </ErrorBoundary>

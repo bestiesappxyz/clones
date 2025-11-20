@@ -39,10 +39,10 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
     <div className="safety-network">
       <div className="network-content">
         <h2 className="network-title animate-slide-up">
-          Your Safety Network 💝
+          Build your safety circle 💝
         </h2>
         <p className="network-subtitle animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          You + Your Besties = Unstoppable
+          Stronger together, always connected
         </p>
 
         {/* Main Illustration */}
@@ -79,25 +79,25 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
         <div className="feature-cards">
           <div className="feature-card animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <div className="feature-card-icon">🎯</div>
-            <div className="feature-card-title">Featured Circle</div>
+            <div className="feature-card-title">Your Inner Circle</div>
             <div className="feature-card-text">
-              Choose 5 besties who get notified first
+              Pick the people who always have your back
             </div>
           </div>
 
           <div className="feature-card animate-slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="feature-card-icon">🔔</div>
-            <div className="feature-card-title">Smart Alerts</div>
+            <div className="feature-card-title">They've Got You</div>
             <div className="feature-card-text">
-              They're alerted only if you miss your check-in
+              Notified automatically if you don't check in
             </div>
           </div>
 
           <div className="feature-card animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <div className="feature-card-icon">🗺️</div>
-            <div className="feature-card-title">Location Sharing</div>
+            <div className="feature-card-title">Stay Connected</div>
             <div className="feature-card-text">
-              Your last known location is shared if needed
+              Share your location on your terms, when you want
             </div>
           </div>
         </div>
@@ -113,62 +113,71 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
 
         {/* Continue Button */}
         <button className="btn-continue flying-element" onClick={handleContinue}>
-          Love it! Next 💜
+          I'm ready to build my circle
+          <span className="btn-arrow">→</span>
         </button>
       </div>
 
       <style jsx>{`
         .safety-network {
           width: 100%;
-          height: 100%;
+          min-height: 100vh;
+          min-height: 100dvh;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
           padding: 20px;
+          padding-top: 40px;
+          padding-bottom: 40px;
+          overflow-y: auto;
         }
 
         .network-content {
           max-width: 900px;
           width: 100%;
+          margin: 0 auto;
         }
 
         .network-title {
           font-family: 'Fredoka One', cursive;
-          font-size: 36px;
+          font-size: clamp(26px, 7vw, 36px);
           color: #FF1493;
           text-align: center;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
+          line-height: 1.2;
         }
 
         .network-subtitle {
           font-family: 'Quicksand', sans-serif;
-          font-size: 20px;
+          font-size: clamp(16px, 4vw, 19px);
           color: #9370DB;
           text-align: center;
-          margin-bottom: 40px;
+          margin-bottom: 28px;
           font-weight: 600;
+          line-height: 1.4;
         }
 
         .network-illustration {
           position: relative;
           display: flex;
           justify-content: center;
-          margin-bottom: 40px;
-          min-height: 350px;
+          margin-bottom: 28px;
+          min-height: 240px;
         }
 
         .info-bubble {
           position: absolute;
           background: white;
-          border-radius: 20px;
-          padding: 12px 18px;
-          box-shadow: 0 8px 25px rgba(255, 105, 180, 0.25);
+          border-radius: 14px;
+          padding: 10px 14px;
+          box-shadow: 0 6px 20px rgba(255, 105, 180, 0.2);
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 8px;
           opacity: 0;
           transform: scale(0.5);
           transition: all 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          z-index: 2;
         }
 
         .info-bubble.show {
@@ -177,7 +186,7 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
         }
 
         .bubble-1 {
-          top: 10%;
+          top: 5%;
           left: 50%;
           transform: translateX(-50%) scale(0.5);
         }
@@ -187,17 +196,19 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
         }
 
         .bubble-2 {
-          top: 40%;
-          right: 5%;
+          top: 35%;
+          right: 2%;
         }
 
         .bubble-3 {
-          bottom: 20%;
-          left: 5%;
+          bottom: 15%;
+          left: 2%;
         }
 
         .bubble-icon {
-          font-size: 28px;
+          font-size: 22px;
+          line-height: 1;
+          flex-shrink: 0;
         }
 
         .bubble-text {
@@ -208,106 +219,207 @@ const SafetyNetwork = ({ onNext, particleSystem, isActive }) => {
 
         .bubble-text strong {
           font-family: 'Fredoka One', cursive;
-          font-size: 14px;
+          font-size: clamp(11px, 2.5vw, 13px);
           color: #FF1493;
+          line-height: 1.2;
         }
 
         .bubble-text span {
           font-family: 'Quicksand', sans-serif;
-          font-size: 12px;
+          font-size: clamp(10px, 2.3vw, 11px);
           color: #666;
+          line-height: 1.2;
         }
 
         .feature-cards {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 20px;
-          margin-bottom: 30px;
+          grid-template-columns: 1fr;
+          gap: 14px;
+          margin-bottom: 20px;
         }
 
         .feature-card {
           background: linear-gradient(135deg, #FFF5F7, #FFE8F0);
           border: 2px solid #FFB6C1;
-          border-radius: 15px;
-          padding: 20px;
+          border-radius: 14px;
+          padding: 18px;
           text-align: center;
           transition: all 300ms;
+          -webkit-tap-highlight-color: transparent;
         }
 
-        .feature-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(255, 105, 180, 0.25);
+        .feature-card:active {
+          transform: scale(0.98);
         }
 
         .feature-card-icon {
-          font-size: 36px;
-          margin-bottom: 10px;
+          font-size: 32px;
+          margin-bottom: 8px;
+          line-height: 1;
         }
 
         .feature-card-title {
           font-family: 'Fredoka One', cursive;
-          font-size: 16px;
+          font-size: clamp(15px, 3.5vw, 16px);
           color: #FF1493;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
+          line-height: 1.2;
         }
 
         .feature-card-text {
           font-family: 'Quicksand', sans-serif;
-          font-size: 13px;
+          font-size: clamp(13px, 3vw, 14px);
           color: #666;
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
         .trust-badge {
           background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
           border: 2px solid #4CAF50;
-          border-radius: 20px;
-          padding: 20px;
+          border-radius: 16px;
+          padding: 16px;
           display: flex;
           align-items: center;
-          gap: 20px;
-          margin-bottom: 30px;
+          gap: 14px;
+          margin-bottom: 24px;
         }
 
         .trust-icon {
-          font-size: 48px;
+          font-size: 40px;
+          flex-shrink: 0;
+          line-height: 1;
         }
 
         .trust-text strong {
           font-family: 'Fredoka One', cursive;
-          font-size: 18px;
+          font-size: clamp(15px, 3.5vw, 17px);
           color: #4CAF50;
           display: block;
-          margin-bottom: 5px;
+          margin-bottom: 4px;
+          line-height: 1.2;
         }
 
         .trust-text p {
           font-family: 'Quicksand', sans-serif;
-          font-size: 14px;
+          font-size: clamp(12px, 3vw, 13px);
           color: #666;
           margin: 0;
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
         .btn-continue {
           background: linear-gradient(135deg, #9370DB 0%, #FF69B4 100%);
           color: white;
           border: none;
-          padding: 18px 40px;
+          padding: 16px 28px;
           border-radius: 50px;
-          font-size: 18px;
+          font-size: clamp(14px, 3.5vw, 16px);
           font-weight: bold;
           font-family: 'Quicksand', sans-serif;
           cursor: pointer;
           box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
           transition: all 300ms;
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
           margin: 0 auto;
+          width: 100%;
+          max-width: 340px;
+          min-height: 52px;
+          -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-continue:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
+        .btn-continue:active {
+          transform: translateY(2px) scale(0.98);
+          box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        .btn-arrow {
+          font-size: 18px;
+          transition: transform 300ms;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 600px) {
+          .network-illustration {
+            min-height: 320px;
+          }
+
+          .bubble-icon {
+            font-size: 26px;
+          }
+
+          .feature-cards {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+          }
+
+          .feature-card-icon {
+            font-size: 36px;
+          }
+
+          .trust-badge {
+            padding: 20px;
+            gap: 18px;
+          }
+
+          .trust-icon {
+            font-size: 46px;
+          }
+        }
+
+        /* Desktop */
+        @media (min-width: 900px) {
+          .network-illustration {
+            min-height: 350px;
+          }
+
+          .bubble-icon {
+            font-size: 28px;
+          }
+
+          .bubble-2 {
+            right: 5%;
+          }
+
+          .bubble-3 {
+            left: 5%;
+          }
+
+          .feature-cards {
+            gap: 20px;
+            margin-bottom: 30px;
+          }
+
+          .feature-card {
+            padding: 20px;
+          }
+
+          .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.25);
+          }
+
+          .trust-icon {
+            font-size: 48px;
+          }
+
+          .btn-continue {
+            width: auto;
+            min-width: 300px;
+            padding: 18px 36px;
+          }
+
+          .btn-continue:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
+          }
+
+          .btn-continue:hover .btn-arrow {
+            transform: translateX(4px);
+          }
         }
       `}</style>
     </div>
