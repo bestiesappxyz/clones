@@ -117,7 +117,12 @@ function App() {
             {/* Public routes */}
             <Route
               path="/login"
-              element={user ? <Navigate to="/" /> : <LoginPage />}
+              element={
+                // Demo mode: redirect to onboarding instead of login
+                !auth ? <Navigate to="/onboarding" /> :
+                user ? <Navigate to="/" /> :
+                <LoginPage />
+              }
             />
             <Route
               path="/privacy"
@@ -143,7 +148,11 @@ function App() {
             {/* Protected routes */}
             <Route
               path="/onboarding"
-              element={<ProtectedRoute user={user}><MagicalOnboarding /></ProtectedRoute>}
+              element={
+                // Demo mode: allow access without user
+                !auth ? <MagicalOnboarding /> :
+                <ProtectedRoute user={user}><MagicalOnboarding /></ProtectedRoute>
+              }
             />
             <Route
               path="/onboarding-old"
@@ -151,7 +160,11 @@ function App() {
             />
             <Route
               path="/"
-              element={<ProtectedRoute user={user}><HomePage /></ProtectedRoute>}
+              element={
+                // Demo mode: redirect to onboarding
+                !auth ? <Navigate to="/onboarding" /> :
+                <ProtectedRoute user={user}><HomePage /></ProtectedRoute>
+              }
             />
             <Route 
               path="/create" 
