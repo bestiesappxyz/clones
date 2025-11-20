@@ -163,6 +163,12 @@ class ErrorTracker {
   }
 
   async sendToFirestore(collectionName, data) {
+    // Skip in demo mode
+    if (!db) {
+      this.storeLocally(collectionName, data);
+      return;
+    }
+
     try {
       await addDoc(collection(db, collectionName), {
         ...data,
