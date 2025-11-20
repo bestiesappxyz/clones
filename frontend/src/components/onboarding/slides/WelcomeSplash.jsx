@@ -1,57 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { AnimatedHeart } from '../SVGGraphics';
-import { textAnimations } from '../../../utils/magicalAnimations';
 
-const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
-  const titleRef = useRef(null);
-  const subtitleRef = useRef(null);
-  const messageRef = useRef(null);
+const WelcomeSplash = ({ onNext, particleSystem }) => {
   const [heartClickCount, setHeartClickCount] = useState(0);
-
-  useEffect(() => {
-    if (isActive && titleRef.current && subtitleRef.current && messageRef.current) {
-      // Typewriter effect for title
-      const titleTimer = setTimeout(() => {
-        if (titleRef.current) {
-          textAnimations.typewriter(titleRef.current, 'Hey bestie! 💕', 80);
-        }
-      }, 500);
-
-      // Fade in subtitle
-      const subtitleTimer = setTimeout(() => {
-        if (subtitleRef.current) {
-          subtitleRef.current.style.opacity = '1';
-        }
-      }, 2500);
-
-      // Fade in message
-      const messageTimer = setTimeout(() => {
-        if (messageRef.current) {
-          messageRef.current.style.opacity = '1';
-        }
-      }, 4000);
-
-      // Create heart particles
-      let heartInterval;
-      if (particleSystem) {
-        heartInterval = setInterval(() => {
-          const x = Math.random() * window.innerWidth;
-          particleSystem.burst(x, window.innerHeight, 2, 'heart');
-          particleSystem.start();
-        }, 400);
-      }
-
-      // Cleanup function to clear all timers and intervals
-      return () => {
-        clearTimeout(titleTimer);
-        clearTimeout(subtitleTimer);
-        clearTimeout(messageTimer);
-        if (heartInterval) {
-          clearInterval(heartInterval);
-        }
-      };
-    }
-  }, [isActive, particleSystem]);
 
   // Easter egg: Click the hero heart for surprises!
   const handleHeartClick = () => {
@@ -143,30 +94,18 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           )}
         </div>
 
-        {/* Title with Typewriter */}
-        <h1
-          ref={titleRef}
-          className="welcome-title"
-          style={{ minHeight: '50px' }}
-        >
-          {/* Text will be filled by typewriter */}
+        {/* Title - No typewriter, just show it */}
+        <h1 className="welcome-title animate-slide-up">
+          Hey bestie! 💕
         </h1>
 
         {/* Subtitle */}
-        <p
-          ref={subtitleRef}
-          className="welcome-subtitle"
-          style={{ opacity: 0, transition: 'opacity 1s' }}
-        >
+        <p className="welcome-subtitle animate-slide-up" style={{ animationDelay: '0.1s' }}>
           We've got your back
         </p>
 
         {/* Warm welcome message */}
-        <p
-          ref={messageRef}
-          className="welcome-message"
-          style={{ opacity: 0, transition: 'opacity 1s' }}
-        >
+        <p className="welcome-message animate-slide-up" style={{ animationDelay: '0.2s' }}>
           You deserve to feel safe, supported, and empowered — no matter where you go or who you're with.
           Let's build your safety circle together. 🌸
         </p>
