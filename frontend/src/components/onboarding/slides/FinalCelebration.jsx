@@ -11,26 +11,36 @@ const FinalCelebration = ({ onComplete, particleSystem, userData, awardXP, unloc
   });
 
   useEffect(() => {
-    // Final XP award and achievement
+    // Final XP award and achievement - only run once on mount
     if (stage === 0) {
       unlockAchievement('onboarding_complete', 'Onboarding Master', 'Completed the magical journey!');
       awardXP(100);
 
       // Continuous confetti for celebration
+      let interval;
       if (particleSystem) {
-        const interval = setInterval(() => {
+        interval = setInterval(() => {
           const types = ['heart', 'star', 'sparkle', 'circle'];
           const x = Math.random() * window.innerWidth;
           particleSystem.burst(x, 0, 10, types[Math.floor(Math.random() * types.length)]);
           particleSystem.start();
         }, 200);
-
-        setTimeout(() => clearInterval(interval), 5000);
       }
 
-      // Progress through stages
-      setTimeout(() => setStage(1), 1000);
-      setTimeout(() => setStage(2), 3000);
+      // Progress through stages with timers
+      const stage1Timer = setTimeout(() => setStage(1), 1000);
+      const stage2Timer = setTimeout(() => setStage(2), 3000);
+      const confettiTimer = setTimeout(() => {
+        if (interval) clearInterval(interval);
+      }, 5000);
+
+      // Cleanup function to clear all timers
+      return () => {
+        if (interval) clearInterval(interval);
+        clearTimeout(stage1Timer);
+        clearTimeout(stage2Timer);
+        clearTimeout(confettiTimer);
+      };
     }
   }, [stage, particleSystem, unlockAchievement, awardXP]);
 

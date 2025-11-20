@@ -1,6 +1,6 @@
 import React from 'react';
 
-const QuickButtons = ({ onQuickCheckIn }) => {
+const QuickButtons = ({ onQuickCheckIn, ...props }) => {
   const quickOptions = [
     { emoji: '☕', label: 'Coffee Date', minutes: 30, color: 'from-amber-400 to-orange-500' },
     { emoji: '🍽️', label: 'Dinner', minutes: 60, color: 'from-rose-400 to-pink-500' },
@@ -9,7 +9,7 @@ const QuickButtons = ({ onQuickCheckIn }) => {
   ];
 
   return (
-    <div className="mb-6">
+    <div className="mb-6" {...props}>
       <h2 className="text-xl font-display text-text-primary mb-4">Quick Check-In</h2>
       <div className="grid grid-cols-2 gap-4">
         {quickOptions.map((option) => (

@@ -4,7 +4,7 @@ import { db } from '../services/firebase';
 import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { useAuth } from '../contexts/AuthContext';
 
-const NotificationBell = () => {
+const NotificationBell = (props) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -126,7 +126,7 @@ const NotificationBell = () => {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef} {...props}>
       {/* Bell Button */}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
