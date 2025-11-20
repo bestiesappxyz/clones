@@ -104,10 +104,14 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
         // Position right
         top = elementRect.top + (elementRect.height / 2) - (tooltipHeight / 2);
         left = elementRect.right + 20;
-      } else {
+      } else if (spaceLeft > tooltipWidth + 20) {
         // Position left
         top = elementRect.top + (elementRect.height / 2) - (tooltipHeight / 2);
         left = elementRect.left - tooltipWidth - 20;
+      } else {
+        // Fallback: center on screen
+        top = window.innerHeight / 2 - tooltipHeight / 2;
+        left = window.innerWidth / 2 - tooltipWidth / 2;
       }
 
       // Keep within viewport bounds

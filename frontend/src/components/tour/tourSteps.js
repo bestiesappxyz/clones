@@ -1,134 +1,138 @@
 /**
  * Complete Interactive Tour Configuration
  * Shows users the ACTUAL app interface step by step
+ * Enhanced with WHY not just WHERE - explaining the purpose and value
  */
 
 export const tourSteps = [
-  // WELCOME & DASHBOARD
+  // WELCOME & INTRODUCTION
   {
     path: '/',
     element: '[data-tour="header-logo"]',
     title: 'Welcome to Besties! 💕',
-    description: 'Let me show you around! This quick tour will help you understand how everything works. You can skip anytime.',
+    description: 'I\'m going to show you around your new safety companion! This quick interactive tour will walk you through the REAL app - every button, every feature, and why it matters for your safety.',
     emoji: '👋',
-    tip: 'This tour shows you the real app - not just pictures!'
+    tip: 'You can skip any time or use the back button to review previous steps'
   },
 
-  // HOMEPAGE - ACTIVE CHECK-INS AREA
+  // HOMEPAGE - OVERVIEW
   {
     path: '/',
-    element: '[data-tour="active-checkins"]', // We'll add this data attribute
+    element: '[data-tour="header-nav"]',
     title: 'Your Safety Dashboard',
-    description: 'This is your home base! Here you\'ll see all your active check-ins, with countdown timers and quick actions.',
+    description: 'This is your home base! The navigation makes it easy to jump between Home (where you manage check-ins), Besties (your safety circle), and Profile (your personal settings and achievements).',
     emoji: '🏠',
-    tip: 'Active check-ins show up here in real-time with countdown timers'
+    tip: 'Everything is designed to be just one tap away when you need it'
   },
 
-  // QUICK BUTTONS
+  // QUICK CHECK-IN BUTTONS
   {
     path: '/',
     element: '[data-tour="quick-buttons"]',
-    title: 'Quick Check-In Buttons',
-    description: 'Need to start a check-in fast? These buttons let you create a 15, 30, or 60 minute check-in instantly!',
+    title: 'Quick Safety Check-Ins',
+    description: 'Going on a coffee date, dinner, or night out? These preset buttons let you start a safety check-in instantly! Just tap one and your chosen besties will be quietly watching out for you.',
     emoji: '⚡',
-    tip: 'Perfect when you\'re in a hurry and just need quick safety monitoring'
+    tip: 'Perfect for those "just in case" moments when you want someone to know where you are'
   },
 
-  // EMERGENCY SOS BUTTON
+  // EMERGENCY SOS
   {
     path: '/',
     element: '[data-tour="emergency-sos"]',
     title: 'Emergency SOS Button',
-    description: 'If you ever feel unsafe, press and hold this button. After 5 seconds, all your besties will be alerted with your location.',
+    description: 'Your panic button. If you ever feel unsafe, press and hold this for 5 seconds. It immediately alerts ALL your besties with your exact location, even if you don\'t have an active check-in.',
     emoji: '🆘',
-    tip: 'You can cancel within 10 seconds if pressed by accident'
+    tip: 'This works 24/7 - you don\'t need an active check-in to use it. You have 10 seconds to cancel if pressed accidentally'
   },
 
-  // CREATE CHECK-IN - NAVIGATION
+  // CREATE CHECK-IN - INTRODUCTION
   {
     path: '/create',
     element: '[data-tour="create-form"]',
-    title: 'Creating a Check-In',
-    description: 'Here\'s where the magic happens! Let\'s walk through creating your first check-in step by step.',
-    emoji: '✨'
+    title: 'Creating a Custom Check-In',
+    description: 'Here\'s where you set up personalized check-ins! Think of this as telling your besties: "I\'m going here, I\'ll be back by this time, and if I don\'t check in, please reach out."',
+    emoji: '✨',
+    tip: 'Custom check-ins give you full control over timing, location sharing, and who gets notified'
   },
 
-  // LOCATION INPUT
+  // LOCATION WITH MAP
   {
     path: '/create',
     element: '[data-tour="location-input"]',
     title: 'Where Are You Going?',
-    description: 'Type in your destination - it could be a restaurant, friend\'s house, or just "walking home". Your location helps your besties know where you are.',
+    description: 'Type your destination - a restaurant, friend\'s address, "walking home", anything! The map shows your location in real-time, and your besties will see exactly where you are if they need to find you.',
     emoji: '📍',
-    tip: 'The app uses Google Maps to find and save your location'
+    tip: 'Being specific helps! Instead of "downtown", try "Mario\'s Pizza on 5th Street"'
   },
 
-  // DURATION SELECTION
+  // DURATION
   {
     path: '/create',
     element: '[data-tour="duration-buttons"]',
-    title: 'How Long Will You Be?',
-    description: 'Choose how long until you need to check in as safe. You\'ll get friendly reminders before time runs out.',
+    title: 'Set Your Safety Window',
+    description: 'How long will you be out? Choose 15 mins for a quick errand, 60 mins for dinner, or 2 hours for a movie. We\'ll send you gentle reminders at 10, 5, and 1 minute before time\'s up.',
     emoji: '⏰',
-    tip: 'Can\'t decide? 30 minutes is perfect for most situations'
+    tip: 'Better to overestimate! You can always check in early, but checking in late triggers an alert'
   },
 
   // BESTIE SELECTION
   {
     path: '/create',
     element: '[data-tour="bestie-selector"]',
-    title: 'Who Should Know?',
-    description: 'Select which besties should be notified if you don\'t check in. They\'ll only get an alert if something seems wrong.',
-    emoji: '👥',
-    tip: 'You can select multiple besties for extra safety'
+    title: 'Choose Your Safety Net',
+    description: 'Select 1-5 besties to watch over you. They\'ll ONLY get alerted if you don\'t check in on time - otherwise they won\'t even know you started a check-in. Perfect balance of safety and privacy!',
+    emoji: '💜',
+    tip: 'Pick people who are usually available and will actually respond if something seems wrong'
+  },
+
+  // NOTES
+  {
+    path: '/create',
+    element: '[data-tour="notes-input"]',
+    title: 'Add Context (Super Important!)',
+    description: 'This is your "just in case" note. Add details like "First date with Alex from Hinge - meeting at Starbucks" or "Going to John\'s house party, might be loud." Helps your besties know what\'s normal vs concerning.',
+    emoji: '📝',
+    tip: 'Include names, meeting spots, and any "if X happens, it\'s fine" context'
   },
 
   // PHOTO UPLOAD
   {
     path: '/create',
     element: '[data-tour="photo-upload"]',
-    title: 'Share Your Vibe (Optional)',
-    description: 'Want to share what you\'re up to? Add a photo! Your besties will see it when they check on you.',
+    title: 'Share Your Scene (Optional)',
+    description: 'Snap a photo of who you\'re with, where you are, or what you\'re wearing. If your besties need to find you or provide info to authorities, these photos could be crucial.',
     emoji: '📸',
-    tip: 'Photos are totally optional but help your friends feel connected'
+    tip: 'Photos are optional but recommended for first dates or unfamiliar places'
   },
 
-  // NOTES SECTION
-  {
-    path: '/create',
-    element: '[data-tour="notes-input"]',
-    title: 'Add Extra Details',
-    description: 'Meeting someone new? Add notes like "First date with Alex from Hinge" or "Dinner at Mario\'s on 5th". Super helpful context for your besties!',
-    emoji: '📝',
-    tip: 'The more context you give, the better your besties can help if needed'
-  },
-
-  // CREATE BUTTON
+  // CREATE SUBMIT
   {
     path: '/create',
     element: '[data-tour="create-submit"]',
-    title: 'Start Your Check-In!',
-    description: 'Once you\'ve filled everything out, tap this button to activate your check-in. The countdown starts immediately!',
-    emoji: '🚀'
+    title: 'Activate Your Safety Net',
+    description: 'Tap this to start your check-in! The countdown begins immediately, your selected besties are on standby, and you\'ll get friendly reminders when it\'s time to check back in.',
+    emoji: '🚀',
+    tip: 'Your check-in is active until you mark yourself safe or the timer expires'
   },
 
-  // BESTIES PAGE - NAVIGATION
+  // BESTIES PAGE - INTRODUCTION
   {
     path: '/besties',
     element: '[data-tour="besties-list"]',
     title: 'Your Safety Circle',
-    description: 'These are your besties - the people who have your back! Here you can see all your connections and their recent activity.',
-    emoji: '💝'
+    description: 'These are your besties - the people you trust with your safety! See who\'s in your circle, their recent activity, and manage your connections. This is your personal safety network.',
+    emoji: '👯‍♀️',
+    tip: 'Quality over quantity! 3-5 trusted people is better than 20 acquaintances'
   },
 
-  // ADD BESTIE BUTTON
+  // ADD BESTIE
   {
     path: '/besties',
     element: '[data-tour="add-bestie-button"]',
-    title: 'Invite Your Friends',
-    description: 'Tap here to add a new bestie! Just enter their phone number and name, and we\'ll send them an invite.',
+    title: 'Grow Your Circle',
+    description: 'Add friends, roommates, family - anyone you trust! They\'ll get a warm invitation to join your safety network. The more besties you have, the safer you\'ll be.',
     emoji: '➕',
-    tip: 'The more besties you have, the safer you\'ll be!'
+    tip: 'Start with your closest friends, then add people you see regularly'
   },
 
   // ACTIVITY FEED
@@ -136,96 +140,89 @@ export const tourSteps = [
     path: '/besties',
     element: '[data-tour="activity-feed"]',
     title: 'Stay Connected',
-    description: 'See what your besties are up to! Their check-ins, alerts, and safety updates all show up here.',
+    description: 'See when your besties are active, their recent check-ins, and any safety alerts. It\'s like a mini social feed, but focused entirely on keeping each other safe!',
     emoji: '📱',
-    tip: 'You\'ll get notified when a bestie needs you'
+    tip: 'Check this regularly to know who\'s available to watch over you'
   },
 
-  // PROFILE PAGE
+  // PROFILE - AVATAR
   {
     path: '/profile',
     element: '[data-tour="profile-avatar"]',
-    title: 'Your Profile',
-    description: 'This is your profile! Add a photo, write a bio, and customize your look. Your besties will see this when they check on you.',
-    emoji: '⭐'
+    title: 'Your Profile Identity',
+    description: 'Add a clear profile photo so your besties can easily identify you. If they need to show your photo to venue staff or authorities, having a recent photo here matters!',
+    emoji: '⭐',
+    tip: 'Use a clear, recent photo where your face is visible'
   },
 
-  // BADGES SECTION
+  // BADGES
   {
     path: '/profile',
     element: '[data-tour="badges-section"]',
-    title: 'Earn Achievements!',
-    description: 'Complete check-ins and milestones to unlock badges! Track your progress and show off your safety streak.',
+    title: 'Earn Safety Achievements',
+    description: 'Complete check-ins, build your circle, and maintain streaks to unlock badges! It\'s a fun way to stay engaged with your safety habits. Display your top 3 badges with pride!',
     emoji: '🏆',
-    tip: 'You can display your favorite 3 badges on your profile'
+    tip: 'The "First Check-In" badge is yours after completing one check-in!'
   },
 
-  // STATS SECTION
+  // STATS
   {
     path: '/profile',
     element: '[data-tour="profile-stats"]',
-    title: 'Your Safety Stats',
-    description: 'See how many check-ins you\'ve completed, how many besties you have, and more! Track your safety journey.',
-    emoji: '📊'
+    title: 'Your Safety Journey',
+    description: 'Track your impact! See how many check-ins you\'ve completed, how many times friends picked you as their emergency contact, your login streak, and more. You\'re making the world safer!',
+    emoji: '📊',
+    tip: 'Celebrate the milestones - every check-in matters!'
   },
 
-  // SETTINGS - NAVIGATION
+  // SETTINGS - NOTIFICATIONS
   {
     path: '/settings',
     element: '[data-tour="notification-settings"]',
-    title: 'Notification Settings',
-    description: 'Control how you get notified! You can enable push notifications, SMS reminders, or email alerts.',
+    title: 'How You Get Notified',
+    description: 'Choose how you want check-in reminders and emergency alerts: email, push notifications, SMS, or all three! We recommend enabling at least two channels so you never miss a critical alert.',
     emoji: '🔔',
-    tip: 'We recommend keeping notifications on so you never miss a reminder'
+    tip: 'Email is reliable and free. SMS costs money to send, so we limit it to 5 per week'
   },
 
-  // PASSCODE SETTINGS
+  // PASSCODES
   {
     path: '/settings',
     element: '[data-tour="passcode-section"]',
-    title: 'Safety vs Duress Passcode',
-    description: 'Super important! Set two different passcodes: one that marks you safe, and one that secretly alerts your besties that you\'re in danger.',
+    title: 'Safety vs Duress Passcode (Critical!)',
+    description: 'Set TWO different passcodes: Safety Passcode marks you safe. Duress Code looks identical but SECRETLY alerts your besties you\'re in danger. Use duress if someone forces you to cancel an alert.',
     emoji: '🔐',
-    tip: 'The duress passcode looks normal but sends a silent alert'
+    tip: 'This could save your life. The duress code triggers a silent alarm your besties will see'
   },
 
   // SMS SETTINGS
   {
     path: '/settings',
     element: '[data-tour="sms-settings"]',
-    title: 'SMS Backup (Optional)',
-    description: 'Want SMS reminders as backup? You can enable text message notifications for extra peace of mind.',
+    title: 'SMS Alerts (Optional Backup)',
+    description: 'Want text message reminders as extra backup? Enable SMS! You get 5 free SMS alerts per week. After that, consider upgrading to premium for unlimited texts.',
     emoji: '💬',
-    tip: 'SMS counts are limited - use push notifications to save your texts'
-  },
-
-  // HEADER NAVIGATION
-  {
-    path: '/',
-    element: '[data-tour="header-nav"]',
-    title: 'Quick Navigation',
-    description: 'Use these buttons to quickly jump between Home, Besties, and Profile. Everything is just one tap away!',
-    emoji: '🧭'
+    tip: 'Use email or push notifications to save your SMS quota for true emergencies'
   },
 
   // NOTIFICATION BELL
   {
     path: '/',
     element: '[data-tour="notification-bell"]',
-    title: 'Your Notifications',
-    description: 'This bell shows all your notifications! Check-in reminders, bestie alerts, and more appear here.',
+    title: 'Your Notification Center',
+    description: 'Click here to see all your notifications! Check-in reminders, bestie alerts, safety warnings, and system updates all appear here. The number shows unread notifications.',
     emoji: '🔔',
-    tip: 'The number shows how many unread notifications you have'
+    tip: 'Turn on browser notifications so you get alerts even when the app isn\'t open'
   },
 
-  // FINAL STEP - Back to home
+  // FINAL STEP - COMPLETION
   {
     path: '/',
     element: '[data-tour="header-logo"]',
-    title: 'You\'re All Set! 🎉',
-    description: 'That\'s the complete tour! You now know how to create check-ins, manage your besties, and stay safe. Ready to get started?',
+    title: 'You\'re Ready to Stay Safe! 🎉',
+    description: 'That\'s everything! You now know how to create check-ins, manage your safety circle, set up emergency alerts, and use all the features. Your besties have your back, and we\'ve got you covered!',
     emoji: '✨',
-    tip: 'Remember: Your besties are here for you, and we\'ve got your back!'
+    tip: 'Start with one check-in today! The first one is always the most important. Stay safe out there! 💜'
   }
 ];
 

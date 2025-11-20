@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useTour } from '../contexts/TourContext';
 import { authService, db } from '../services/firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -12,6 +13,7 @@ import notificationService from '../services/notifications';
 const SettingsPage = () => {
   const { currentUser, userData } = useAuth();
   const { isDark, toggle: toggleDarkMode } = useDarkMode();
+  const { startTour, resetTour } = useTour();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(false);
@@ -964,6 +966,18 @@ const SettingsPage = () => {
               className="btn btn-secondary text-left px-4 py-3"
             >
               <div className="text-sm">📥 Export Data</div>
+            </button>
+            <button
+              onClick={() => {
+                resetTour();
+                startTour();
+                navigate('/');
+                toast.success('Tour started! Follow the highlights to learn about Besties', { duration: 4000 });
+              }}
+              className="btn bg-gradient-primary text-white text-left px-4 py-3 col-span-2"
+            >
+              <div className="text-sm">✨ Retake App Tour</div>
+              <div className="text-xs opacity-90">Learn how to use every feature</div>
             </button>
             {userData?.isAdmin && (
               <>
