@@ -5,27 +5,33 @@ import { textAnimations } from '../../../utils/magicalAnimations';
 const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
+  const messageRef = useRef(null);
   const [heartClickCount, setHeartClickCount] = useState(0);
 
   useEffect(() => {
-    if (isActive && titleRef.current && subtitleRef.current) {
+    if (isActive && titleRef.current && subtitleRef.current && messageRef.current) {
       // Typewriter effect for title
       setTimeout(() => {
-        textAnimations.typewriter(titleRef.current, 'Welcome to Besties! 💕', 80);
+        textAnimations.typewriter(titleRef.current, 'Hey bestie! 💕', 80);
       }, 500);
 
       // Fade in subtitle
       setTimeout(() => {
         subtitleRef.current.style.opacity = '1';
-      }, 3000);
+      }, 2500);
+
+      // Fade in message
+      setTimeout(() => {
+        messageRef.current.style.opacity = '1';
+      }, 4000);
 
       // Create heart particles
       if (particleSystem) {
         const interval = setInterval(() => {
           const x = Math.random() * window.innerWidth;
-          particleSystem.burst(x, window.innerHeight, 3, 'heart');
+          particleSystem.burst(x, window.innerHeight, 2, 'heart');
           particleSystem.start();
-        }, 300);
+        }, 400);
 
         return () => clearInterval(interval);
       }
@@ -39,14 +45,12 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
     const newCount = heartClickCount + 1;
     setHeartClickCount(newCount);
 
-    // Get heart position
     const heartElement = document.querySelector('.hero-heart-container');
     if (heartElement) {
       const rect = heartElement.getBoundingClientRect();
       const x = rect.left + rect.width / 2;
       const y = rect.top + rect.height / 2;
 
-      // Progressive explosions - the more you click, the crazier it gets!
       const burstTypes = ['heart', 'star', 'sparkle', 'circle'];
       const particleCount = Math.min(20 + (newCount * 10), 100);
       const type = burstTypes[newCount % burstTypes.length];
@@ -54,9 +58,7 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
       particleSystem.burst(x, y, particleCount, type);
       particleSystem.start();
 
-      // Extra special effect every 5 clicks
       if (newCount % 5 === 0) {
-        // Rainbow explosion!
         setTimeout(() => {
           burstTypes.forEach((burstType, i) => {
             setTimeout(() => {
@@ -71,7 +73,6 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
   const handleContinue = (e) => {
     const button = e.currentTarget;
 
-    // Heart burst from button
     if (particleSystem) {
       const rect = button.getBoundingClientRect();
       particleSystem.burst(
@@ -92,7 +93,7 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
     <div className="welcome-splash">
       {/* Floating Hearts Background */}
       <div className="floating-hearts">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(12)].map((_, i) => (
           <div
             key={i}
             className="floating-heart"
@@ -100,8 +101,8 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
               animationDuration: `${3 + Math.random() * 4}s`,
-              fontSize: `${20 + Math.random() * 30}px`,
-              opacity: 0.1 + Math.random() * 0.2
+              fontSize: `${16 + Math.random() * 20}px`,
+              opacity: 0.08 + Math.random() * 0.12
             }}
           >
             💕
@@ -111,14 +112,14 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
 
       {/* Main Content */}
       <div className="welcome-content animate-scale-up">
-        {/* Large Animated Heart - Easter egg: try clicking it! */}
+        {/* Large Animated Heart */}
         <div
           className="hero-heart-container"
           onClick={handleHeartClick}
           style={{ cursor: 'pointer' }}
-          title="💕 Click me!"
+          title="💕 Tap me!"
         >
-          <AnimatedHeart size={120} className="hero-heart" animate={true} />
+          <AnimatedHeart size={100} className="hero-heart" animate={true} />
           <div className="heart-glow" />
           {heartClickCount > 0 && (
             <div className="click-counter">
@@ -131,7 +132,7 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
         <h1
           ref={titleRef}
           className="welcome-title"
-          style={{ minHeight: '60px' }}
+          style={{ minHeight: '50px' }}
         >
           {/* Text will be filled by typewriter */}
         </h1>
@@ -142,20 +143,33 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           className="welcome-subtitle"
           style={{ opacity: 0, transition: 'opacity 1s' }}
         >
-          Your besties have your back
+          We've got your back
         </p>
 
-        {/* Feature Pills */}
+        {/* Warm welcome message */}
+        <p
+          ref={messageRef}
+          className="welcome-message"
+          style={{ opacity: 0, transition: 'opacity 1s' }}
+        >
+          You deserve to feel safe, supported, and empowered — no matter where you go or who you're with.
+          Let's build your safety circle together. 🌸
+        </p>
+
+        {/* Feature Pills - mobile optimized */}
         <div className="feature-pills">
           {[
-            { icon: '🛡️', text: 'Stay Safe', delay: '0.5s' },
-            { icon: '💝', text: 'Feel Supported', delay: '0.7s' },
-            { icon: '⚡', text: 'Super Easy', delay: '0.9s' }
+            { icon: '🛡️', text: 'Stay Safe', color: '#9370DB' },
+            { icon: '💝', text: 'Feel Supported', color: '#FF69B4' },
+            { icon: '✨', text: 'Take Control', color: '#FFB6C1' }
           ].map((feature, i) => (
             <div
               key={i}
               className="feature-pill animate-slide-up"
-              style={{ animationDelay: feature.delay }}
+              style={{
+                animationDelay: `${0.5 + i * 0.15}s`,
+                borderLeft: `3px solid ${feature.color}`
+              }}
             >
               <span className="feature-icon">{feature.icon}</span>
               <span className="feature-text">{feature.text}</span>
@@ -168,26 +182,28 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           className="btn-continue flying-element"
           onClick={handleContinue}
         >
-          Let's Begin! ✨
-          <span className="btn-shine" />
+          Let's Get Started
+          <span className="btn-arrow">→</span>
         </button>
 
-        {/* Swipe Hint */}
+        {/* Swipe Hint for mobile */}
         <div className="swipe-hint animate-bounce">
-          <span>👇</span>
-          <p>Tap to continue</p>
+          <span className="hint-icon">👆</span>
+          <p className="hint-text">Tap to begin your journey</p>
         </div>
       </div>
 
       <style jsx>{`
         .welcome-splash {
           width: 100%;
-          height: 100%;
+          min-height: 100vh;
+          min-height: 100dvh; /* Mobile viewport height */
           display: flex;
           align-items: center;
           justify-content: center;
           position: relative;
           overflow: hidden;
+          padding: 20px;
         }
 
         .floating-hearts {
@@ -226,19 +242,17 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
         .welcome-content {
           text-align: center;
           max-width: 600px;
-          padding: 40px;
+          width: 100%;
+          padding: 0 20px;
           z-index: 1;
         }
 
         .hero-heart-container {
           position: relative;
           display: inline-block;
-          margin-bottom: 30px;
+          margin-bottom: 24px;
           transition: transform 200ms;
-        }
-
-        .hero-heart-container:hover {
-          transform: scale(1.05);
+          -webkit-tap-highlight-color: transparent;
         }
 
         .hero-heart-container:active {
@@ -251,13 +265,13 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
 
         .click-counter {
           position: absolute;
-          top: -15px;
-          right: -15px;
+          top: -12px;
+          right: -12px;
           background: linear-gradient(135deg, #FFD93D, #FFA500);
           color: white;
           font-family: 'Fredoka One', cursive;
-          font-size: 14px;
-          padding: 6px 12px;
+          font-size: 13px;
+          padding: 4px 10px;
           border-radius: 20px;
           box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
           animation: bounce-in 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -280,9 +294,9 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 150px;
-          height: 150px;
-          background: radial-gradient(circle, rgba(255,105,180,0.4) 0%, transparent 70%);
+          width: 130px;
+          height: 130px;
+          background: radial-gradient(circle, rgba(255,105,180,0.3) 0%, transparent 70%);
           animation: glow 2s ease-in-out infinite;
           pointer-events: none;
         }
@@ -300,63 +314,80 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
 
         .welcome-title {
           font-family: 'Fredoka One', cursive;
-          font-size: 48px;
+          font-size: clamp(32px, 8vw, 48px);
           color: #FF1493;
-          margin-bottom: 15px;
-          text-shadow: 2px 2px 0 rgba(147, 112, 219, 0.3);
+          margin-bottom: 12px;
+          text-shadow: 2px 2px 0 rgba(147, 112, 219, 0.2);
           line-height: 1.2;
         }
 
         .welcome-subtitle {
           font-family: 'Quicksand', sans-serif;
-          font-size: 24px;
+          font-size: clamp(18px, 4vw, 24px);
           color: #9370DB;
-          margin-bottom: 40px;
-          font-weight: 500;
+          margin-bottom: 20px;
+          font-weight: 600;
+        }
+
+        .welcome-message {
+          font-family: 'Quicksand', sans-serif;
+          font-size: clamp(14px, 3.5vw, 16px);
+          color: #666;
+          line-height: 1.7;
+          margin-bottom: 28px;
+          padding: 0 10px;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .feature-pills {
           display: flex;
-          gap: 15px;
-          justify-content: center;
-          margin-bottom: 40px;
-          flex-wrap: wrap;
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: 32px;
+          width: 100%;
+          max-width: 400px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .feature-pill {
           background: white;
-          padding: 12px 24px;
-          border-radius: 30px;
+          padding: 14px 20px;
+          border-radius: 16px;
           display: flex;
           align-items: center;
-          gap: 10px;
-          box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+          gap: 12px;
+          box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
           transition: all 300ms;
+          -webkit-tap-highlight-color: transparent;
         }
 
-        .feature-pill:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+        .feature-pill:active {
+          transform: scale(0.98);
         }
 
         .feature-icon {
-          font-size: 20px;
+          font-size: 24px;
+          flex-shrink: 0;
         }
 
         .feature-text {
           font-family: 'Quicksand', sans-serif;
           font-weight: 600;
           color: #333;
-          font-size: 14px;
+          font-size: 15px;
+          text-align: left;
         }
 
         .btn-continue {
           background: linear-gradient(135deg, #9370DB 0%, #FF69B4 100%);
           color: white;
           border: none;
-          padding: 18px 50px;
+          padding: 16px 40px;
           border-radius: 50px;
-          font-size: 20px;
+          font-size: 18px;
           font-weight: bold;
           font-family: 'Quicksand', sans-serif;
           cursor: pointer;
@@ -364,57 +395,47 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           transition: all 300ms;
           position: relative;
           overflow: hidden;
-        }
-
-        .btn-continue:hover {
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
+          width: 100%;
+          max-width: 320px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin: 0 auto 24px;
+          -webkit-tap-highlight-color: transparent;
+          min-height: 52px;
         }
 
         .btn-continue:active {
-          transform: translateY(-1px) scale(1.02);
+          transform: translateY(2px) scale(0.98);
+          box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
         }
 
-        .btn-shine {
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: linear-gradient(
-            45deg,
-            transparent,
-            rgba(255, 255, 255, 0.3),
-            transparent
-          );
-          animation: shine 3s infinite;
+        .btn-arrow {
+          font-size: 20px;
+          transition: transform 300ms;
         }
 
-        @keyframes shine {
-          0% {
-            transform: translateX(-100%) translateY(-100%) rotate(45deg);
-          }
-          100% {
-            transform: translateX(100%) translateY(100%) rotate(45deg);
-          }
+        .btn-continue:hover .btn-arrow {
+          transform: translateX(4px);
         }
 
         .swipe-hint {
-          margin-top: 40px;
           color: #9370DB;
           font-family: 'Quicksand', sans-serif;
           opacity: 0.6;
+          font-size: 13px;
         }
 
-        .swipe-hint span {
-          font-size: 30px;
+        .hint-icon {
+          font-size: 24px;
           display: block;
-          margin-bottom: 5px;
+          margin-bottom: 4px;
         }
 
-        .swipe-hint p {
-          font-size: 14px;
+        .hint-text {
           margin: 0;
+          font-size: 13px;
         }
 
         @keyframes pulse {
@@ -422,7 +443,39 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
             transform: scale(1);
           }
           50% {
-            transform: scale(1.1);
+            transform: scale(1.08);
+          }
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+          .welcome-content {
+            padding: 40px;
+          }
+
+          .hero-heart-container {
+            margin-bottom: 30px;
+          }
+
+          .feature-pills {
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+
+          .feature-pill {
+            flex: 0 1 auto;
+            min-width: 150px;
+          }
+
+          .btn-continue {
+            width: auto;
+            padding: 18px 50px;
+          }
+
+          .btn-continue:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(255, 105, 180, 0.5);
           }
         }
       `}</style>
