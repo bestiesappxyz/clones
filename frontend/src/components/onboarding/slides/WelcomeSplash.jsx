@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatedHeart } from '../SVGGraphics';
 import { textAnimations } from '../../../utils/magicalAnimations';
 
 const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
+  const [heartClickCount, setHeartClickCount] = useState(0);
 
   useEffect(() => {
     if (isActive && titleRef.current && subtitleRef.current) {
@@ -30,6 +31,42 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
       }
     }
   }, [isActive, particleSystem]);
+
+  // Easter egg: Click the hero heart for surprises!
+  const handleHeartClick = () => {
+    if (!particleSystem) return;
+
+    const newCount = heartClickCount + 1;
+    setHeartClickCount(newCount);
+
+    // Get heart position
+    const heartElement = document.querySelector('.hero-heart-container');
+    if (heartElement) {
+      const rect = heartElement.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      // Progressive explosions - the more you click, the crazier it gets!
+      const burstTypes = ['heart', 'star', 'sparkle', 'circle'];
+      const particleCount = Math.min(20 + (newCount * 10), 100);
+      const type = burstTypes[newCount % burstTypes.length];
+
+      particleSystem.burst(x, y, particleCount, type);
+      particleSystem.start();
+
+      // Extra special effect every 5 clicks
+      if (newCount % 5 === 0) {
+        // Rainbow explosion!
+        setTimeout(() => {
+          burstTypes.forEach((burstType, i) => {
+            setTimeout(() => {
+              particleSystem.burst(x, y, 30, burstType);
+            }, i * 100);
+          });
+        }, 100);
+      }
+    }
+  };
 
   const handleContinue = (e) => {
     const button = e.currentTarget;
@@ -74,10 +111,20 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
 
       {/* Main Content */}
       <div className="welcome-content animate-scale-up">
-        {/* Large Animated Heart */}
-        <div className="hero-heart-container">
+        {/* Large Animated Heart - Easter egg: try clicking it! */}
+        <div
+          className="hero-heart-container"
+          onClick={handleHeartClick}
+          style={{ cursor: 'pointer' }}
+          title="💕 Click me!"
+        >
           <AnimatedHeart size={120} className="hero-heart" animate={true} />
           <div className="heart-glow" />
+          {heartClickCount > 0 && (
+            <div className="click-counter">
+              {heartClickCount} 💕
+            </div>
+          )}
         </div>
 
         {/* Title with Typewriter */}
@@ -187,10 +234,45 @@ const WelcomeSplash = ({ onNext, particleSystem, isActive }) => {
           position: relative;
           display: inline-block;
           margin-bottom: 30px;
+          transition: transform 200ms;
+        }
+
+        .hero-heart-container:hover {
+          transform: scale(1.05);
+        }
+
+        .hero-heart-container:active {
+          transform: scale(0.95);
         }
 
         .hero-heart {
           animation: pulse 2s ease-in-out infinite;
+        }
+
+        .click-counter {
+          position: absolute;
+          top: -15px;
+          right: -15px;
+          background: linear-gradient(135deg, #FFD93D, #FFA500);
+          color: white;
+          font-family: 'Fredoka One', cursive;
+          font-size: 14px;
+          padding: 6px 12px;
+          border-radius: 20px;
+          box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
+          animation: bounce-in 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          z-index: 10;
+        }
+
+        @keyframes bounce-in {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
         }
 
         .heart-glow {
