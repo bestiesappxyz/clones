@@ -52,7 +52,7 @@ const QuickOnboarding = () => {
         setTimeout(() => {
           startTour();
           console.log('🎯 Interactive tour started - showing REAL app!');
-        }, 1500); // Increased from 800ms to 1500ms to ensure DOM is ready
+        }, 2000); // Increased from 1500ms to 2000ms to ensure DOM is fully ready
       } catch (error) {
         console.error('Error completing onboarding:', error);
         // Still navigate to home even if there's an error

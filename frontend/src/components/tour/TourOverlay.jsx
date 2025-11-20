@@ -19,9 +19,13 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
   useEffect(() => {
     if (!currentStepData || !isVisible) return;
 
+    // CRITICAL: Clear old highlight IMMEDIATELY when step changes
+    setHighlightRect(null);
+
     let retryCount = 0;
-    const maxRetries = 20; // Max 2 seconds of retrying (20 * 100ms)
+    const maxRetries = 30; // Max 3 seconds of retrying (30 * 100ms)
     let retryTimeout;
+    let initialDelay;
 
     const updateHighlight = () => {
       const element = document.querySelector(currentStepData.element);
@@ -38,7 +42,7 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
         calculateTooltipPosition(rect);
         retryCount = 0; // Reset retry count on success
       } else {
-        // Element not found - clear old highlight and retry
+        // Element not found - keep highlight cleared and retry
         setHighlightRect(null);
 
         if (retryCount < maxRetries) {
@@ -50,7 +54,9 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
       }
     };
 
-    updateHighlight();
+    // Wait 200ms before first attempt to ensure any navigation/rendering is complete
+    initialDelay = setTimeout(updateHighlight, 200);
+
     window.addEventListener('resize', updateHighlight);
     window.addEventListener('scroll', updateHighlight);
 
@@ -71,6 +77,9 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
       if (retryTimeout) {
         clearTimeout(retryTimeout);
       }
+      if (initialDelay) {
+        clearTimeout(initialDelay);
+      }
     };
   }, [currentStep, currentStepData, isVisible]);
 
@@ -85,7 +94,7 @@ const TourOverlay = ({ steps, onComplete, onSkip }) => {
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      }, 500); // Increased from 100ms to 500ms to ensure DOM is ready
+      }, 1000); // Increased from 500ms to 1000ms to ensure DOM is fully ready
     }
   }, [currentStep, currentStepData, navigate]);
 
